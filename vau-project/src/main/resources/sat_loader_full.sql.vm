@@ -1,0 +1,64 @@
+delete ${model.sat.tableName}
+ where c$source_system = '${model.sourceSystem}'
+   and c$start_date >= p_run_date;
+
+INSERT INTO ${model.sat.tableName}
+  (${model.sat.entity.entityName}_ID,
+   C$SOURCE_SYSTEM,
+   C$START_DATE,
+   C$END_DATE,
+   C$AUDIT_ID,
+   C$REC_PRESENT #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end)
+  WITH src AS
+   (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
+#end #foreach($h in $model.sat.hubs) ${h.tableName}.${h.entityName}_ID #if( $foreach.hasNext ), #end #end
+#if($model.sat.link) , ${model.sat.link.tableName}.${model.sat.link.entityName}_id #end
+      FROM (${model.sqlScript.trim()}) i
+#foreach($h in $model.sat.hubs) join ${h.tableName} on ${h.tableName}.${h.entityName}_BK = i.${h.entityName}_BK
+#end #if($model.sat.link) join ${model.sat.link.tableName} on
+    #foreach($h in $model.sat.hubs) ${model.sat.link.tableName}.${h.entityName}_ID = ${h.tableName}.${h.entityName}_ID #if( $foreach.hasNext ) AND #end  #end
+#end)
+  SELECT ${model.sat.entity.entityName}_ID,
+         '${model.sourceSystem}' AS C$SOURCE_SYSTEM,
+         p_run_date AS C$START_DATE,
+         to_date('99991231', 'yyyymmdd') AS C$END_DATE,
+         c_audit_id AS C$AUDIT_ID,
+         c$rec_present AS c$rec_present #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end
+    FROM ((SELECT #foreach($c in $model.sat.nonTechnicalColumns) s.$c.columnName,
+#end S.${model.sat.entity.entityName}_ID,
+                  1 AS c$rec_present
+             FROM src s
+           MINUS
+           SELECT #foreach($c in $model.sat.nonTechnicalColumns) c.$c.columnName,
+#end C.${model.sat.entity.entityName}_ID,
+                  1 AS c$rec_present
+             FROM ${model.sat.tableName} c
+            WHERE P_RUN_DATE BETWEEN C.C$START_DATE AND C.C$END_DATE) UNION ALL
+          (SELECT #foreach($c in $model.sat.nonTechnicalColumns) null as $c.columnName,
+#end C.${model.sat.entity.entityName}_ID,
+                  0 AS c$rec_present
+             FROM ${model.sat.tableName} c
+            WHERE P_RUN_DATE BETWEEN C.C$START_DATE AND C.C$END_DATE
+           MINUS
+           SELECT #foreach($c in $model.sat.nonTechnicalColumns) null as $c.columnName,
+#end S.${model.sat.entity.entityName}_ID,
+                  0 AS c$rec_present
+             FROM src s));
+
+Merge Into ${model.sat.tableName} u
+Using (select * from (
+Select t.${model.sat.entity.entityName}_ID,
+       t.c$start_date,
+       t.c$end_date,
+       nvl(lead(t.c$start_date - 1/(24*60*60))
+           over(Partition By ${model.sat.entity.entityName}_ID Order By t.c$start_date),
+           to_date('99991231',
+                   'yyyymmdd')) new_c$end_date
+  From ${model.sat.tableName} t
+) where c$end_date <> new_c$end_date or c$end_date is null) k
+On (u.${model.sat.entity.entityName}_ID = k.${model.sat.entity.entityName}_ID And u.c$start_date = k.c$start_date)
+When Matched Then
+  Update
+     Set u.c$end_date = k.new_c$end_date;

@@ -1,0 +1,24 @@
+map for entity CUSTOMER {
+
+	source {
+		system 	EXAMPLE
+		owner 	EXAMPLE
+		table	PARTNERS
+		contains FULL
+	}
+
+	business key ID;
+
+	attributes {
+		datagroup DIM {
+			NAME := NEV; // név betöltése
+			BANK_ACCOUNT := BANKSZAMLA;
+			CUSTOMER_TYPE := "GENERAL";
+		}
+		datagroup RATING {
+			RATING_METHOD := "BEST_RATE";
+			CR_RATING := "A0";
+		}
+	}
+
+}

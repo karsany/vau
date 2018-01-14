@@ -1,0 +1,85 @@
+grammar DataModel;
+
+s  : entries ;
+
+entries: (entity|link|ref)+ ;
+
+entity : 'entity' entity_name datagroup_definition ;
+
+datagroup_definition : ('{' datagroup* '}')? ;
+
+link : 'link' link_name 'between' entity_name (('and'|',') entity_name)* (';'|datagroup_definition) ;
+
+datagroup : 'datagroup' datagroup_name '{' attributes '}';
+
+ref : 'ref' reference_name '{' reference_attributes '}';
+
+reference_attributes : keys attributes ;
+
+keys : key+ ;
+
+attributes : attribute* ;
+
+attribute : 'attr' attribute_name 'typ' type comment? ';';
+
+key : 'key' attribute_name 'typ' type comment? ';';
+
+comment : STRINGDEF
+    ;
+
+STRINGDEF: '"' CHARSEQUENCE? '"'
+        {
+          String s = getText();
+          s = s.substring(1, s.length() - 1); // strip the leading and trailing quotes
+          s = s.replace("\"\"", "\""); // replace all double quotes with single quotes
+          setText(s);
+        }
+        ;
+
+fragment CHARSEQUENCE: CHAR+ ;
+
+fragment CHAR: ~["]
+    |   '\\\n'   // Added line
+    |   '\\\r\n' // Added line
+    ;
+
+
+type :  'CURRENCY' |
+        'DATE' |
+        'LARGETEXT' |
+        'MIDDLETEXT' |
+        'MIDDLETEXT' |
+        'MONEY' |
+        'PERCENTAGE' |
+        'SHORTTEXT' |
+        'SMALLTEXT' |
+		'FLAG' |
+		'INTEGER' ;
+
+datagroup_name : ID ;
+
+entity_name : ID ;
+
+link_name : ID;
+
+attribute_name : ID ;
+
+reference_name : ID ;
+
+ID : CHARS (CHARS|SYMBOLS|NUMBERS)*;
+
+SYMBOLS : ('_'|'$');
+
+CHARS : [A-Z] ;
+
+NUMBERS : [0-9] ;
+
+WS : [ \t\r\n]+ -> skip ;
+
+COMMENT
+    : '/*' .*? '*/' -> skip
+;
+
+LINE_COMMENT
+    : '//' ~[\r\n]* -> skip
+;

@@ -1,0 +1,60 @@
+Declare
+  v_uq_cnt Number := 1;
+  Procedure column(p_table_name  In Varchar2,
+                   p_column_name In Varchar2,
+                   p_column_type In Varchar2,
+                   p_comment     In Varchar2) Is
+    cnt Number;
+  Begin
+
+    Select Count(1) Into cnt From user_tables t Where t.table_name = upper(p_table_name);
+
+    If cnt = 0 Then
+      Execute Immediate 'create table ' || p_table_name || ' (' || p_column_name || ' ' || p_column_type || ')';
+    Else
+      Begin
+        Execute Immediate 'alter table ' || p_table_name || ' add ' || p_column_name || ' ' || p_column_type;
+      Exception
+        When Others Then
+          If Sqlcode = -1430 Then
+            Null;
+          Else
+            Raise;
+          End If;
+      End;
+    End If;
+
+    EXECUTE IMMEDIATE 'comment on column ' || p_table_name || '.' || p_column_name || ' is ''' || p_comment || '''';
+
+  End column;
+
+  Procedure uniq(p_table_name In Varchar2,
+                 p_columns    In Varchar2) Is
+  Begin
+    Begin
+
+      Execute Immediate 'alter table ' || p_table_name || ' add constraint ' || p_table_name || '_u' || v_uq_cnt ||
+                        ' unique (' || p_columns || ')';
+
+    Exception
+      When Others Then
+        If Sqlcode = -955 or sqlcode = -2261 Then
+          Null;
+        Else
+          Raise;
+        End If;
+    End;
+    v_uq_cnt := v_uq_cnt + 1;
+  End uniq;
+Begin
+
+#foreach($c in $model.columns)
+    column('${model.tableName}','${c.columnName}','${c.dataType}','${c.comment}');
+#end
+
+#foreach($u in $model.uniqueKeys)
+    uniq('${model.tableName}','#foreach($c in $u)${c.columnName}#if( $foreach.hasNext ), #end#end');
+#end
+
+end;
+/

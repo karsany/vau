@@ -1,0 +1,40 @@
+delete ${model.ref.tableName}
+ where c$source_system = '${model.sourceSystem}'
+   and c$start_date >= p_run_date;
+
+INSERT INTO ${model.ref.tableName}
+  (C$SOURCE_SYSTEM,
+   C$START_DATE,
+   C$END_DATE,
+   C$AUDIT_ID #foreach($c in $model.ref.nonTechnicalColumns), $c.columnName
+#end)
+  WITH src AS
+   (SELECT #foreach($c in $model.ref.nonTechnicalColumns) i.$c.columnName#if ($foreach.hasNext), #end
+#end
+      FROM (${model.sqlScript.trim()}) i
+  SELECT '${model.sourceSystem}' AS C$SOURCE_SYSTEM,
+         p_run_date AS C$START_DATE,
+         to_date('99991231', 'yyyymmdd') AS C$END_DATE,
+         c_audit_id AS C$AUDIT_ID    #foreach($c in $model.ref.nonTechnicalColumns), $c.columnName
+#end
+    FROM (SELECT #foreach($c in $model.ref.nonTechnicalColumns) s.$c.columnName#if ($foreach.hasNext), #end
+#end      FROM src s
+           MINUS
+           SELECT #foreach($c in $model.ref.nonTechnicalColumns) c.$c.columnName#if ($foreach.hasNext), #end
+#end             FROM ${model.ref.tableName} c
+            WHERE P_RUN_DATE BETWEEN C.C$START_DATE AND C.C$END_DATE);
+
+Merge Into ${model.ref.tableName} u
+Using (select * from (
+Select t.c$start_date,
+       t.c$end_date,
+       nvl(lead(t.c$start_date - 1/(24*60*60))
+           over(Partition By ${model.ref.hub.entityName}_ID Order By t.c$start_date),
+           to_date('99991231',
+                   'yyyymmdd')) new_c$end_date
+  From ${model.ref.tableName} t
+) where c$end_date <> new_c$end_date) k
+On (u.${model.ref.hub.entityName}_ID = k.${model.ref.hub.entityName}_ID And u.c$start_date = k.c$start_date)
+When Matched Then
+  Update
+     Set u.c$end_date = k.new_c$end_date;

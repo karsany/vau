@@ -1,0 +1,8 @@
+Insert Into $model.hub.tableName
+  Select ${model.hub.tableName}_seq.nextval As ${model.hub.entityName}_id,
+         ${model.hub.entityName}_bk As ${model.hub.entityName}_bk,
+         '${model.sourceSystem}' As c$source_system,
+         p_run_date As c$load_date,
+         c_audit_id As c$audit_id
+    From ((select to_char(${model.hub.entityName}_bk) as ${model.hub.entityName}_bk from (${model.sqlScript.trim()})) Minus
+          (Select ${model.hub.entityName}_bk From $model.hub.tableName Where c$source_system = '${model.sourceSystem}'));

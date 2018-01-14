@@ -1,0 +1,37 @@
+entity CUSTOMER {
+	datagroup DIM {
+		attr NAME typ MIDDLETEXT "Ügyfél neve"; // hello
+		attr BANK_ACCOUNT typ MIDDLETEXT;
+		attr CUSTOMER_TYPE typ SMALLTEXT;
+		attr RATING typ SMALLTEXT;
+	}
+	datagroup RATING {
+		attr RATING_METHOD typ MIDDLETEXT;
+		attr CR_RATING typ SMALLTEXT;
+	}
+}
+
+ref CUSTOMER_TYPE {
+	key CUSTOMER_TYPE typ SMALLTEXT;
+	attr TYPE_DESC typ MIDDLETEXT;
+}
+
+ref CUSTOMER_RATING {
+	key RATING typ SMALLTEXT;
+	attr RATING_NAME typ MIDDLETEXT;
+	attr RATING_ORDER typ INTEGER;
+}
+
+entity ADDRESS {
+	datagroup MAIN {
+		attr COUNTRY typ SMALLTEXT;
+		attr ZIP typ MIDDLETEXT;
+		attr TOWN typ MIDDLETEXT;
+		attr ADDRLINE1 typ MIDDLETEXT;
+		attr ADDRLINE2 typ MIDDLETEXT;
+		attr ADDRLINE3 typ MIDDLETEXT;
+	}
+}
+
+link CUSTOMER_ADDRESS between CUSTOMER and ADDRESS
+

@@ -1,0 +1,29 @@
+delete ${model.sat.tableName}
+ where c$source_system = '${model.sourceSystem}'
+   and c$start_date >= p_run_date;
+
+INSERT INTO ${model.sat.tableName}
+  (${model.sat.hub.entityName}_ID,
+   C$SOURCE_SYSTEM,
+   C$START_DATE,
+   C$END_DATE,
+   C$AUDIT_ID,
+   C$REC_PRESENT #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end)
+  WITH src AS
+   (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
+#end h.${model.sat.hub.entityName}_ID
+      FROM (${model.sqlScript.trim()}) i
+      JOIN hub_${model.sat.hub.entityName} h
+        ON i.${model.sat.hub.entityName}_BK = h.${model.sat.hub.entityName}_BK)
+  SELECT ${model.sat.hub.entityName}_ID,
+         '${model.sourceSystem}' AS C$SOURCE_SYSTEM,
+         p_run_date AS C$START_DATE,
+         to_date('99991231', 'yyyymmdd') AS C$END_DATE,
+         c_audit_id AS C$AUDIT_ID,
+         c$rec_present AS c$rec_present #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end
+    FROM (SELECT #foreach($c in $model.sat.nonTechnicalColumns) s.$c.columnName,
+#end S.${model.sat.hub.entityName}_ID,
+                  1 AS c$rec_present
+             FROM src s);
