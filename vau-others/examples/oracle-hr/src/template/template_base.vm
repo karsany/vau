@@ -1,0 +1,23 @@
+create or replace procedure ${model.loaderName}(p_run_date in date) is
+  co_audit_id number := dwh_utils.audit_id('${model.loaderName.toUpperCase()}');
+begin
+
+#foreach($input_table in $model.inputTables)
+  dwh_utils.input_table('${input_table.fullyQualifiedName}');
+#end
+  dwh_utils.output_table('${model.outputTableName}');
+
+  dwh_utils.start_load;
+  
+  ${model.loaderScript}
+  
+  commit;
+  
+  dwh_utils.end_load;
+  
+exception
+  when others then
+    rollback;
+    dwh_utils.handle_critical_error;
+end $model.loaderName
+/

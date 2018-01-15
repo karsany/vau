@@ -1,0 +1,22 @@
+map for entity EMPLOYEE {
+
+	source {
+		system 	HR
+		owner 	HR
+		table	EMPLOYEES
+		contains FULL
+	}
+
+	business key EMPLOYEE_ID;
+
+	attributes {
+		datagroup MAIN {
+			FIRST_NAME := FIRST_NAME;
+			LAST_NAME := LAST_NAME;
+			EMAIL := EMAIL;
+			PHONE_NUMBER := PHONE_NUMBER;
+			HIRE_DATE := HIRE_DATE;
+			COMMISSION_PCT := COMMISSION_PCT;			
+		}
+	}
+}

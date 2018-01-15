@@ -1,0 +1,51 @@
+ref COUNTRY_CODE {
+	key COUNTRY_CODE typ SMALLTEXT;
+	attr COUNTRY_NAME typ MIDDLETEXT;
+	attr REGION_NAME typ MIDDLETEXT;
+}
+
+entity LOCATION {
+	datagroup MAIN {
+		attr POSTAL_CODE typ MIDDLETEXT; // hello
+		attr CITY typ MIDDLETEXT;
+		attr STREET_ADDRESS typ MIDDLETEXT;
+		attr STATE_PROVINCE typ MIDDLETEXT;
+		attr COUNTRY_CODE typ SMALLTEXT;
+	}
+}
+
+entity JOB {
+	datagroup MAIN {
+		attr JOB_TITLE typ MIDDLETEXT;
+		attr MIN_SALARY typ MONEY;
+		attr MAX_SALARY typ MONEY;		
+	}
+}
+
+entity DEPARTMENT {
+	datagroup MAIN {
+		attr DEPARTMENT_NAME typ MIDDLETEXT;
+	}
+}
+
+entity EMPLOYEE {
+	datagroup MAIN {
+		attr FIRST_NAME typ MIDDLETEXT;
+		attr LAST_NAME typ MIDDLETEXT;
+		attr EMAIL typ MIDDLETEXT;
+		attr PHONE_NUMBER typ MIDDLETEXT;
+		attr HIRE_DATE typ DATE;
+		attr SALARY typ MONEY;
+		attr COMMISSION_PCT typ PERCENTAGE;		
+	}
+}
+
+link DEPARTMENT_LOCATION between DEPARTMENT and LOCATION;
+
+link DEPARTMENT_MANAGER between DEPARTMENT and EMPLOYEE;
+
+link EMPLOYEE_MANAGER between EMPLOYEE and EMPLOYEE;
+
+link EMPLOYEE_DEPARTMENT between EMPLOYEE and DEPARTMENT;
+
+link EMPLOYEE_JOB between EMPLOYEE and JOB;

@@ -1,0 +1,14 @@
+<project>
+	<name>Oracle HR database Data Vault Example</name>	
+	
+	<template>
+		<default>template_base.vm</default>
+	</template>
+	
+	<documentation>
+		<datamodel-csv>true</datamodel-csv>
+	</documentation>
+	
+	<target>oracle</target>
+	
+</project>
