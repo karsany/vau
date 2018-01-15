@@ -29,9 +29,9 @@
 
 package hu.karsany.vau.util.sql;
 
-import hu.karsany.vau.grammar.plsql.PlsqlBaseListener;
-import hu.karsany.vau.grammar.plsql.PlsqlLexer;
-import hu.karsany.vau.grammar.plsql.PlsqlParser;
+import com.antlr.grammarsv4.plsql.PlSqlLexer;
+import com.antlr.grammarsv4.plsql.PlSqlParser;
+import com.antlr.grammarsv4.plsql.PlSqlParserBaseListener;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -45,7 +45,7 @@ import java.util.List;
 
 public class SqlAnalyzer {
     private final String sqlScript;
-    private PlsqlListenerImpl pli = null;
+    private PlSqlListenerImpl pli = null;
 
     public SqlAnalyzer(String sqlScript) {
         this.sqlScript = sqlScript;
@@ -53,7 +53,7 @@ public class SqlAnalyzer {
 
     public List<MappingData> getMapping() {
         if (pli == null) {
-            pli = getPlsqlListener();
+            pli = getPlSqlListener();
         }
 
         return pli.getMapping();
@@ -61,20 +61,21 @@ public class SqlAnalyzer {
 
     public List<String> getTables() {
         if (pli == null) {
-            pli = getPlsqlListener();
+            pli = getPlSqlListener();
         }
 
         return pli.getTables();
 
     }
 
-    private PlsqlListenerImpl getPlsqlListener() {
-        PlsqlLexer lexer = new PlsqlLexer(new ANTLRInputStream(sqlScript));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        PlsqlParser parser = new PlsqlParser(tokens);
+    private PlSqlListenerImpl getPlSqlListener() {
 
-        PlsqlParser.Select_statementContext ctx = parser.select_statement();
-        PlsqlListenerImpl pli = new PlsqlListenerImpl();
+        PlSqlLexer lexer = new PlSqlLexer(new CaseChangingCharStream(new ANTLRInputStream(sqlScript), true));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        PlSqlParser parser = new PlSqlParser(tokens);
+
+        PlSqlParser.Select_statementContext ctx = parser.select_statement();
+        PlSqlListenerImpl pli = new PlSqlListenerImpl();
         ParseTreeWalker.DEFAULT.walk(pli, ctx);
         return pli;
     }
@@ -97,7 +98,7 @@ public class SqlAnalyzer {
         return tables;
     }
 
-    private class PlsqlListenerImpl extends PlsqlBaseListener {
+    private class PlSqlListenerImpl extends PlSqlParserBaseListener {
 
         private List<MappingData> mdl = new ArrayList<>();
         private List<String> tbls = new ArrayList<>();
@@ -105,16 +106,16 @@ public class SqlAnalyzer {
         private String currentColAlias = "";
 
         @Override
-        public void enterSelected_element(PlsqlParser.Selected_elementContext ctx) {
+        public void enterSelected_element(PlSqlParser.Selected_elementContext ctx) {
             try {
-                currentColAlias = ctx.column_alias().id().getText().toUpperCase();
+                currentColAlias = ctx.column_alias().identifier().getText().toUpperCase();
             } catch (NullPointerException npe) {
                 currentColAlias = "$TMP$COLUMN$";
             }
         }
 
         @Override
-        public void enterGeneral_element_part(PlsqlParser.General_element_partContext ctx) {
+        public void enterGeneral_element_part(PlSqlParser.General_element_partContext ctx) {
 
             if (ctx.function_argument() == null) {
                 mdl.add(new MappingData(
@@ -129,17 +130,26 @@ public class SqlAnalyzer {
         }
 
         @Override
-        public void enterTable_ref_aux(PlsqlParser.Table_ref_auxContext ctx) {
-
+        public void enterTable_ref_aux(PlSqlParser.Table_ref_auxContext ctx) {
             String tableName = "";
             String alias = "";
             try {
-                tableName = ctx.dml_table_expression_clause().tableview_name().getText().toUpperCase();
+
+                PlSqlParser.Table_ref_aux_internalContext ic = ctx.table_ref_aux_internal();
+                PlSqlParser.Dml_table_expression_clauseContext ecc = null;
+                if (ic instanceof PlSqlParser.Table_ref_aux_internal_oneContext) {
+                    ecc = ((PlSqlParser.Table_ref_aux_internal_oneContext) ic).dml_table_expression_clause();
+                } else if (ic instanceof PlSqlParser.Table_ref_aux_internal_threeContext) {
+                    ecc = ((PlSqlParser.Table_ref_aux_internal_threeContext) ic).dml_table_expression_clause();
+                }
+
+                tableName = ecc.tableview_name().getText().toUpperCase();
                 alias = ctx.table_alias().getText().toUpperCase();
                 tbls.add((tableName + " " + alias).trim());
             } catch (NullPointerException e) {
                 // nothing to do
             }
+
 
         }
 
@@ -166,6 +176,7 @@ public class SqlAnalyzer {
         public String getSourceExpression() {
             return sourceExpression;
         }
+
     }
 
     public class Table {
