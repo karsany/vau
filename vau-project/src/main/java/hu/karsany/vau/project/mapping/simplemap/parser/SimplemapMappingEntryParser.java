@@ -30,11 +30,12 @@
 package hu.karsany.vau.project.mapping.simplemap.parser;
 
 import hu.karsany.vau.project.datamodel.model.DataModel;
-import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.MappingParser;
+import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.simplemap.model.SimplemapDataGroupMapping;
 import hu.karsany.vau.project.mapping.simplemap.model.SimplemapEntry;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +44,12 @@ class SimplemapMappingEntryParser implements MappingParser {
 
     private final SimplemapEntry simplemapEntry;
     private final DataModel dataModel;
+    private final File sourceFile;
 
-    public SimplemapMappingEntryParser(SimplemapEntry simplemapEntry, DataModel dataModel) {
+    public SimplemapMappingEntryParser(SimplemapEntry simplemapEntry, DataModel dataModel, File sourceFile) {
         this.simplemapEntry = simplemapEntry;
         this.dataModel = dataModel;
+        this.sourceFile = sourceFile;
     }
 
     private LoaderParameter generateSatLoader(SimplemapDataGroupMapping dgms) {
@@ -70,6 +73,7 @@ class SimplemapMappingEntryParser implements MappingParser {
                         + " from " + simplemapEntry.getSourceDefinition().getOwner() + "." + simplemapEntry.getSourceDefinition().getTable()
         );
 
+        lp.setSourceFile(sourceFile);
 
         return lp;
     }
@@ -82,6 +86,8 @@ class SimplemapMappingEntryParser implements MappingParser {
         lp.setEntityName(simplemapEntry.getEntityName());
         lp.setSourceSystemName(simplemapEntry.getSourceDefinition().getSystem());
         lp.setSqlScript("select " + simplemapEntry.getBusinessKey() + " as " + simplemapEntry.getEntityName() + "_BK from " + simplemapEntry.getSourceDefinition().getOwner() + "." + simplemapEntry.getSourceDefinition().getTable());
+
+        lp.setSourceFile(sourceFile);
 
         return lp;
     }

@@ -58,7 +58,7 @@ public class SimplemapMappingFileParser implements MappingParser {
             SimplemapEvaluation simplemapEvaluation = new SimplemapEvaluation(file);
             List<SimplemapEntry> entries = simplemapEvaluation.getSimplemapModel().getEntries();
             for (SimplemapEntry entry : entries) {
-                lps.addAll(new SimplemapMappingEntryParser(entry, dataModel).getMapping());
+                lps.addAll(new SimplemapMappingEntryParser(entry, dataModel, file).getMapping());
             }
             return lps;
         } catch (IOException e) {

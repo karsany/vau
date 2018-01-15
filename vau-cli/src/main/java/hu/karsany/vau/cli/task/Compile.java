@@ -40,6 +40,7 @@ import hu.karsany.vau.project.mapping.documentation.ColumnLineageCsv;
 import hu.karsany.vau.project.mapping.documentation.TableLineageCsv;
 import hu.karsany.vau.project.mapping.generator.Loader;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
+import hu.karsany.vau.project.mapping.generator.LoaderProcedure;
 import hu.karsany.vau.util.Generator;
 import hu.karsany.vau.util.VauException;
 import org.apache.commons.io.FileUtils;
@@ -99,8 +100,9 @@ public class Compile {
         Logger.info("Generating loaders");
 
         for (LoaderParameter loaderParameter : pm.getMappings()) {
-            generate(new Loader(loaderParameter));
-//            generate(new LoaderProcedure(lp.));
+            Loader ldr = new Loader(loaderParameter);
+            generate(ldr);
+            generate(new LoaderProcedure(ldr, new File("src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
 

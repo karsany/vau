@@ -52,6 +52,7 @@ public class SqlMappingParser extends LoaderBaseListener implements MappingParse
     public SqlMappingParser(File loaderFile, DataModel m) throws IOException {
         this.loaderFile = loaderFile;
         loaderParameter.setDataModel(m);
+        loaderParameter.setSourceFile(loaderFile);
         fillConfigAndScript();
 
         LoaderLexer lexer = new LoaderLexer(new ANTLRInputStream(loaderParameter.getLoaderConfig()));

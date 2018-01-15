@@ -39,26 +39,24 @@ import java.io.File;
 import java.util.List;
 
 public class LoaderProcedure implements Generator {
-    private final File mappingFileName;
     private final Loader loader;
     private final File loaderTemplate;
 
-    public LoaderProcedure(File mappingFileName, Loader loader, File loaderTemplate) {
-        this.mappingFileName = mappingFileName;
+    public LoaderProcedure(Loader loader, File loaderTemplate) {
         this.loader = loader;
         this.loaderTemplate = loaderTemplate;
     }
 
     @Override
     public String getFileName() {
-        if (mappingFileName.getName().endsWith(".ssm")) {
+        if (loader.getLoaderParameter().getSourceFile().toString().endsWith(".sql")) {
+            return loader.getLoaderParameter().getSourceFile().getName().replace(".sql", ".prc");
+        } else {
             if (loader.getLoaderParameter().getLoaderType() == LoaderParameter.LoaderType.SATTELITE) {
                 return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_" + loader.getLoaderParameter().getDataGroupName() + "_m.prc").toLowerCase();
             } else {
                 return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_m.prc").toLowerCase();
             }
-        } else {
-            return mappingFileName.getName().replace(".sql", ".prc");
         }
     }
 

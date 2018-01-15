@@ -32,6 +32,8 @@ package hu.karsany.vau.project.mapping.generator;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.util.VauException;
 
+import java.io.File;
+
 public class LoaderParameter {
     private DataModel dataModel;
     private LoaderType loaderType;
@@ -44,6 +46,7 @@ public class LoaderParameter {
     private String referenceName;
     private String linkName;
     private String loaderConfig;
+    private File sourceFile;
 
     public LoaderParameter() {
     }
@@ -54,6 +57,14 @@ public class LoaderParameter {
 
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
+    }
+
+    public File getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(File sourceFile) {
+        this.sourceFile = sourceFile;
     }
 
     public String getLoaderConfig() {
