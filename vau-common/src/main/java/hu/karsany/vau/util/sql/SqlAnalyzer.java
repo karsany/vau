@@ -196,5 +196,9 @@ public class SqlAnalyzer {
         public String getTableName() {
             return tableName;
         }
+
+        public String getFullyQualifiedName() {
+            return owner + "." + tableName;
+        }
     }
 }
