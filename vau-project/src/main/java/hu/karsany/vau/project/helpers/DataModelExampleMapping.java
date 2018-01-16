@@ -29,9 +29,9 @@
 
 package hu.karsany.vau.project.helpers;
 
-import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.datamodel.model.Table;
-import hu.karsany.vau.util.templating.TemplateEvaluation;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
 public class DataModelExampleMapping implements Generator {
 

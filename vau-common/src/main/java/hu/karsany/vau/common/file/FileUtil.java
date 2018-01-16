@@ -27,51 +27,24 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.templating;
+package hu.karsany.vau.common.file;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import org.pmw.tinylog.Logger;
 
 import java.io.File;
-import java.io.StringWriter;
+import java.io.FileNotFoundException;
 
-public class TemplateEvaluation {
-    private final String templateName;
-    private final Object model;
-    private final File templateFile;
+public class FileUtil {
 
-    public TemplateEvaluation(String templateName, Object model) {
-        this.templateName = templateName;
-        this.model = model;
-        templateFile = null;
+    public static boolean exists(String fileName) {
+        File file = new File(fileName);
+        return file.exists() && !file.isDirectory();
     }
 
-    public TemplateEvaluation(File templateFile, Object model) {
-        this.templateFile = templateFile;
-        templateName = null;
-        this.model = model;
-    }
-
-    @Override
-    public String toString() {
-        VelocityContext context = new VelocityContext();
-        VelocityEngine velocityEngine = new VelocityEngine();
-        Template template = null;
-        if (templateName != null) {
-            velocityEngine.setProperty("resource.loader", "class");
-            velocityEngine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-            velocityEngine.init();
-            template = velocityEngine.getTemplate(templateName + ".vm");
-        } else if (templateFile != null) {
-            velocityEngine.setProperty("file.resource.loader.path", templateFile.getParent());
-            velocityEngine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-            velocityEngine.init();
-            template = velocityEngine.getTemplate(templateFile.getName());
+    public static void existsOrThrow(String fileName) throws FileNotFoundException {
+        if (!exists(fileName)) {
+            Logger.error("File not found: " + fileName);
+            throw new FileNotFoundException(fileName);
         }
-        context.put("model", model);
-        StringWriter writer = new StringWriter();
-        template.merge(context, writer);
-        return writer.toString();
     }
 }

@@ -29,8 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
-import hu.karsany.vau.util.VauException;
-import hu.karsany.vau.util.struct.Pair;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.struct.Pair;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;

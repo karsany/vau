@@ -29,7 +29,7 @@
 
 package hu.karsany.vau.project.mapping.generator;
 
-import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.common.Generator;
 
 public class Loader implements Generator {
 

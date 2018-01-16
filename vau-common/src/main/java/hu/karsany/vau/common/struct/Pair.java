@@ -27,53 +27,35 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.struct;
+package hu.karsany.vau.common.struct;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+public class Pair<L, R> {
+    private final L left;
+    private final R right;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Spliterator;
-import java.util.function.Consumer;
+    public Pair(L left, R right) {
+        this.left = left;
+        this.right = right;
+    }
 
-public class OneItemIterable<T> implements Iterable<T> {
+    public L getLeft() {
+        return left;
+    }
 
-    private final T item;
-
-    public OneItemIterable(T item) {
-        this.item = item;
+    public R getRight() {
+        return right;
     }
 
     @Override
-    public Iterator<T> iterator() {
-
-        return new Iterator<T>() {
-
-            private boolean end = false;
-
-            @Override
-            public boolean hasNext() {
-                return !end;
-            }
-
-            @Override
-            public T next() {
-                if (end) {
-                    throw new NoSuchElementException();
-                }
-                end = true;
-                return item;
-            }
-        };
+    public int hashCode() {
+        return left.hashCode() ^ right.hashCode();
     }
 
     @Override
-    public void forEach(Consumer<? super T> action) {
-        action.accept(item);
-    }
-
-    @Override
-    public Spliterator<T> spliterator() {
-        throw new NotImplementedException();
+    public boolean equals(Object o) {
+        if (!(o instanceof Pair)) return false;
+        Pair pairo = (Pair) o;
+        return this.left.equals(pairo.getLeft()) &&
+                this.right.equals(pairo.getRight());
     }
 }

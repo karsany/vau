@@ -29,10 +29,10 @@
 
 package hu.karsany.vau.project.mapping.generator;
 
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.VauException;
-import hu.karsany.vau.util.sql.SqlAnalyzer;
-import hu.karsany.vau.util.templating.TemplateEvaluation;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 import net.sf.jsqlparser.JSQLParserException;
 
 import java.io.File;

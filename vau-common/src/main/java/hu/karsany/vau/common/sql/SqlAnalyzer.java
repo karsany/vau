@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.sql;
+package hu.karsany.vau.common.sql;
 
 import com.antlr.grammarsv4.plsql.PlSqlLexer;
 import com.antlr.grammarsv4.plsql.PlSqlParser;

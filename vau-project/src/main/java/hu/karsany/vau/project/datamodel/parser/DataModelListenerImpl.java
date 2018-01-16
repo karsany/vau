@@ -32,7 +32,7 @@ package hu.karsany.vau.project.datamodel.parser;
 import hu.karsany.vau.grammar.datamodel.DataModelBaseListener;
 import hu.karsany.vau.grammar.datamodel.DataModelParser;
 import hu.karsany.vau.project.datamodel.model.*;
-import hu.karsany.vau.util.VauException;
+import hu.karsany.vau.common.VauException;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package hu.karsany.vau.util.sql;
+package hu.karsany.vau.common.sql;
 
 import org.junit.Test;
 

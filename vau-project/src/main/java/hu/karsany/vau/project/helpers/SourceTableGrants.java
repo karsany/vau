@@ -31,9 +31,9 @@ package hu.karsany.vau.project.helpers;
 
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.VauException;
-import hu.karsany.vau.util.sql.SqlAnalyzer;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
 import net.sf.jsqlparser.JSQLParserException;
 
 public class SourceTableGrants implements Generator {

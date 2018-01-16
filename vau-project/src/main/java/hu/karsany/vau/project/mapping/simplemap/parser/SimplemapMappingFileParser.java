@@ -33,7 +33,7 @@ import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.MappingParser;
 import hu.karsany.vau.project.mapping.simplemap.model.SimplemapEntry;
-import hu.karsany.vau.util.VauException;
+import hu.karsany.vau.common.VauException;
 
 import java.io.File;
 import java.io.IOException;

@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.file;
+package hu.karsany.vau.common.file;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

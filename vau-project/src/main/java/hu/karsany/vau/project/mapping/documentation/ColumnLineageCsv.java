@@ -29,11 +29,11 @@
 
 package hu.karsany.vau.project.mapping.documentation;
 
-import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
-import hu.karsany.vau.util.file.CsvRecordBuilder;
-import hu.karsany.vau.util.sql.SqlAnalyzer;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
 
 public class ColumnLineageCsv implements Generator {
 

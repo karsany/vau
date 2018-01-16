@@ -34,7 +34,7 @@ import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.MappingParser;
 import hu.karsany.vau.project.mapping.simplemap.parser.SimplemapMappingFileParser;
 import hu.karsany.vau.project.mapping.sqlmap.SqlMappingParser;
-import hu.karsany.vau.util.VauException;
+import hu.karsany.vau.common.VauException;
 
 import java.io.File;
 import java.io.IOException;

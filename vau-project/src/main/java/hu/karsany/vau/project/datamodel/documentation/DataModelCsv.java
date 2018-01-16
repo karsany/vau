@@ -29,11 +29,11 @@
 
 package hu.karsany.vau.project.datamodel.documentation;
 
-import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.project.datamodel.model.Column;
 import hu.karsany.vau.project.datamodel.model.DocumentableTable;
-import hu.karsany.vau.util.file.CsvRecordBuilder;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
 
 public class DataModelCsv implements Generator {
 

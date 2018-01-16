@@ -27,35 +27,51 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.struct;
+package hu.karsany.vau.common.templating;
 
-public class Pair<L, R> {
-    private final L left;
-    private final R right;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
-    public Pair(L left, R right) {
-        this.left = left;
-        this.right = right;
+import java.io.File;
+import java.io.StringWriter;
+
+public class TemplateEvaluation {
+    private final String templateName;
+    private final Object model;
+    private final File templateFile;
+
+    public TemplateEvaluation(String templateName, Object model) {
+        this.templateName = templateName;
+        this.model = model;
+        templateFile = null;
     }
 
-    public L getLeft() {
-        return left;
-    }
-
-    public R getRight() {
-        return right;
+    public TemplateEvaluation(File templateFile, Object model) {
+        this.templateFile = templateFile;
+        templateName = null;
+        this.model = model;
     }
 
     @Override
-    public int hashCode() {
-        return left.hashCode() ^ right.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Pair)) return false;
-        Pair pairo = (Pair) o;
-        return this.left.equals(pairo.getLeft()) &&
-                this.right.equals(pairo.getRight());
+    public String toString() {
+        VelocityContext context = new VelocityContext();
+        VelocityEngine velocityEngine = new VelocityEngine();
+        Template template = null;
+        if (templateName != null) {
+            velocityEngine.setProperty("resource.loader", "class");
+            velocityEngine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            velocityEngine.init();
+            template = velocityEngine.getTemplate(templateName + ".vm");
+        } else if (templateFile != null) {
+            velocityEngine.setProperty("file.resource.loader.path", templateFile.getParent());
+            velocityEngine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+            velocityEngine.init();
+            template = velocityEngine.getTemplate(templateFile.getName());
+        }
+        context.put("model", model);
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+        return writer.toString();
     }
 }

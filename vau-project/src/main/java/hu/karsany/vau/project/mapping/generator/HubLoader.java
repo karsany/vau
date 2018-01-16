@@ -29,9 +29,9 @@
 
 package hu.karsany.vau.project.mapping.generator;
 
-import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.datamodel.model.Hub;
-import hu.karsany.vau.util.templating.TemplateEvaluation;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
 public class HubLoader implements Generator {
     private final LoaderParameter lp;

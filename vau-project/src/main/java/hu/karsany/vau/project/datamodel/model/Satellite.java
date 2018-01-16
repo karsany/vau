@@ -29,7 +29,7 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
-import hu.karsany.vau.util.struct.OneItemIterable;
+import hu.karsany.vau.common.struct.OneItemIterable;
 
 public class Satellite extends DocumentableTable {
 

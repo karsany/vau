@@ -27,24 +27,53 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util.file;
+package hu.karsany.vau.common.struct;
 
-import org.pmw.tinylog.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
-public class FileUtil {
+public class OneItemIterable<T> implements Iterable<T> {
 
-    public static boolean exists(String fileName) {
-        File file = new File(fileName);
-        return file.exists() && !file.isDirectory();
+    private final T item;
+
+    public OneItemIterable(T item) {
+        this.item = item;
     }
 
-    public static void existsOrThrow(String fileName) throws FileNotFoundException {
-        if (!exists(fileName)) {
-            Logger.error("File not found: " + fileName);
-            throw new FileNotFoundException(fileName);
-        }
+    @Override
+    public Iterator<T> iterator() {
+
+        return new Iterator<T>() {
+
+            private boolean end = false;
+
+            @Override
+            public boolean hasNext() {
+                return !end;
+            }
+
+            @Override
+            public T next() {
+                if (end) {
+                    throw new NoSuchElementException();
+                }
+                end = true;
+                return item;
+            }
+        };
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        action.accept(item);
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        throw new NotImplementedException();
     }
 }

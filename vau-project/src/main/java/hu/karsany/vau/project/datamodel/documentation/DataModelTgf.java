@@ -32,8 +32,8 @@ package hu.karsany.vau.project.datamodel.documentation;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.project.datamodel.model.DocumentableTable;
 import hu.karsany.vau.project.datamodel.model.Table;
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.struct.Pair;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.struct.Pair;
 
 public class DataModelTgf implements Generator {
     private final DataModel dataModel;

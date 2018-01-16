@@ -29,8 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.templating.TemplateEvaluation;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;

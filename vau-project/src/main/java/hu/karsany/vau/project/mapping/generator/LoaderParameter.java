@@ -30,7 +30,7 @@
 package hu.karsany.vau.project.mapping.generator;
 
 import hu.karsany.vau.project.datamodel.model.DataModel;
-import hu.karsany.vau.util.VauException;
+import hu.karsany.vau.common.VauException;
 
 import java.io.File;
 

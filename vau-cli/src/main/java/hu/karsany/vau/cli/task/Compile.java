@@ -29,8 +29,8 @@
 
 package hu.karsany.vau.cli.task;
 
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.VauException;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.datamodel.documentation.DataModelCsv;
 import hu.karsany.vau.project.datamodel.documentation.DataModelHtml;

@@ -27,28 +27,18 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.util;
+package hu.karsany.vau.common;
 
-public interface Generator {
+public class VauException extends RuntimeException {
+    public VauException(Exception e) {
+        super(e);
+    }
 
-    @Override
-    String toString();
+    public VauException(String s) {
+        super(s);
+    }
 
-    String getFileName();
-
-    OutputType getOutputType();
-
-    enum OutputType {
-        TABLE("table"), LOADER("loader"), DOCUMENTATION("doc"), EXAMPLE("example"), LOADER_PROCEDURE("procedure");
-
-        private final String outputTypeName;
-
-        OutputType(String outputTypeName) {
-            this.outputTypeName = outputTypeName;
-        }
-
-        public String getOutputTypeName() {
-            return outputTypeName;
-        }
+    public VauException(String s, Exception e) {
+        super(s, e);
     }
 }
