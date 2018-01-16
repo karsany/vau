@@ -143,8 +143,11 @@ public class SqlAnalyzer {
                     ecc = ((PlSqlParser.Table_ref_aux_internal_threeContext) ic).dml_table_expression_clause();
                 }
 
+
                 tableName = ecc.tableview_name().getText().toUpperCase();
-                alias = ctx.table_alias().getText().toUpperCase();
+                if (ctx.table_alias() != null) {
+                    alias = ctx.table_alias().getText().toUpperCase();
+                }
                 tbls.add((tableName + " " + alias).trim());
             } catch (NullPointerException e) {
                 // nothing to do
