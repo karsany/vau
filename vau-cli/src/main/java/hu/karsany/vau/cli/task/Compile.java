@@ -29,6 +29,8 @@
 
 package hu.karsany.vau.cli.task;
 
+import hu.karsany.vau.util.Generator;
+import hu.karsany.vau.util.VauException;
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.datamodel.documentation.DataModelCsv;
 import hu.karsany.vau.project.datamodel.documentation.DataModelHtml;
@@ -41,8 +43,6 @@ import hu.karsany.vau.project.mapping.documentation.TableLineageCsv;
 import hu.karsany.vau.project.mapping.generator.Loader;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.generator.LoaderProcedure;
-import hu.karsany.vau.util.Generator;
-import hu.karsany.vau.util.VauException;
 import org.apache.commons.io.FileUtils;
 import org.pmw.tinylog.Logger;
 
@@ -57,12 +57,12 @@ public class Compile {
         this.pm = pm;
     }
 
-    public static void generate(Generator g) throws IOException {
+    public void generate(Generator g) throws IOException {
         generate(g, "utf-8");
     }
 
-    public static void generate(Generator g, String encoding) throws IOException {
-        File fileName = new File("./target/" + g.getOutputType().getOutputTypeName() + "/" + g.getFileName().toLowerCase());
+    public void generate(Generator g, String encoding) throws IOException {
+        File fileName = new File(pm.getProjectPath() + "/target/" + g.getOutputType().getOutputTypeName() + "/" + g.getFileName().toLowerCase());
 
         Logger.info("  Generating: " + fileName.toString());
 
@@ -102,7 +102,7 @@ public class Compile {
         for (LoaderParameter loaderParameter : pm.getMappings()) {
             Loader ldr = new Loader(loaderParameter);
             generate(ldr);
-            generate(new LoaderProcedure(ldr, new File("src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
+            generate(new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
 

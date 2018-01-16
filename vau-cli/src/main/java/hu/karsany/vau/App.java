@@ -36,7 +36,6 @@ import hu.karsany.vau.cli.task.Compile;
 import hu.karsany.vau.project.Project;
 import org.pmw.tinylog.Configurator;
 
-import java.io.File;
 import java.io.IOException;
 
 public class App {
@@ -49,12 +48,12 @@ public class App {
 
         // Clean
         if (ps.isClean()) {
-            new Clean().run();
+            new Clean(ps.getProjectDirectory()).run();
         }
 
         // Compile
         if (ps.isCompile()) {
-            Project pm = Project.initialize(new File("."));
+            Project pm = Project.initialize(ps.getProjectDirectory());
             new Compile(pm).run();
         }
 

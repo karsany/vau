@@ -31,12 +31,20 @@ package hu.karsany.vau.cli;
 
 import com.beust.jcommander.Parameter;
 
+import java.io.File;
+
 public class Parameters {
 
     @Parameter(names = "clean", description = "Cleanup project", arity = 0)
     private boolean clean;
     @Parameter(names = "compile", description = "Generate project")
     private boolean compile;
+    @Parameter(names = {"-d", "--directory"}, description = "Project directory. Defaults to current directory")
+    private File projectDirectory = new File(".");
+
+    public File getProjectDirectory() {
+        return projectDirectory;
+    }
 
     public boolean isClean() {
         return clean;

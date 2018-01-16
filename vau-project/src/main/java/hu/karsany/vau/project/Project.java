@@ -46,19 +46,20 @@ import java.util.List;
 
 public class Project {
 
+    private final File projectPath;
     private Configuration configuration;
     private DataModel dataModel;
     private List<LoaderParameter> mappings;
 
-    private Project() {
+    private Project(File projectPath) {
+        this.projectPath = projectPath;
     }
 
-    public static Project initialize(File file) throws IOException {
-        Project pm = new Project();
-
+    public static Project initialize(File projectPath) throws IOException {
+        Project pm = new Project(projectPath);
 
         // Configuration
-        pm.configuration = Configuration.loadConfiguration(new FileInputStream(file + "\\vau.xml"));
+        pm.configuration = Configuration.loadConfiguration(new FileInputStream(projectPath + "\\vau.xml"));
 
 
         // Data DataModel
@@ -66,7 +67,7 @@ public class Project {
 
         Logger.info("Found data model definitions");
 
-        Files.walk(Paths.get(file.getAbsolutePath() + "\\src\\model\\"))
+        Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
                 .filter(Files::isRegularFile)
                 .forEach(dataModelInitializer::addModelDefinition);
 
@@ -78,7 +79,7 @@ public class Project {
 
         pm.mappings = new ArrayList<>();
 
-        Files.walk(Paths.get(file.getAbsolutePath() + "\\src\\mapping\\"))
+        Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\mapping\\"))
                 .filter(Files::isRegularFile)
                 .forEach(path -> pm.mappings.addAll(new GenericMappingParser(path.toFile(), pm.dataModel).getMapping()));
 
@@ -93,6 +94,10 @@ public class Project {
 
     public List<LoaderParameter> getMappings() {
         return mappings;
+    }
+
+    public File getProjectPath() {
+        return projectPath;
     }
 
     public DataModel getDataModel() {

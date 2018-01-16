@@ -36,10 +36,16 @@ import java.io.File;
 import java.io.IOException;
 
 public class Clean {
+    private final File projectDirectory;
+
+    public Clean(File projectDirectory) {
+        this.projectDirectory = projectDirectory;
+    }
+
     public void run() throws IOException {
 
         Logger.info("Cleanup project directory...");
 
-        FileUtils.deleteDirectory(new File("target"));
+        FileUtils.deleteDirectory(new File(projectDirectory.getPath() + "\\target"));
     }
 }

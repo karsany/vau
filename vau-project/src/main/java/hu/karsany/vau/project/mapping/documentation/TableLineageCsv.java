@@ -32,7 +32,6 @@ package hu.karsany.vau.project.mapping.documentation;
 import hu.karsany.vau.util.Generator;
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
-import hu.karsany.vau.project.datamodel.model.Table;
 import hu.karsany.vau.util.VauException;
 import hu.karsany.vau.util.file.CsvRecordBuilder;
 import hu.karsany.vau.util.sql.SqlAnalyzer;
