@@ -40,24 +40,10 @@ import java.io.IOException;
 
 public class App {
 
+    private Project projectModel;
+
     public static void main(String... args) throws IOException {
-        Parameters ps = commandLineParsing(args);
-        if (ps == null) return;
-
-        initializeLogger();
-
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            Project pm = Project.initialize(ps.getProjectDirectory());
-            new Compile(pm).run();
-        }
-
-
+        new App().app(args);
     }
 
     private static void initializeLogger() {
@@ -86,5 +72,29 @@ public class App {
                 .build()
                 .parse(args);
         return ps;
+    }
+
+    public Project getProjectModel() {
+        return projectModel;
+    }
+
+    public void app(String... args) throws IOException {
+        Parameters ps = commandLineParsing(args);
+        if (ps == null)
+            return;
+
+        initializeLogger();
+
+        // Clean
+        if (ps.isClean()) {
+            new Clean(ps.getProjectDirectory()).run();
+        }
+
+        // Compile
+        if (ps.isCompile()) {
+            projectModel = Project.initialize(ps.getProjectDirectory());
+            new Compile(projectModel).run();
+        }
+
     }
 }
