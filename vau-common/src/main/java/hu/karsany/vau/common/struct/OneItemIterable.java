@@ -29,7 +29,7 @@
 
 package hu.karsany.vau.common.struct;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
