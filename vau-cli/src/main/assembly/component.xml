@@ -45,7 +45,7 @@
         </fileSet>
         <fileSet>
             <directory>src/bin</directory>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>.</outputDirectory>
             <includes>
                 <include>*.cmd</include>
                 <include>*.conf</include>
@@ -54,7 +54,7 @@
         </fileSet>
         <fileSet>
             <directory>src/bin</directory>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>.</outputDirectory>
             <includes>
                 <include>*.cmd</include>
                 <include>*.conf</include>
@@ -63,7 +63,7 @@
         </fileSet>
         <fileSet>
             <directory>target/</directory>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>.</outputDirectory>
             <includes>
                 <include>vau.jar</include>
             </includes>
