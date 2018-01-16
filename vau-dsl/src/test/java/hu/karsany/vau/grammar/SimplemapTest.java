@@ -17,7 +17,7 @@ public class SimplemapTest extends SimplemapBaseListener {
 
     @Test
     public void simplemapTc1() throws IOException {
-        SimplemapLexer lexer = new SimplemapLexer(CharStreams.fromStream(getClass().getClassLoader().getResourceAsStream("simple.sum")));
+        SimplemapLexer lexer = new SimplemapLexer(CharStreams.fromStream(getClass().getClassLoader().getResourceAsStream("simplemap_testcase1.ssm")));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SimplemapParser parser = new SimplemapParser(tokens);
         SimplemapParser.SContext tree = parser.s();
