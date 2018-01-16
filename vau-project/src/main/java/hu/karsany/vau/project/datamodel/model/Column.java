@@ -29,6 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
+import java.util.Objects;
+
 public class Column {
     private final String columnName;
     private final String dataType;
@@ -77,6 +79,19 @@ public class Column {
         return businessDataType.name();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Column column = (Column) o;
+        return Objects.equals(columnName, column.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(columnName);
+    }
 
     public enum BusinessDataType {
         FLAG("VARCHAR2(1)"),
@@ -101,6 +116,4 @@ public class Column {
             return databaseDataType;
         }
     }
-
-
 }
