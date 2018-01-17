@@ -17,6 +17,7 @@ map for entity EMPLOYEE {
 			PHONE_NUMBER := PHONE_NUMBER;
 			HIRE_DATE := HIRE_DATE;
 			COMMISSION_PCT := COMMISSION_PCT;			
+			SALARY := SALARY;
 		}
 	}
 }
