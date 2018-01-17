@@ -29,21 +29,14 @@
 
 package hu.karsany.vau.cli.task;
 
-import hu.karsany.vau.common.Generator;
-import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.GeneratorHelper;
 import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.documentation.DataModelTgf;
 import hu.karsany.vau.project.datamodel.model.Table;
 import hu.karsany.vau.project.helpers.DataModelExampleMapping;
 import hu.karsany.vau.project.helpers.SourceTableGrants;
-import hu.karsany.vau.project.mapping.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.documentation.TableLineageCsv;
 import hu.karsany.vau.project.mapping.generator.Loader;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.generator.LoaderProcedure;
-import org.apache.commons.io.FileUtils;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
@@ -57,77 +50,28 @@ public class Compile {
         this.pm = pm;
     }
 
-    public void generate(Generator g) throws IOException {
-        generate(g, "utf-8");
-    }
-
-    public void generate(Generator g, String encoding) throws IOException {
-        File fileName = new File(pm.getProjectPath() + "/target/" + g.getOutputType().getOutputTypeName() + "/" + g.getFileName().toLowerCase());
-
-        Logger.info("  Generating: " + fileName.toString());
-
-        String generatedData;
-        try {
-            generatedData = g.toString();
-        } catch (Exception e) {
-            throw new VauException("Error at generating " + g.getOutputType().getOutputTypeName().toLowerCase() + " " + g.getFileName(), e);
-        }
-        FileUtils.write(
-                fileName,
-                generatedData,
-                encoding);
-    }
-
     public void run() throws IOException {
 
         Logger.info("Generating tables");
         for (Table table : pm.getDataModel().getTables()) {
-            generate(table);
-        }
-
-        if (pm.getConfiguration().getDocumentation().getGenDatamodelCsv()) {
-            Logger.info("Generating data model documentation");
-            generate(new DataModelCsv(pm.getDataModel()));
-            generate(new DataModelTgf(pm.getDataModel()));
-            generate(new DataModelHtml(pm.getDataModel()));
+            GeneratorHelper.generate(pm.getProjectPath(), table);
         }
 
         Logger.info("Generating example mapping");
         for (Table table : pm.getDataModel().getTables()) {
-            generate(new DataModelExampleMapping(table));
+            GeneratorHelper.generate(pm.getProjectPath(), new DataModelExampleMapping(table));
         }
 
         Logger.info("Generating loaders");
 
         for (LoaderParameter loaderParameter : pm.getMappings()) {
             Loader ldr = new Loader(loaderParameter);
-            generate(ldr);
-            generate(new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
+            GeneratorHelper.generate(pm.getProjectPath(), ldr);
+            GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
-
-        generate(new TableLineageCsv(pm));
-        generate(new SourceTableGrants(pm));
-        generate(new ColumnLineageCsv(pm));
-
-  /*      for (Path f : pm.getMapping()) {
-            Logger.info(" Parsing " + f + "...");
-            if (f.toFile().getAbsolutePath().toString().toLowerCase().endsWith(".sql")) {
-                Loader loader = new Loader();
-                generate(loader);
-                generate(new LoaderProcedure(f.toFile(), loader, new File("src\\template\\" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
-            } else {
-                SimplemapEvaluation smev = new SimplemapEvaluation(f.toFile());
-                for (SimplemapEntry se : smev.getSimplemapModel().getEntries()) {
-                    List<Loader> loaders = new SimplemapMappingEntryParser(se, pm.getDataModel()).getLoaders();
-                    for (Loader loader : loaders) {
-                        generate(loader);
-                        generate(new LoaderProcedure(f.toFile(), loader, new File("src\\template\\" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
-                    }
-                }
-
-            }
-        }*/
+        GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm));
+        
     }
 
 }

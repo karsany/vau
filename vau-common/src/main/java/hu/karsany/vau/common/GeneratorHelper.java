@@ -26,84 +26,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE *
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
+package hu.karsany.vau.common;
 
-package hu.karsany.vau;
+import org.apache.commons.io.FileUtils;
+import org.pmw.tinylog.Logger;
 
-import com.beust.jcommander.JCommander;
-import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.Clean;
-import hu.karsany.vau.cli.task.Compile;
-import hu.karsany.vau.cli.task.Documentation;
-import hu.karsany.vau.project.Project;
-import org.pmw.tinylog.Configurator;
-
+import java.io.File;
 import java.io.IOException;
 
-public class App {
+public class GeneratorHelper {
 
-    private Project projectModel;
-
-    public static void main(String... args) throws IOException {
-        new App().app(args);
+    public static void generate(File projectPath, Generator g) throws IOException {
+        generate(projectPath, g, "utf-8");
     }
 
-    private static void initializeLogger() {
-        // Logger
-        Configurator.defaultConfig()
-                .formatPattern("[{level}] {message}")
-                .activate();
+    public static void generate(File projectPath, Generator g, String encoding) throws IOException {
+        File fileName = new File(projectPath + "/target/" + g.getOutputType().getOutputTypeName() + "/" + g.getFileName().toLowerCase());
+
+        Logger.info("  Generating: " + fileName.toString());
+
+        String generatedData;
+        try {
+            generatedData = g.toString();
+        } catch (Exception e) {
+            throw new VauException("Error at generating " + g.getOutputType().getOutputTypeName().toLowerCase() + " " + g.getFileName(), e);
+        }
+        FileUtils.write(
+                fileName,
+                generatedData,
+                encoding);
     }
 
-    private static Parameters commandLineParsing(String[] args) {
-        // Command Line
-        if (args.length == 0) {
-            Parameters ps = new Parameters();
-            JCommander.newBuilder()
-                    .addObject(ps)
-                    .programName("vau")
-                    .build()
-                    .usage();
 
-            return null;
-        }
-
-        Parameters ps = new Parameters();
-        JCommander.newBuilder()
-                .addObject(ps)
-                .build()
-                .parse(args);
-        return ps;
-    }
-
-    public Project getProjectModel() {
-        return projectModel;
-    }
-
-    public void app(String... args) throws IOException {
-        Parameters ps = commandLineParsing(args);
-        if (ps == null)
-            return;
-
-        initializeLogger();
-
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        if (ps.isCompile() || ps.isDocumentation()) {
-            projectModel = Project.initialize(ps.getProjectDirectory());
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            new Compile(projectModel).run();
-        }
-
-        // Documentation
-        if (ps.isDocumentation()) {
-            new Documentation(projectModel).run();
-        }
-
-    }
 }

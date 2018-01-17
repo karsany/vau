@@ -27,83 +27,36 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau;
+package hu.karsany.vau.cli.task;
 
-import com.beust.jcommander.JCommander;
-import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.Clean;
-import hu.karsany.vau.cli.task.Compile;
-import hu.karsany.vau.cli.task.Documentation;
+import hu.karsany.vau.common.GeneratorHelper;
 import hu.karsany.vau.project.Project;
-import org.pmw.tinylog.Configurator;
+import hu.karsany.vau.project.datamodel.documentation.DataModelCsv;
+import hu.karsany.vau.project.datamodel.documentation.DataModelHtml;
+import hu.karsany.vau.project.datamodel.documentation.DataModelTgf;
+import hu.karsany.vau.project.mapping.documentation.ColumnLineageCsv;
+import hu.karsany.vau.project.mapping.documentation.TableLineageCsv;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 
-public class App {
+public class Documentation {
 
-    private Project projectModel;
+    private final Project projectModel;
 
-    public static void main(String... args) throws IOException {
-        new App().app(args);
+    public Documentation(Project projectModel) {
+        this.projectModel = projectModel;
     }
 
-    private static void initializeLogger() {
-        // Logger
-        Configurator.defaultConfig()
-                .formatPattern("[{level}] {message}")
-                .activate();
-    }
 
-    private static Parameters commandLineParsing(String[] args) {
-        // Command Line
-        if (args.length == 0) {
-            Parameters ps = new Parameters();
-            JCommander.newBuilder()
-                    .addObject(ps)
-                    .programName("vau")
-                    .build()
-                    .usage();
+    public void run() throws IOException {
 
-            return null;
-        }
-
-        Parameters ps = new Parameters();
-        JCommander.newBuilder()
-                .addObject(ps)
-                .build()
-                .parse(args);
-        return ps;
-    }
-
-    public Project getProjectModel() {
-        return projectModel;
-    }
-
-    public void app(String... args) throws IOException {
-        Parameters ps = commandLineParsing(args);
-        if (ps == null)
-            return;
-
-        initializeLogger();
-
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        if (ps.isCompile() || ps.isDocumentation()) {
-            projectModel = Project.initialize(ps.getProjectDirectory());
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            new Compile(projectModel).run();
-        }
-
-        // Documentation
-        if (ps.isDocumentation()) {
-            new Documentation(projectModel).run();
-        }
+        Logger.info("Generating data model documentation");
+        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
+        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
+        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
+        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
+        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
 
     }
 }

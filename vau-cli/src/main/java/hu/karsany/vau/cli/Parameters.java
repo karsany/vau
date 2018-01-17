@@ -39,6 +39,9 @@ public class Parameters {
     private boolean clean;
     @Parameter(names = "compile", description = "Generate project")
     private boolean compile;
+    @Parameter(names = "doc", description = "Generate documentation")
+    private boolean documentation;
+
     @Parameter(names = {"-d", "--directory"}, description = "Project directory. Defaults to current directory")
     private File projectDirectory = new File(".");
 
@@ -54,4 +57,7 @@ public class Parameters {
         return compile;
     }
 
+    public boolean isDocumentation() {
+        return documentation;
+    }
 }
