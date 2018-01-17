@@ -1,5 +1,5 @@
 create or replace procedure ${model.loaderName}(p_run_date in date) is  
-  c_audit_id number := dbms_flashback.get_system_change_number;
+  c_audit_id number := 1;
 begin
 
 #foreach($input_table in $model.inputTables)
