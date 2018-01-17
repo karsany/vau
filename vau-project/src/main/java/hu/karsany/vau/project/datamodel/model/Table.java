@@ -30,6 +30,7 @@
 package hu.karsany.vau.project.datamodel.model;
 
 import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.templating.TemplateEvaluation;
 import org.pmw.tinylog.Logger;
 
@@ -57,13 +58,18 @@ public class Table implements Generator {
         this(null, tableName);
     }
 
-    public void addColumn(Column... c) {
-        columns.addAll(Arrays.asList(c));
+    public void addColumn(Column... columnList) {
+
+        for (Column column : columnList) {
+            if (this.columns.contains(column)) {
+                throw new VauException("Table " + tableName + " contains the " + column.getColumnName() + ". Specify an alias.");
+            }
+            columns.add(column);
+        }
+
+
     }
 
-    public void addColumn(List<Column> c) {
-        columns.addAll(c);
-    }
 
     public List<List<Column>> getUniqueKeys() {
         return uniqueKeys;

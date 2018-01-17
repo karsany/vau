@@ -30,6 +30,9 @@
 package hu.karsany.vau.project.datamodel.model;
 
 import hu.karsany.vau.common.struct.OneItemIterable;
+import hu.karsany.vau.common.struct.Pair;
+
+import java.util.stream.Collectors;
 
 public class Satellite extends DocumentableTable {
 
@@ -94,7 +97,7 @@ public class Satellite extends DocumentableTable {
         if (hub != null) {
             return new OneItemIterable<>(hub);
         } else {
-            return link.getConnectedHubs();
+            return link.getConnectedHubs().stream().map(Pair::getLeft).collect(Collectors.toList());
         }
     }
 

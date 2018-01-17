@@ -29,26 +29,27 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
-import java.util.Arrays;
+import hu.karsany.vau.common.struct.Pair;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Link extends DocumentableTable implements Entity {
     private final String linkName;
-    private final List<Hub> connectedHubs;
+    private final List<Pair<Hub, String>> connectedHubs;
     private final List<Column> idColumns;
 
-    public Link(String linkName, Hub... hubs) {
+    public Link(String linkName, List<Pair<Hub, String>> hubs) {
         super("LNK_" + linkName);
         this.linkName = linkName;
-        this.connectedHubs = Arrays.asList(hubs);
+        this.connectedHubs = hubs;
 
         Column idColumn = new Column(linkName + "_ID", Column.BusinessDataType.ID, true, "SK for " + linkName);
         addColumn(idColumn);
         this.addUniqueKey(idColumn);
 
-        idColumns = Arrays.stream(hubs)
-                .map(hub -> new Column(hub.getEntityName() + "_ID", Column.BusinessDataType.ID, true, "SK for hub " + hub.getEntityName()))
+        idColumns = hubs.stream()
+                .map(hub -> new Column(hub.getRight() + "_ID", Column.BusinessDataType.ID, true, "SK for hub " + hub.getLeft().getEntityName()))
                 .collect(Collectors.toList());
 
         Column[] idColsArray = idColumns.toArray(new Column[]{});
@@ -82,7 +83,7 @@ public class Link extends DocumentableTable implements Entity {
         return idColumns;
     }
 
-    public List<Hub> getConnectedHubs() {
+    public List<Pair<Hub, String>> getConnectedHubs() {
         return connectedHubs;
     }
 }

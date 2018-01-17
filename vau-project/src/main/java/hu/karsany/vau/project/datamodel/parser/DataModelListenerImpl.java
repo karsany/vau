@@ -29,10 +29,11 @@
 
 package hu.karsany.vau.project.datamodel.parser;
 
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.struct.Pair;
 import hu.karsany.vau.grammar.datamodel.DataModelBaseListener;
 import hu.karsany.vau.grammar.datamodel.DataModelParser;
 import hu.karsany.vau.project.datamodel.model.*;
-import hu.karsany.vau.common.VauException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,15 +84,27 @@ class DataModelListenerImpl extends DataModelBaseListener {
     @Override
     public void enterLink(DataModelParser.LinkContext ctx) {
         String linkName = ctx.link_name().getText();
-        List<Hub> hubs = ctx.entity_name().stream()
-                .map(entity_nameContext -> dataModel.getHub(entity_nameContext.getText()))
+        List<Pair<Hub, String>> hubsWithAliases = ctx.entity_name_with_optional_alias().stream()
+                .map(entity_nameContext -> {
+
+                    String alias;
+                    if (entity_nameContext.alias() != null) {
+                        alias = entity_nameContext.alias().getText();
+                    } else {
+                        alias = entity_nameContext.entity_name().getText();
+                    }
+
+                    Pair<Hub, String> hubWithAlias = new Pair<>(dataModel.getHub(entity_nameContext.entity_name().getText()), alias);
+
+                    return hubWithAlias;
+                })
                 .collect(Collectors.toList());
 
-        Link l = new Link(linkName, hubs.toArray(new Hub[]{}));
+        Link l = new Link(linkName, hubsWithAliases);
         setCurrent(l);
         dataModel.addTable(l);
-        for (Hub h : hubs) {
-            dataModel.addConnection(h, l);
+        for (Pair<Hub, String> h : hubsWithAliases) {
+            dataModel.addConnection(h.getLeft(), l);
         }
     }
 

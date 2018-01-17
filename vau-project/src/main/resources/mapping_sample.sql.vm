@@ -27,7 +27,7 @@ Select #foreach ($c in $model.hubs)1 as ${c.entityName}_BK,
 -- source_system #TODO#
 -- sql --------------------------------
 
-Select #foreach ($c in $model.connectedHubs)1 as ${c.entityName.toLowerCase()}_bk #if ($foreach.hasNext), #end
+Select #foreach ($c in $model.connectedHubs)1 as ${c.right.toLowerCase()}_bk #if ($foreach.hasNext), #end
 
 #end  From dual
 

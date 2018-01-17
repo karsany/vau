@@ -8,7 +8,13 @@ entity : 'entity' entity_name datagroup_definition ;
 
 datagroup_definition : ('{' datagroup* '}')? ;
 
-link : 'link' link_name 'between' entity_name (('and'|',') entity_name)* (';'|datagroup_definition) ;
+link : 'link' link_name 'between' entity_name_with_optional_alias (('and'|',') entity_name_with_optional_alias)* (';'|datagroup_definition) ;
+
+entity_name_with_optional_alias :
+    entity_name ('as' alias)?;
+
+alias :
+    ID;
 
 datagroup : 'datagroup' datagroup_name '{' attributes '}';
 

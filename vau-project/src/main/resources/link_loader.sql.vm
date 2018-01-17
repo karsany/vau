@@ -1,17 +1,17 @@
 insert into ${model.link.tableName}
   With src As
     (${model.sqlScript.trim()})
-  Select ${model.link.tableName}_SEQ.nextval As ${model.link.entityName}_ID,#foreach($h in $model.link.connectedHubs)${h.entityName}_ID as ${h.entityName}_ID,
+  Select ${model.link.tableName}_SEQ.nextval As ${model.link.entityName}_ID,#foreach($h in $model.link.connectedHubs)${h.right}_ID,
 #end
          '${model.sourceSystem}' As c$source_system,
          p_run_date As c$load_date,
          c_audit_id As c$audit_id
-    From (Select #foreach($h in $model.link.connectedHubs)${h.entityName}_ID #if( $foreach.hasNext ), #end
+    From (Select #foreach($h in $model.link.connectedHubs)${h.right}.${h.left.entityName}_ID as ${h.right}_ID #if( $foreach.hasNext ), #end
 #end
             From src
-#foreach($h in $model.link.connectedHubs)join ${h.tableName} on ${h.tableName}.${h.entityName}_BK = src.${h.entityName}_BK
+#foreach($h in $model.link.connectedHubs)join ${h.left.tableName} ${h.right} on ${h.right}.${h.left.entityName}_BK = src.${h.right}_BK
 #end
           Minus
-          Select #foreach($h in $model.link.connectedHubs)${h.entityName}_ID #if( $foreach.hasNext ), #end
+          Select #foreach($h in $model.link.connectedHubs)${h.right}_ID #if( $foreach.hasNext ), #end
 #end
             From LNK_${model.link.entityName});

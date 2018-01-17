@@ -1,4 +1,5 @@
 create or replace procedure ${model.loaderName}(p_run_date in date) is  
+  c_audit_id number := dbms_flashback.get_system_change_number;
 begin
 
 #foreach($input_table in $model.inputTables)
@@ -10,5 +11,5 @@ begin
   
   commit;
 
-end $model.loaderName
+end $model.loaderName;
 /
