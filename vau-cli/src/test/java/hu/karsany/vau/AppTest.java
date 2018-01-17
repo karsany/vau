@@ -18,5 +18,9 @@ public class AppTest {
         Assert.assertNotNull(projectModel);
         Assert.assertEquals("Oracle HR database Data Vault Example", projectModel.getConfiguration().getName());
 
+        app = new App();
+        app.app("doc", "-d", "../vau-others/examples/oracle-hr");
+
+
     }
 }
