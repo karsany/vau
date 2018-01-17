@@ -27,7 +27,7 @@ public class LinkLoaderTest {
         Assert.assertFalse("Does not contain ${h.", script.contains("${h."));
         Assert.assertTrue("Contains employee_id string", script.toUpperCase().contains("EMPLOYEE_ID"));
         Assert.assertTrue("Contains manager_id string", script.toUpperCase().contains("MANAGER_ID"));
-        Assert.assertTrue("Contains 'hub_employee As manager' string", script.toUpperCase().contains("hub_employee As manager".toUpperCase()));
+        Assert.assertTrue("Contains 'hub_employee manager' string", script.toUpperCase().contains("hub_employee manager".toUpperCase()));
 
 
     }
