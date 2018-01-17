@@ -4,3 +4,4 @@
 vau-others/tools/grammars-v4/
 vau-others/examples/*/target
 vau-bin-*.zip
+target/*
