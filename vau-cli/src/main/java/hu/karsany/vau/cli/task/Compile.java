@@ -70,7 +70,7 @@ public class Compile {
             GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
-        GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm));
+        GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
         
     }
 

@@ -33,6 +33,7 @@ import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class GeneratorHelper {
 
@@ -40,8 +41,14 @@ public class GeneratorHelper {
         generate(projectPath, g, "utf-8");
     }
 
+    public static void generate(File projectPath, List<Generator> generatorList) throws IOException {
+        for (Generator generator : generatorList) {
+            generate(projectPath, generator);
+        }
+    }
+
     public static void generate(File projectPath, Generator g, String encoding) throws IOException {
-        File fileName = new File(projectPath + "/target/" + g.getOutputType().getOutputTypeName() + "/" + g.getFileName().toLowerCase());
+        File fileName = new File(projectPath + "/target/" + g.getOutputType().getTargetDirectoryPath() + "/" + g.getFileName().toLowerCase());
 
         Logger.info("  Generating: " + fileName.toString());
 
@@ -49,7 +56,7 @@ public class GeneratorHelper {
         try {
             generatedData = g.toString();
         } catch (Exception e) {
-            throw new VauException("Error at generating " + g.getOutputType().getOutputTypeName().toLowerCase() + " " + g.getFileName(), e);
+            throw new VauException("Error at generating " + g.getOutputType().getTargetDirectoryPath().toLowerCase() + " " + g.getFileName(), e);
         }
         FileUtils.write(
                 fileName,

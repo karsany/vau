@@ -39,12 +39,19 @@ public interface Generator {
     OutputType getOutputType();
 
     enum OutputType {
-        TABLE("table"), LOADER("loader"), DOCUMENTATION("doc"), EXAMPLE("example"), LOADER_PROCEDURE("procedure");
+        TABLE("table", "src/table"), LOADER("loader", "other/loader"), DOCUMENTATION("doc", "doc"), EXAMPLE("example", "other/example"), LOADER_PROCEDURE("procedure", "src/procedure"), GRANT("grant", "src/grant");
 
         private final String outputTypeName;
 
-        OutputType(String outputTypeName) {
+        private final String targetDirectoryPath;
+
+        OutputType(String outputTypeName, String targetDirectoryPath) {
             this.outputTypeName = outputTypeName;
+            this.targetDirectoryPath = targetDirectoryPath;
+        }
+
+        public String getTargetDirectoryPath() {
+            return targetDirectoryPath;
         }
 
         public String getOutputTypeName() {

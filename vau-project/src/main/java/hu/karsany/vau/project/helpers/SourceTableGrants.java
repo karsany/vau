@@ -29,14 +29,16 @@
 
 package hu.karsany.vau.project.helpers;
 
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.sql.SqlAnalyzer;
+import hu.karsany.vau.project.Project;
+import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import net.sf.jsqlparser.JSQLParserException;
 
-public class SourceTableGrants implements Generator {
+import java.util.*;
+
+public class SourceTableGrants {
 
     private final Project pm;
 
@@ -44,25 +46,29 @@ public class SourceTableGrants implements Generator {
         this.pm = pm;
     }
 
-    @Override
-    public String getFileName() {
-        return "source_table_grants.sql";
+    public List<Generator> generateGrants() {
+        List<Generator> r = new ArrayList<>();
+
+        Map<String, Set<String>> grantScripts = collectGrantScriptsByOwner();
+
+        for (Map.Entry<String, Set<String>> kv : grantScripts.entrySet()) {
+            r.add(new SourceTableGrantPerOwnerGenerator(kv.getKey(), kv.getValue()));
+        }
+
+        return r;
     }
 
-    @Override
-    public OutputType getOutputType() {
-        return OutputType.DOCUMENTATION;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder grants = new StringBuilder();
-
+    private Map<String, Set<String>> collectGrantScriptsByOwner() {
+        Map<String, Set<String>> grantScripts = new HashMap<>();
 
         for (LoaderParameter lp : pm.getMappings()) {
             try {
                 for (SqlAnalyzer.Table table : new SqlAnalyzer(lp.getSqlScript()).getInputTables()) {
-                    grants.append("grant select on " + table.getOwner() + "." + table.getTableName() + " to @DW@;\n");
+                    if (!grantScripts.containsKey(table.getOwner().toUpperCase())) {
+                        grantScripts.put(table.getOwner().toUpperCase(), new HashSet<>());
+                    }
+
+                    grantScripts.get(table.getOwner().toUpperCase()).add("grant select on " + table.getOwner() + "." + table.getTableName() + " to @DW@;".toUpperCase());
                 }
 
 
@@ -70,8 +76,38 @@ public class SourceTableGrants implements Generator {
                 throw new VauException(e);
             }
         }
+        return grantScripts;
+    }
 
-        return grants.toString();
+    public class SourceTableGrantPerOwnerGenerator implements Generator {
+
+        private final String owner;
+        private final Set<String> grants;
+
+        public SourceTableGrantPerOwnerGenerator(String owner, Set<String> grants) {
+            this.owner = owner;
+            this.grants = grants;
+        }
+
+        @Override
+        public String toString() {
+            StringBuffer sb = new StringBuffer();
+            for (String grant : grants) {
+                sb.append(grant + "\n");
+            }
+
+            return sb.toString();
+        }
+
+        @Override
+        public String getFileName() {
+            return "grant_from_" + owner.toLowerCase() + ".sql";
+        }
+
+        @Override
+        public OutputType getOutputType() {
+            return OutputType.GRANT;
+        }
     }
 
 }
