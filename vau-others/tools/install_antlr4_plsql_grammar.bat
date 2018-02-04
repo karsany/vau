@@ -16,6 +16,8 @@ del /Q not-implemented\*
 sed -i "s/parser grammar PlSqlParser;/parser grammar PlSqlParser;\n\n@header {package com.antlr.grammarsv4.plsql;}/g" PlSqlParser.g4
 sed -i "s/lexer grammar PlSqlLexer;/lexer grammar PlSqlLexer;\n\n@lexer::header {package com.antlr.grammarsv4.plsql;}/g" PlSqlLexer.g4
 
+cd ..
+
 call mvn package install
 
 cd ..
