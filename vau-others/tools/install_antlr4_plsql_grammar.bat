@@ -19,5 +19,3 @@ sed -i "s/lexer grammar PlSqlLexer;/lexer grammar PlSqlLexer;\n\n@lexer::header 
 cd ..
 
 call mvn package install
-
-cd ..
