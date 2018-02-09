@@ -29,6 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
-interface Entity {
+public interface Entity {
     String getEntityName();
+
+    String getTableType();
 }

@@ -31,8 +31,10 @@ package hu.karsany.vau.cli.task;
 
 import hu.karsany.vau.common.GeneratorHelper;
 import hu.karsany.vau.project.Project;
+import hu.karsany.vau.project.datamodel.model.Entity;
 import hu.karsany.vau.project.datamodel.model.Table;
 import hu.karsany.vau.project.helpers.DataModelExampleMapping;
+import hu.karsany.vau.project.helpers.SequenceGenerator;
 import hu.karsany.vau.project.helpers.SourceTableGrants;
 import hu.karsany.vau.project.mapping.generator.Loader;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
@@ -57,6 +59,12 @@ public class Compile {
             GeneratorHelper.generate(pm.getProjectPath(), table);
         }
 
+        Logger.info("Generating sequences");
+        for (Entity entity : pm.getDataModel().getEntityTables()) {
+            GeneratorHelper.generate(pm.getProjectPath(), new SequenceGenerator(entity));
+        }
+
+
         Logger.info("Generating example mapping");
         for (Table table : pm.getDataModel().getTables()) {
             GeneratorHelper.generate(pm.getProjectPath(), new DataModelExampleMapping(table));
@@ -70,8 +78,9 @@ public class Compile {
             GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
+
         GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
-        
+
     }
 
 }

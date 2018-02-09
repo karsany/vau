@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DataModel {
 
@@ -71,6 +72,14 @@ public class DataModel {
             tables.add(e);
             return e;
         }
+    }
+
+    public Set<Entity> getEntityTables() {
+        return tables
+                .stream()
+                .filter(t -> t instanceof Entity)
+                .map(t -> (Entity) t)
+                .collect(Collectors.toSet());
     }
 
     public Set<DocumentableTable> getTables() {
