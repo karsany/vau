@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AppTest {
 
     @Test
-    public void oracleHrExampleTest() throws IOException {
+    public void oracleHrExampleTestCleanCompile() throws IOException {
         App app = new App();
         app.app("clean", "compile", "-d", "../vau-others/examples/oracle-hr");
 
@@ -17,10 +17,12 @@ public class AppTest {
 
         Assert.assertNotNull(projectModel);
         Assert.assertEquals("Oracle HR database Data Vault Example", projectModel.getConfiguration().getName());
-
-        app = new App();
-        app.app("doc", "-d", "../vau-others/examples/oracle-hr");
-
-
     }
+
+    @Test
+    public void oracleHrExampleTestDoc() throws IOException {
+        App app = new App();
+        app.app("doc", "-d", "../vau-others/examples/oracle-hr");
+    }
+
 }
