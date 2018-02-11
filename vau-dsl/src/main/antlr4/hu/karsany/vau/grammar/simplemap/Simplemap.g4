@@ -21,9 +21,11 @@ owner_name : ID;
 table_name : ID;
 containing_type : ('FULL'|'DELTA'|'INSERT'|cdc);
 
-cdc : 'CDC' '(' cdc_column ')';
+cdc : 'CDC' '(' cdc_column ',' timestamp_column ')';
 
 cdc_column: ID;
+
+timestamp_column: ID;
 
 business_key_def: 'business' 'key' business_key_column ';';
 

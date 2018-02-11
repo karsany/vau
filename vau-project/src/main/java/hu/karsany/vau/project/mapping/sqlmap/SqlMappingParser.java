@@ -100,7 +100,12 @@ public class SqlMappingParser extends LoaderBaseListener implements MappingParse
 
     @Override
     public void enterLoad_method_name(hu.karsany.vau.grammar.loader.LoaderParser.Load_method_nameContext ctx) {
-        loaderParameter.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.valueOf(ctx.getText().toUpperCase()));
+        if(ctx.getText().toUpperCase().startsWith("CDC")) {
+            loaderParameter.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.CDC);
+        } else {
+            loaderParameter.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.valueOf(ctx.getText().toUpperCase()));
+        }
+
     }
 
     @Override

@@ -30,8 +30,8 @@
 package hu.karsany.vau.project.mapping.generator;
 
 import hu.karsany.vau.common.Generator;
-import hu.karsany.vau.project.datamodel.model.Satellite;
 import hu.karsany.vau.common.templating.TemplateEvaluation;
+import hu.karsany.vau.project.datamodel.model.Satellite;
 
 public class SatLoader implements Generator {
     private final LoaderParameter lp;
@@ -60,6 +60,9 @@ public class SatLoader implements Generator {
                 break;
             case INSERT:
                 templateFileName = "sat_loader_insert.sql";
+                break;
+            case CDC:
+                templateFileName = "sat_loader_cdc.sql";
                 break;
         }
 

@@ -33,9 +33,11 @@ link
 load_method_name
 	: ('full'|'delta'|'insert'|cdc) ;
 
-cdc : 'cdc' '(' cdc_column ')';
+cdc : 'cdc' '(' cdc_column ',' timestamp_column ')';
 
 cdc_column: ID;
+
+timestamp_column: ID;
 		
 datagroup_name : ID ;
 

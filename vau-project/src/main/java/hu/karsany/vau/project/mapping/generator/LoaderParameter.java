@@ -155,5 +155,5 @@ public class LoaderParameter {
 
     public enum LoaderType {HUB, SATTELITE, LINK, REFERENCE}
 
-    public enum SatteliteLoadMethod {FULL, DELTA, INSERT}
+    public enum SatteliteLoadMethod {FULL, DELTA, INSERT, CDC}
 }
