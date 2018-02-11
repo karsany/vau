@@ -78,7 +78,7 @@ public class Compile {
             GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
         }
 
-
+        Logger.info("Generating grants");
         GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
 
     }
