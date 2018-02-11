@@ -39,7 +39,14 @@ public interface Generator {
     OutputType getOutputType();
 
     enum OutputType {
-        TABLE("table", "src/table"), LOADER("loader", "other/loader"), DOCUMENTATION("doc", "doc"), EXAMPLE("example", "other/example"), LOADER_PROCEDURE("procedure", "src/procedure"), GRANT("grant", "src/grant"), SEQUENCE("sequence", "src/sequence");
+        TABLE("table", "src/table"),
+        LOADER("loader", "other/loader"),
+        DOCUMENTATION("doc", "doc"),
+        EXAMPLE("example", "other/example"),
+        LOADER_PROCEDURE("procedure", "src/procedure"),
+        GRANT("grant", "src/grant"),
+        SEQUENCE("sequence", "src/sequence"),
+        INSTALL_SCRIPT("install", "src");
 
         private final String outputTypeName;
 

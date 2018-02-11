@@ -34,6 +34,7 @@ import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.datamodel.model.Entity;
 import hu.karsany.vau.project.datamodel.model.Table;
 import hu.karsany.vau.project.helpers.DataModelExampleMapping;
+import hu.karsany.vau.project.helpers.InstallScriptGenerator;
 import hu.karsany.vau.project.helpers.SequenceGenerator;
 import hu.karsany.vau.project.helpers.SourceTableGrants;
 import hu.karsany.vau.project.mapping.generator.Loader;
@@ -81,6 +82,8 @@ public class Compile {
         Logger.info("Generating grants");
         GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
 
+        Logger.info("Generating install script");
+        GeneratorHelper.generate(pm.getProjectPath(), new InstallScriptGenerator(pm));
     }
 
 }
