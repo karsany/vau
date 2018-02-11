@@ -17,7 +17,7 @@ public class SequenceGenerator implements Generator {
 
     @Override
     public String toString() {
-        return "CREATE SEQUENCE " + entity.getTableType() + "_" + entity.getEntityName() + "_SEQ START WITH 10000";
+        return "CREATE SEQUENCE " + entity.getTableType() + "_" + entity.getEntityName() + "_SEQ START WITH 10000" + "\n" + "/\n";
     }
 
     @Override
