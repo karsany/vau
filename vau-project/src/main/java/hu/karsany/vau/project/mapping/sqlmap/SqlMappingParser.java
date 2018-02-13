@@ -31,9 +31,10 @@ package hu.karsany.vau.project.mapping.sqlmap;
 
 import hu.karsany.vau.grammar.loader.LoaderBaseListener;
 import hu.karsany.vau.grammar.loader.LoaderLexer;
+import hu.karsany.vau.grammar.loader.LoaderParser;
 import hu.karsany.vau.project.datamodel.model.DataModel;
-import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.MappingParser;
+import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -60,6 +61,16 @@ public class SqlMappingParser extends LoaderBaseListener implements MappingParse
         hu.karsany.vau.grammar.loader.LoaderParser parser = new hu.karsany.vau.grammar.loader.LoaderParser(tokens);
         hu.karsany.vau.grammar.loader.LoaderParser.SContext tree = parser.s();
         ParseTreeWalker.DEFAULT.walk(this, tree);
+    }
+
+    @Override
+    public void enterTimestamp_column(LoaderParser.Timestamp_columnContext ctx) {
+        this.loaderParameter.setCdcStartTsName(ctx.getText());
+    }
+
+    @Override
+    public void enterCdc_column(LoaderParser.Cdc_columnContext ctx) {
+        this.loaderParameter.setCdcColumnName(ctx.getText());
     }
 
     private void fillConfigAndScript() throws IOException {
@@ -100,7 +111,7 @@ public class SqlMappingParser extends LoaderBaseListener implements MappingParse
 
     @Override
     public void enterLoad_method_name(hu.karsany.vau.grammar.loader.LoaderParser.Load_method_nameContext ctx) {
-        if(ctx.getText().toUpperCase().startsWith("CDC")) {
+        if (ctx.getText().toUpperCase().startsWith("CDC")) {
             loaderParameter.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.CDC);
         } else {
             loaderParameter.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.valueOf(ctx.getText().toUpperCase()));

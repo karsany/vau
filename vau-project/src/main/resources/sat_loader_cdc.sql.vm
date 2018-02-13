@@ -1,1 +1,61 @@
-hello
+delete ${model.sat.tableName}
+ where c$source_system = '${model.sourceSystem}'
+   and c$start_date >= p_run_date;
+
+INSERT INTO ${model.sat.tableName}
+  (${model.sat.hub.entityName}_ID,
+   C$SOURCE_SYSTEM,
+   C$START_DATE,
+   C$END_DATE,
+   C$AUDIT_ID,
+   C$REC_PRESENT #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end)
+  WITH src AS
+   (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
+#end h.${model.sat.hub.entityName}_ID, i.${model.cdcStartTsName} as C$START_DATE, decode(i.${model.cdcColumnName}, 'D', 0, 1) as C$REC_PRESENT
+      FROM (${model.sqlScript.trim()}) i
+      JOIN hub_${model.sat.hub.entityName} h
+        ON i.${model.sat.hub.entityName}_BK = h.${model.sat.hub.entityName}_BK),
+  src2 as (
+     select q.*,
+     decode(
+      #foreach($c in $model.sat.nonTechnicalColumns) lag($c.columnName) over (partition by ${model.sat.hub.entityName}_ID order by c$start_date) || '#>#' ||
+                  #end '>>',
+#foreach($c in $model.sat.nonTechnicalColumns) $c.columnName || '#>#' ||
+                  #end '>>'
+                  , 0,1) as has_change
+      from (Select #foreach($c in $model.sat.nonTechnicalColumns) $c.columnName,
+            #end    ${model.sat.hub.entityName}_ID,
+            c$start_date,
+                        c$rec_present,
+                        0 as status
+                   From sat_location_main
+                  Where c$end_date = to_date('99991231', 'yyyymmdd')
+     union all
+     select s.*, 1 as status from src s) q
+  )
+  SELECT ${model.sat.hub.entityName}_ID,
+         '${model.sourceSystem}' AS C$SOURCE_SYSTEM,
+         C$START_DATE AS C$START_DATE,
+         to_date('99991231', 'yyyymmdd') AS C$END_DATE,
+         c_audit_id AS C$AUDIT_ID,
+         c$rec_present AS c$rec_present #foreach($c in $model.sat.nonTechnicalColumns), $c.columnName
+#end
+    FROM src2
+    where has_change = 1 and status = 1;
+
+Merge Into ${model.sat.tableName} u
+Using (select * from (
+Select t.${model.sat.hub.entityName}_ID,
+       t.c$start_date,
+       t.c$end_date,
+       nvl(lead(t.c$start_date - 1/(24*60*60))
+           over(Partition By ${model.sat.hub.entityName}_ID Order By t.c$start_date),
+           to_date('99991231',
+                   'yyyymmdd')) new_c$end_date
+  From ${model.sat.tableName} t
+) where c$end_date <> new_c$end_date or c$end_date is null) k
+On (u.${model.sat.hub.entityName}_ID = k.${model.sat.hub.entityName}_ID And u.c$start_date = k.c$start_date)
+When Matched Then
+  Update
+     Set u.c$end_date = k.new_c$end_date;

@@ -29,8 +29,8 @@
 
 package hu.karsany.vau.project.mapping.generator;
 
-import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.project.datamodel.model.DataModel;
 
 import java.io.File;
 
@@ -42,13 +42,30 @@ public class LoaderParameter {
 
     private String sqlScript;
     private SatteliteLoadMethod satteliteLoadMethod;
+    private String cdcColumnName;
+    private String cdcStartTsName;
     private String dataGroupName;
     private String referenceName;
     private String linkName;
     private String loaderConfig;
     private File sourceFile;
-
     public LoaderParameter() {
+    }
+
+    public String getCdcColumnName() {
+        return cdcColumnName;
+    }
+
+    public void setCdcColumnName(String cdcColumnName) {
+        this.cdcColumnName = cdcColumnName;
+    }
+
+    public String getCdcStartTsName() {
+        return cdcStartTsName;
+    }
+
+    public void setCdcStartTsName(String cdcStartTsName) {
+        this.cdcStartTsName = cdcStartTsName;
     }
 
     public DataModel getDataModel() {

@@ -46,7 +46,9 @@ public class SatLoader implements Generator {
         TemplateModel templateModel = new TemplateModel(
                 lp.getDataModel().getSatellite(lp.getEntityName(), lp.getDataGroupName()),
                 lp.getSqlScript(),
-                lp.getSourceSystemName()
+                lp.getSourceSystemName(),
+                lp.getCdcColumnName(),
+                lp.getCdcStartTsName()
         );
 
         String templateFileName = null;
@@ -83,11 +85,23 @@ public class SatLoader implements Generator {
         private final Satellite sat;
         private final String sqlScript;
         private final String sourceSystem;
+        private final String cdcColumnName;
+        private final String cdcStartTsName;
 
-        public TemplateModel(Satellite sat, String sqlScript, String sourceSystem) {
+        public TemplateModel(Satellite sat, String sqlScript, String sourceSystem, String cdcColumnName, String cdcStartTsName) {
             this.sat = sat;
             this.sqlScript = sqlScript;
             this.sourceSystem = sourceSystem;
+            this.cdcColumnName = cdcColumnName;
+            this.cdcStartTsName = cdcStartTsName;
+        }
+
+        public String getCdcColumnName() {
+            return cdcColumnName;
+        }
+
+        public String getCdcStartTsName() {
+            return cdcStartTsName;
         }
 
         public Satellite getSat() {
