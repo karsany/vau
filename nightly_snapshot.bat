@@ -3,11 +3,11 @@ set datetime=%datetime:~0,8%-%datetime:~8,6%
 
 call mvn clean
 
-cd vau-others\tools
+cd tools
 
 call install_antlr4_plsql_grammar.bat
 
-cd ..\..\..
+cd ..\..
 
 call mvn clean package
 
