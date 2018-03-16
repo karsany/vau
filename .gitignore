@@ -1,7 +1,7 @@
 */target/
 .idea/
 *.iml
-vau-others/tools/grammars-v4/
-vau-others/examples/*/target
+tools/grammars-v4/
+examples/*/target
 vau-bin-*.zip
 target/*
