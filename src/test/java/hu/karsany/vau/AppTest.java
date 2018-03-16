@@ -11,7 +11,7 @@ public class AppTest {
     @Test
     public void oracleHrExampleTestCleanCompile() throws IOException {
         App app = new App();
-        app.app("clean", "compile", "-d", "../vau-others/examples/oracle-hr");
+        app.app("clean", "compile", "-d", "vau-others/examples/oracle-hr");
 
         Project projectModel = app.getProjectModel();
 
@@ -22,7 +22,7 @@ public class AppTest {
     @Test
     public void oracleHrExampleTestDoc() throws IOException {
         App app = new App();
-        app.app("doc", "-d", "../vau-others/examples/oracle-hr");
+        app.app("doc", "-d", "vau-others/examples/oracle-hr");
     }
 
 }
