@@ -11,4 +11,4 @@ cd ..\..
 
 call mvn clean package
 
-copy vau-cli\target\vau-bin.zip vau-bin-%datetime%.zip
+copy target\vau-bin.zip vau-bin-%datetime%.zip
