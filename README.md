@@ -41,7 +41,7 @@ Currently -- due to heavy development -- there is no released versions yet.
 If you want to build VAU, you can do it by running nightly_snapshot.bat from tools directory.
 It compiles the binary version: vau-bin-yyyymmdd-hhmmss.zip
 
-Prerequisites for build are: jdk8 or above, maven, git.
+Prerequisites for build are: jdk8 or above, maven, git, cat, grep, sed.
 
 If you unzip the build somewhere, there will be a vau.cmd in it.
 
