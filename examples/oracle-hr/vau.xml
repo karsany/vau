@@ -12,4 +12,6 @@
 	
 	<target>oracle</target>
 	
+	<target-schema>HR_DW</target-schema>
+	
 </project>

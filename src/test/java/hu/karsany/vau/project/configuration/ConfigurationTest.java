@@ -11,6 +11,7 @@ public class ConfigurationTest {
         Configuration configuration = Configuration.loadConfiguration(getClass().getClassLoader().getResourceAsStream("loadConfiguration_1.xml"));
         Assert.assertEquals("template_base.vm", configuration.getTemplate().getTemplateName());
         Assert.assertEquals("procedure", configuration.getTemplate().getTemplateType());
+        Assert.assertEquals("@DW@", configuration.getTargetSchema());
     }
 
     @Test

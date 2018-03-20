@@ -40,6 +40,7 @@ public class Configuration {
     private Template template;
     private Documentation documentation;
     private String target = "oracle";
+    private String targetSchema = "@DW@";
 
     public static Configuration loadConfiguration(InputStream is) {
         Class<?>[] classes = new Class[]{Configuration.class, Template.class};
@@ -47,6 +48,7 @@ public class Configuration {
         XStream.setupDefaultSecurity(xs);
         xs.allowTypes(classes);
         xs.alias("project", Configuration.class);
+        xs.aliasField("target-schema", Configuration.class, "targetSchema");
         xs.aliasField("name", Template.class, "templateName");
         xs.aliasField("type", Template.class, "templateType");
         xs.aliasField("datamodel-csv", Documentation.class, "genDatamodelCsv");
@@ -57,6 +59,18 @@ public class Configuration {
         Logger.info("Configuration found in vau.xml: " + configuration.getName());
 
         return configuration;
+    }
+
+    public String getTargetSchema() {
+        if (targetSchema == null) {
+            return "@DW@";
+        } else {
+            return targetSchema;
+        }
+    }
+
+    public void setTargetSchema(String targetSchema) {
+        this.targetSchema = targetSchema;
     }
 
     public String getTarget() {
