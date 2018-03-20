@@ -47,7 +47,8 @@ public class Configuration {
         XStream.setupDefaultSecurity(xs);
         xs.allowTypes(classes);
         xs.alias("project", Configuration.class);
-        xs.aliasField("default", Template.class, "defaultTemplate");
+        xs.aliasField("name", Template.class, "templateName");
+        xs.aliasField("type", Template.class, "templateType");
         xs.aliasField("datamodel-csv", Documentation.class, "genDatamodelCsv");
 
         Configuration configuration = (Configuration) xs.fromXML(is);

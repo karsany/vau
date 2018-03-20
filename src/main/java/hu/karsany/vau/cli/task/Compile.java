@@ -76,7 +76,7 @@ public class Compile {
         for (LoaderParameter loaderParameter : pm.getMappings()) {
             Loader ldr = new Loader(loaderParameter);
             GeneratorHelper.generate(pm.getProjectPath(), ldr);
-            GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getDefaultTemplate())));
+            GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName())));
         }
 
         Logger.info("Generating grants");

@@ -1,15 +1,13 @@
 <project>
-	<name>Oracle HR database Data Vault Example</name>	
+	<name>Test XML1</name>
 	
 	<template>
 		<name>template_base.vm</name>
-		<type>procedure</type>
+		<type>blablabla</type>
 	</template>
 	
 	<documentation>
 		<datamodel-csv>true</datamodel-csv>
 	</documentation>
-	
-	<target>oracle</target>
 	
 </project>
