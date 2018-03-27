@@ -33,10 +33,7 @@ import hu.karsany.vau.common.GeneratorHelper;
 import hu.karsany.vau.project.Project;
 import hu.karsany.vau.project.datamodel.model.Entity;
 import hu.karsany.vau.project.datamodel.model.Table;
-import hu.karsany.vau.project.helpers.DataModelExampleMapping;
-import hu.karsany.vau.project.helpers.InstallScriptGenerator;
-import hu.karsany.vau.project.helpers.SequenceGenerator;
-import hu.karsany.vau.project.helpers.SourceTableGrants;
+import hu.karsany.vau.project.helpers.*;
 import hu.karsany.vau.project.mapping.generator.Loader;
 import hu.karsany.vau.project.mapping.generator.LoaderParameter;
 import hu.karsany.vau.project.mapping.generator.LoaderProcedure;
@@ -76,7 +73,11 @@ public class Compile {
         for (LoaderParameter loaderParameter : pm.getMappings()) {
             Loader ldr = new Loader(loaderParameter);
             GeneratorHelper.generate(pm.getProjectPath(), ldr);
-            GeneratorHelper.generate(pm.getProjectPath(), new LoaderProcedure(ldr, new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName())));
+            File loaderTemplate = new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName());
+            LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
+            GeneratorHelper.generate(pm.getProjectPath(), lp);
+            LoaderGrantGenerator lgg = new LoaderGrantGenerator(ldr, pm.getConfiguration().getTargetExecuteGrant());
+            GeneratorHelper.generate(pm.getProjectPath(), lgg);
         }
 
         Logger.info("Generating grants");

@@ -13,5 +13,6 @@
 	<target>oracle</target>
 	
 	<target-schema>HR_DW</target-schema>
+	<target-execute-grant>HR_DW_PROXY</target-execute-grant>
 	
 </project>

@@ -77,4 +77,8 @@ public class Loader implements Generator {
     public LoaderParameter getLoaderParameter() {
         return loaderParameter;
     }
+
+    public String getObjectName() {
+        return generator.getFileName();
+    }
 }
