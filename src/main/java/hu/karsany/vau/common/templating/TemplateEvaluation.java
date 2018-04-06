@@ -29,6 +29,7 @@
 
 package hu.karsany.vau.common.templating;
 
+import hu.karsany.vau.common.VauException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -68,6 +69,8 @@ public class TemplateEvaluation {
             velocityEngine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
             velocityEngine.init();
             template = velocityEngine.getTemplate(templateFile.getName());
+        } else {
+            throw new VauException("Invalid TemplateEvaluation initialized. Aborting...");
         }
         context.put("model", model);
         StringWriter writer = new StringWriter();

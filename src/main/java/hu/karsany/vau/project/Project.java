@@ -81,8 +81,11 @@ public class Project {
 
         Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\mapping\\"))
                 .filter(Files::isRegularFile)
-                .forEach(path -> pm.mappings.addAll(new GenericMappingParser(path.toFile(), pm.dataModel).getMapping()));
-
+                .forEach(path ->
+                        pm.mappings.addAll(
+                                new GenericMappingParser(path.toFile(), pm.dataModel).getMapping()
+                        )
+                );
 
         return pm;
 
