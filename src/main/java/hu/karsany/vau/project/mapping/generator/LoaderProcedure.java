@@ -65,7 +65,8 @@ public class LoaderProcedure implements Generator {
     }
 
     @Override
-    public OutputType getOutputType() { return App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? OutputType.LOADER_PROCEDURE : OutputType.LOADER_PACKAGE;
+    public OutputType getOutputType() {
+        return App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? OutputType.LOADER_PROCEDURE : OutputType.LOADER_PACKAGE;
     }
 
     @Override
@@ -73,7 +74,7 @@ public class LoaderProcedure implements Generator {
         TemplateModel tm = null;
         try {
             tm = new TemplateModel(
-                    getFileName().replace(".prc", ""),
+                    getLoaderName(),
                     loader.getLoaderParameter().getOutputTableName(),
                     loader.toString(),
                     new SqlAnalyzer(loader.getLoaderParameter().getSqlScript()).getInputTables()
@@ -82,6 +83,10 @@ public class LoaderProcedure implements Generator {
             throw new VauException(e);
         }
         return new TemplateEvaluation(loaderTemplate, tm).toString();
+    }
+
+    public String getLoaderName() {
+        return getFileName().replace(".prc", "");
     }
 
     public class TemplateModel {

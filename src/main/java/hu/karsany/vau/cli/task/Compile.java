@@ -76,7 +76,7 @@ public class Compile {
             File loaderTemplate = new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName());
             LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
             GeneratorHelper.generate(pm.getProjectPath(), lp);
-            LoaderGrantGenerator lgg = new LoaderGrantGenerator(ldr, pm.getConfiguration().getTargetExecuteGrant());
+            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, pm.getConfiguration().getTargetExecuteGrant());
             GeneratorHelper.generate(pm.getProjectPath(), lgg);
         }
 
