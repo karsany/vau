@@ -41,6 +41,7 @@ public class Configuration {
     private Documentation documentation;
     private String target = "oracle";
     private String targetSchema = "@DW@";
+    private String targetExecuteGrant = "@DW@";
 
     public static Configuration loadConfiguration(InputStream is) {
         Class<?>[] classes = new Class[]{Configuration.class, Template.class};
@@ -49,6 +50,7 @@ public class Configuration {
         xs.allowTypes(classes);
         xs.alias("project", Configuration.class);
         xs.aliasField("target-schema", Configuration.class, "targetSchema");
+        xs.aliasField("target-execute-grant", Configuration.class, "targetExecuteGrant");
         xs.aliasField("name", Template.class, "templateName");
         xs.aliasField("type", Template.class, "templateType");
         xs.aliasField("datamodel-csv", Documentation.class, "genDatamodelCsv");
@@ -59,6 +61,18 @@ public class Configuration {
         Logger.info("Configuration found in vau.xml: " + configuration.getName());
 
         return configuration;
+    }
+
+    public String getTargetExecuteGrant() {
+        if (targetExecuteGrant == null) {
+            return "@DW@";
+        } else {
+            return targetExecuteGrant;
+        }
+    }
+
+    public void setTargetExecuteGrant(String targetExecuteGrant) {
+        this.targetExecuteGrant = targetExecuteGrant;
     }
 
     public String getTargetSchema() {
