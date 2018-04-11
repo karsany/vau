@@ -61,4 +61,5 @@ Select t.${model.sat.entity.entityName}_ID,
 On (u.${model.sat.entity.entityName}_ID = k.${model.sat.entity.entityName}_ID And u.c$start_date = k.c$start_date)
 When Matched Then
   Update
-     Set u.c$end_date = k.new_c$end_date;
+     Set u.c$end_date = k.new_c$end_date,
+         u.c$update_audit_id = c_audit_id;
