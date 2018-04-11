@@ -34,6 +34,10 @@ import hu.karsany.vau.common.struct.Pair;
 import hu.karsany.vau.grammar.datamodel.DataModelBaseListener;
 import hu.karsany.vau.grammar.datamodel.DataModelParser;
 import hu.karsany.vau.project.datamodel.model.*;
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
+import hu.karsany.vau.project.datamodel.model.type.DataType;
+import hu.karsany.vau.project.datamodel.model.type.NativeDataType;
+import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,14 +131,26 @@ class DataModelListenerImpl extends DataModelBaseListener {
     public void enterAttribute(DataModelParser.AttributeContext ctx) {
         String attributeName = ctx.attribute_name().getText();
         String comment = ctx.comment() != null ? ctx.comment().STRINGDEF().getText() : "";
-        Column.BusinessDataType attrDataType = Column.BusinessDataType.valueOf(ctx.type().getText());
+
+        DataType dataType = getDataType(ctx.type());
+
         if (currSat != null) {
-            currSat.addColumn(new Column(attributeName, attrDataType, comment));
+            currSat.addColumn(new Column(attributeName, dataType, comment));
         } else if (currRef != null) {
-            currRef.addColumn(new Column(attributeName, attrDataType, comment));
+            currRef.addColumn(new Column(attributeName, dataType, comment));
         } else {
             throw new VauException("Attribute call not valid here: " + ctx.attribute_name());
         }
+    }
+
+    private DataType getDataType(DataModelParser.TypeContext ctx) {
+        DataType dataType;
+        if (ctx.nativetype() != null) {
+            dataType = new NativeDataType(ctx.nativetype().nativetypedef().getText());
+        } else {
+            dataType = new SimpleBusinessDataType(BusinessDataType.valueOf(ctx.getText()));
+        }
+        return dataType;
     }
 
     @Override
@@ -149,8 +165,8 @@ class DataModelListenerImpl extends DataModelBaseListener {
     public void enterKey(DataModelParser.KeyContext ctx) {
         String attributeName = ctx.attribute_name().getText();
         String comment = ctx.comment() != null ? ctx.comment().STRINGDEF().getText() : "";
-        Column.BusinessDataType attrDataType = Column.BusinessDataType.valueOf(ctx.type().getText());
-        Column c = new Column(attributeName, attrDataType, comment);
+        DataType dataType = getDataType(ctx.type());
+        Column c = new Column(attributeName, dataType, comment);
         currRef.addColumn(c);
         currRef.addToMainUniqueKey(c);
     }

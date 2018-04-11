@@ -30,10 +30,9 @@
 package hu.karsany.vau.project.mapping.parser;
 
 import hu.karsany.vau.project.datamodel.model.DataModel;
-import hu.karsany.vau.project.mapping.generator.LoaderParameter;
-import hu.karsany.vau.project.mapping.MappingParser;
-import hu.karsany.vau.project.mapping.simplemap.parser.SimplemapMappingFileParser;
-import hu.karsany.vau.project.mapping.sqlmap.SqlMappingParser;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.project.mapping.model.simplemap.parser.SimplemapMappingFileParser;
+import hu.karsany.vau.project.mapping.model.sqlmap.SqlMappingParser;
 import hu.karsany.vau.common.VauException;
 
 import java.io.File;

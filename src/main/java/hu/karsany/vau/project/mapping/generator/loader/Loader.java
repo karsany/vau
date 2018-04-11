@@ -27,68 +27,58 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
 
-import java.util.Objects;
+public class Loader implements Generator {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
+    private LoaderParameter loaderParameter;
+    private Generator generator;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
+    public Loader(LoaderParameter loaderParameter) {
+        this.loaderParameter = loaderParameter;
+        generate();
     }
 
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
+    private void generate() {
+        switch (loaderParameter.getLoaderType()) {
+            case HUB:
+                generator = new HubLoader(loaderParameter);
+                break;
+            case LINK:
+                generator = new LinkLoader(loaderParameter);
+                break;
+            case SATTELITE:
+                generator = new SatLoader(loaderParameter);
+                break;
+            case REFERENCE:
+                generator = new RefLoader(loaderParameter);
+                break;
+        }
     }
 
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    @Override
+    public String toString() {
+        return generator.toString();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String getFileName() {
+        return generator.getFileName();
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public OutputType getOutputType() {
+        return generator.getOutputType();
     }
 
+    public LoaderParameter getLoaderParameter() {
+        return loaderParameter;
+    }
+
+    public String getObjectName() {
+        return generator.getFileName();
+    }
 }

@@ -27,68 +27,41 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.datamodel.generator.documentation;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.datamodel.model.DocumentableTable;
+import hu.karsany.vau.project.datamodel.model.Table;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.struct.Pair;
 
-import java.util.Objects;
+public class DataModelTgf implements Generator {
+    private final DataModel dataModel;
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
-
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public DataModelTgf(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String toString() {
+        StringBuilder tgfFile = new StringBuilder();
+        for (Table t : dataModel.getTables()) {
+            tgfFile.append(t.getTableName() + " " + t.getTableName() + "\n");
+        }
+        tgfFile.append("##\n");
+        for (Pair<DocumentableTable, DocumentableTable> s : dataModel.getTableConnections()) {
+            tgfFile.append(s.getLeft().getTableName() + " " + s.getRight().getTableName() + "\n");
+        }
+        return tgfFile.toString();
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public String getFileName() {
+        return "datamodel.tgf";
     }
 
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
 }

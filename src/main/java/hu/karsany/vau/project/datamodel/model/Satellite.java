@@ -31,6 +31,7 @@ package hu.karsany.vau.project.datamodel.model;
 
 import hu.karsany.vau.common.struct.OneItemIterable;
 import hu.karsany.vau.common.struct.Pair;
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
 
 import java.util.stream.Collectors;
 
@@ -46,16 +47,16 @@ public class Satellite extends DocumentableTable {
         this.link = null;
         this.qualifier = qualifier;
 
-        Column idColumn = new Column(hub.getEntityName() + "_ID", Column.BusinessDataType.ID, true, "SK for " + hub.getEntityName());
-        Column startDate = new Column("C$START_DATE", Column.BusinessDataType.DATE, true, "Record Validity From");
+        Column idColumn = new Column(hub.getEntityName() + "_ID", BusinessDataType.ID, true, "SK for " + hub.getEntityName());
+        Column startDate = new Column("C$START_DATE", BusinessDataType.DATE, true, "Record Validity From");
         addColumn(
                 idColumn,
-                new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
+                new Column("C$SOURCE_SYSTEM", BusinessDataType.SMALLTEXT, true, "Source System"),
                 startDate,
-                new Column("C$END_DATE", Column.BusinessDataType.DATE, true, "Record Validity To"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID"),
-                new Column("C$UPDATE_AUDIT_ID", Column.BusinessDataType.ID, true, "Update audit ID"),
-                new Column("C$REC_PRESENT", Column.BusinessDataType.ID, true, "Record Present Flag")
+                new Column("C$END_DATE", BusinessDataType.DATE, true, "Record Validity To"),
+                new Column("C$AUDIT_ID", BusinessDataType.ID, true, "Audit ID"),
+                new Column("C$UPDATE_AUDIT_ID", BusinessDataType.ID, true, "Update audit ID"),
+                new Column("C$REC_PRESENT", BusinessDataType.ID, true, "Record Present Flag")
         );
 
         addUniqueKey(idColumn, startDate);
@@ -69,17 +70,17 @@ public class Satellite extends DocumentableTable {
         this.link = link;
 
 
-        Column idColumn = new Column(link.getEntityName() + "_ID", Column.BusinessDataType.ID, true, "SK for " + link.getEntityName());
-        Column startDate = new Column("C$START_DATE", Column.BusinessDataType.DATE, true, "Record Validity From");
+        Column idColumn = new Column(link.getEntityName() + "_ID", BusinessDataType.ID, true, "SK for " + link.getEntityName());
+        Column startDate = new Column("C$START_DATE", BusinessDataType.DATE, true, "Record Validity From");
         addColumn(idColumn);
         //addColumn(link.getIdColumns());
         addColumn(
-                new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
+                new Column("C$SOURCE_SYSTEM", BusinessDataType.SMALLTEXT, true, "Source System"),
                 startDate,
-                new Column("C$END_DATE", Column.BusinessDataType.DATE, true, "Record Validity To"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID"),
-                new Column("C$UPDATE_AUDIT_ID", Column.BusinessDataType.ID, true, "Update audit ID"),
-                new Column("C$REC_PRESENT", Column.BusinessDataType.ID, true, "Record Present Flag")
+                new Column("C$END_DATE", BusinessDataType.DATE, true, "Record Validity To"),
+                new Column("C$AUDIT_ID", BusinessDataType.ID, true, "Audit ID"),
+                new Column("C$UPDATE_AUDIT_ID", BusinessDataType.ID, true, "Update audit ID"),
+                new Column("C$REC_PRESENT", BusinessDataType.ID, true, "Record Present Flag")
         );
 
         addUniqueKey(idColumn, startDate);

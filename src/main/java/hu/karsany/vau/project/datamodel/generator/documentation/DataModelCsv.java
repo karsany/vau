@@ -27,68 +27,53 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.datamodel.generator.documentation;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.datamodel.model.Column;
+import hu.karsany.vau.project.datamodel.model.DocumentableTable;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
 
-import java.util.Objects;
+public class DataModelCsv implements Generator {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
+    private final DataModel dataModel;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public DataModelCsv(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String toString() {
+        StringBuilder tableColumnsCsv = new StringBuilder();
+
+        tableColumnsCsv.append("TABLE_TYPE;ENTITY_NAME;TABLE_NAME;COLUMN_NAME;BUSINESS_DATATYPE;DATATYPE;TECHNICAL_COLUMN;COLUMN_DESCRIPTION\n");
+
+        for (DocumentableTable t : dataModel.getTables()) {
+            for (Column c : t.getColumns()) {
+                tableColumnsCsv.append(new CsvRecordBuilder(
+                        t.getTableType(),
+                        t.getEntityName(),
+                        t.getTableName(),
+                        c.getColumnName(),
+                        c.getBusinessDataType(),
+                        c.getDataType(),
+                        Boolean.toString(c.isTechnicalColumn()),
+                        c.getComment()
+                ));
+            }
+        }
+
+        return tableColumnsCsv.toString();
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public String getFileName() {
+        return "datamodel.csv";
     }
 
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
 }

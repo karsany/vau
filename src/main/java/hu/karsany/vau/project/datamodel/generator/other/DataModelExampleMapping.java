@@ -27,68 +27,35 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.datamodel.generator.other;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.Table;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.util.Objects;
+public class DataModelExampleMapping implements Generator {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
+    private final Table table;
 
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public DataModelExampleMapping(Table table) {
+        this.table = table;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String getFileName() {
+        String qualifier = table.getTableName().substring(0, 1);
+        String mainName = table.getTableName().substring(table.getTableName().indexOf('_') + 1);
+        return (qualifier + "_##_" + mainName + "_m.sql").toLowerCase();
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public OutputType getOutputType() {
+        return OutputType.EXAMPLE;
     }
 
+    @Override
+    public String toString() {
+        return new TemplateEvaluation("mapping_sample.sql", table).toString();
+    }
 }

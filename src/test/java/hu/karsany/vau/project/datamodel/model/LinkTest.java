@@ -1,6 +1,7 @@
 package hu.karsany.vau.project.datamodel.model;
 
 import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.project.datamodel.model.type.NativeDataType;
 import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,8 +30,8 @@ public class LinkTest {
         DataModel dataModel = dataModelInitializer.getDataModel();
         Link link = dataModel.getLink("EMPLOYEE_MANAGER");
         Assert.assertEquals("Column names are unique", link.getColumns().size(), link.getColumns().stream().map(Column::getColumnName).distinct().count());
-        Assert.assertTrue(link.getColumns().contains(new Column("MANAGER_ID", "NUMBER(20)", "Comment")));
-        Assert.assertTrue(link.getColumns().contains(new Column("EMPLOYEE_ID", "NUMBER(20)", "Comment")));
+        Assert.assertTrue(link.getColumns().contains(new Column("MANAGER_ID", new NativeDataType("NUMBER(20)"), "Comment")));
+        Assert.assertTrue(link.getColumns().contains(new Column("EMPLOYEE_ID", new NativeDataType("NUMBER(20)"), "Comment")));
 
     }
 

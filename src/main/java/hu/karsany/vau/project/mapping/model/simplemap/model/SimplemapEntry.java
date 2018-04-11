@@ -27,68 +27,47 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.model.simplemap.model;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Objects;
+public class SimplemapEntry {
+    private String entityName;
+    private SourceDefinition sourceDefinition;
+    private String businessKey;
+    private List<SimplemapDataGroupMapping> simplemapDataGroupMappingList = new ArrayList<>();
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
+    public String getEntityName() {
+        return entityName;
     }
 
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
+    public SourceDefinition getSourceDefinition() {
+        return sourceDefinition;
     }
 
-    public String getComment() {
-        return comment;
+    public void setSourceDefinition(SourceDefinition sourceDefinition) {
+        this.sourceDefinition = sourceDefinition;
     }
 
-    public String getDataType() {
-        return dataType.getNativeDataType();
+    public String getBusinessKey() {
+        return businessKey;
     }
 
-    public String getColumnName() {
-        return columnName;
+    public void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
     }
 
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
+    public void addDataGroupMappingSpecification(SimplemapDataGroupMapping simplemapDataGroupMapping) {
+        this.simplemapDataGroupMappingList.add(simplemapDataGroupMapping);
     }
 
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public List<SimplemapDataGroupMapping> getSimplemapDataGroupMappingList() {
+        return simplemapDataGroupMappingList;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
-    }
-
 }

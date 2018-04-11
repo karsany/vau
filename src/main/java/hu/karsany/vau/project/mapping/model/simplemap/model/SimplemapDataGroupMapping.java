@@ -27,68 +27,28 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.model.simplemap.model;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.Objects;
+public class SimplemapDataGroupMapping {
+    private String datagroupName;
+    private Map<String, String> mapping = new HashMap<>();
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
-
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
+    public Map<String, String> getMapping() {
+        return mapping;
     }
 
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
+    public void addMapping(String target, String source) {
+        this.mapping.put(target, source);
     }
 
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
+    public String getDatagroupName() {
+        return datagroupName;
     }
 
-    public String getComment() {
-        return comment;
+    public void setDatagroupName(String datagroupName) {
+        this.datagroupName = datagroupName;
     }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
-    }
-
 }

@@ -27,68 +27,33 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.datamodel.generator.documentation;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.util.Objects;
+public class DataModelHtml implements Generator {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
+    private final DataModel dataModel;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
+    public DataModelHtml(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
 
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    @Override
+    public String getFileName() {
+        return "datamodel.html";
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public String toString() {
+        return new TemplateEvaluation("doc_datamodel_html.html", dataModel).toString();
     }
-
 }

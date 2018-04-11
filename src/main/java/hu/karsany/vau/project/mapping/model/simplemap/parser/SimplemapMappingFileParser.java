@@ -27,68 +27,42 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.model.simplemap.parser;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.project.mapping.parser.MappingParser;
+import hu.karsany.vau.project.mapping.model.simplemap.model.SimplemapEntry;
+import hu.karsany.vau.common.VauException;
 
-import java.util.Objects;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
+public class SimplemapMappingFileParser implements MappingParser {
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
+    private final File file;
+    private final DataModel dataModel;
 
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public SimplemapMappingFileParser(File file, DataModel dataModel) {
+        this.file = file;
+        this.dataModel = dataModel;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public List<LoaderParameter> getMapping() {
+        try {
+            List<LoaderParameter> lps = new ArrayList<>();
+
+            SimplemapEvaluation simplemapEvaluation = new SimplemapEvaluation(file);
+            List<SimplemapEntry> entries = simplemapEvaluation.getSimplemapModel().getEntries();
+            for (SimplemapEntry entry : entries) {
+                lps.addAll(new SimplemapMappingEntryParser(entry, dataModel, file).getMapping());
+            }
+            return lps;
+        } catch (IOException e) {
+            throw new VauException(e);
+        }
     }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
-    }
-
 }

@@ -1,6 +1,8 @@
 package hu.karsany.vau.project.mapping.generator;
 
 import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
+import hu.karsany.vau.project.mapping.generator.loader.LinkLoader;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import org.junit.Assert;
 import org.junit.Test;
 

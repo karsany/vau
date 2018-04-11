@@ -27,68 +27,35 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.model.simplemap.model;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+public class SourceDefinition {
+    private final String system;
+    private final String owner;
+    private final String table;
+    private final String contains;
 
-import java.util.Objects;
+    public SourceDefinition(String system, String owner, String table, String contains) {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
-
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
+        this.system = system;
+        this.owner = owner;
+        this.table = table;
+        this.contains = contains;
     }
 
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
+    public String getSystem() {
+        return system;
     }
 
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
+    public String getOwner() {
+        return owner;
     }
 
-    public String getComment() {
-        return comment;
+    public String getTable() {
+        return table;
     }
 
-    public String getDataType() {
-        return dataType.getNativeDataType();
+    public String getContains() {
+        return contains;
     }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
-    }
-
 }

@@ -31,11 +31,11 @@ package hu.karsany.vau.cli.task;
 
 import hu.karsany.vau.common.GeneratorHelper;
 import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.documentation.TableLineageCsv;
+import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
+import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
+import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
+import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
+import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
 import org.pmw.tinylog.Logger;
 
 import java.io.IOException;

@@ -50,7 +50,13 @@ fragment CHAR: ~["]
     ;
 
 
-type :  'CURRENCY' |
+type : vautype | nativetype ;
+
+nativetype: 'NATIVE' '(' nativetypedef ')' ;
+
+nativetypedef: STRINGDEF ;
+
+vautype :  'CURRENCY' |
         'DATE' |
         'LARGETEXT' |
         'MIDDLETEXT' |

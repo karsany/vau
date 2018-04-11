@@ -30,6 +30,7 @@
 package hu.karsany.vau.project.datamodel.model;
 
 import hu.karsany.vau.common.struct.Pair;
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,12 +45,12 @@ public class Link extends DocumentableTable implements Entity {
         this.linkName = linkName;
         this.connectedHubs = hubs;
 
-        Column idColumn = new Column(linkName + "_ID", Column.BusinessDataType.ID, true, "SK for " + linkName);
+        Column idColumn = new Column(linkName + "_ID", BusinessDataType.ID, true, "SK for " + linkName);
         addColumn(idColumn);
         this.addUniqueKey(idColumn);
 
         idColumns = hubs.stream()
-                .map(hub -> new Column(hub.getRight() + "_ID", Column.BusinessDataType.ID, true, "SK for hub " + hub.getLeft().getEntityName()))
+                .map(hub -> new Column(hub.getRight() + "_ID", BusinessDataType.ID, true, "SK for hub " + hub.getLeft().getEntityName()))
                 .collect(Collectors.toList());
 
         Column[] idColsArray = idColumns.toArray(new Column[]{});
@@ -57,9 +58,9 @@ public class Link extends DocumentableTable implements Entity {
         this.addUniqueKey(idColsArray);
 
         addColumn(
-                new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
-                new Column("C$LOAD_DATE", Column.BusinessDataType.DATE, true, "First Load Date"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID")
+                new Column("C$SOURCE_SYSTEM", BusinessDataType.SMALLTEXT, true, "Source System"),
+                new Column("C$LOAD_DATE", BusinessDataType.DATE, true, "First Load Date"),
+                new Column("C$AUDIT_ID", BusinessDataType.ID, true, "Audit ID")
         );
 
     }

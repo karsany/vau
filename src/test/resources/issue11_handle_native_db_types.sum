@@ -1,0 +1,18 @@
+entity CUSTOMER {
+	datagroup DIM {
+		attr NAME typ MIDDLETEXT "Ügyfél neve"; // hello
+		attr BANK_ACCOUNT typ NATIVE("VARCHAR2(100)");
+		attr CUSTOMER_TYPE typ NATIVE("NUMBER");
+		attr RATING typ NATIVE("NUMBER(10)");
+		attr RATING typ NATIVE("NUMBER(10,2)");
+	}
+	datagroup RATING {
+		attr RATING_METHOD typ MIDDLETEXT;
+		attr CR_RATING typ SMALLTEXT;
+	}
+}
+
+ref CUSTOMER_TYPE {
+	key CUSTOMER_TYPE typ SMALLTEXT;
+	attr TYPE_DESC typ MIDDLETEXT;
+}

@@ -29,6 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
+
 public class Hub extends DocumentableTable implements Entity {
     private final String hubName;
 
@@ -37,15 +39,15 @@ public class Hub extends DocumentableTable implements Entity {
         this.hubName = hubName;
 
 
-        Column idColumn = new Column(hubName + "_ID", Column.BusinessDataType.ID, true, "SK Column for " + hubName);
-        Column businessKeyColumn = new Column(hubName + "_BK", Column.BusinessDataType.MIDDLETEXT, false, "BK Column for " + hubName);
+        Column idColumn = new Column(hubName + "_ID", BusinessDataType.ID, true, "SK Column for " + hubName);
+        Column businessKeyColumn = new Column(hubName + "_BK", BusinessDataType.MIDDLETEXT, false, "BK Column for " + hubName);
 
         addColumn(
                 idColumn,
                 businessKeyColumn,
-                new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
-                new Column("C$LOAD_DATE", Column.BusinessDataType.DATE, true, "First Load Date"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Load Audit ID")
+                new Column("C$SOURCE_SYSTEM", BusinessDataType.SMALLTEXT, true, "Source System"),
+                new Column("C$LOAD_DATE", BusinessDataType.DATE, true, "First Load Date"),
+                new Column("C$AUDIT_ID", BusinessDataType.ID, true, "Load Audit ID")
         );
 
         this.addUniqueKey(idColumn);

@@ -27,68 +27,62 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.Link;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.util.Objects;
+public class LinkLoader implements Generator {
+    private final LoaderParameter lp;
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
-
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
-
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+    public LinkLoader(LoaderParameter loaderParameter) {
+        this.lp = loaderParameter;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String toString() {
+        TemplateModel templateModel = new TemplateModel(
+                lp.getDataModel().getLink(lp.getLinkName()),
+                lp.getSqlScript(),
+                lp.getSourceSystemName()
+        );
+
+        return new TemplateEvaluation("link_loader.sql", templateModel).toString();
     }
 
     @Override
-    public int hashCode() {
-
-        return Objects.hash(columnName);
+    public String getFileName() {
+        return "LNK_" + lp.getLinkName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
     }
 
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.LOADER;
+    }
+
+
+    public class TemplateModel {
+        private final Link link;
+        private final String sqlScript;
+        private final String sourceSystem;
+
+        public TemplateModel(Link link, String sqlScript, String sourceSystem) {
+            this.link = link;
+            this.sqlScript = sqlScript;
+            this.sourceSystem = sourceSystem;
+        }
+
+        public Link getLink() {
+            return link;
+        }
+
+        public String getSqlScript() {
+            return sqlScript;
+        }
+
+        public String getSourceSystem() {
+            return sourceSystem;
+        }
+    }
 }

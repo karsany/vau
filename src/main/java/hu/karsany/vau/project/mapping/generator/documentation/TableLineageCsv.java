@@ -27,68 +27,63 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.project.datamodel.model;
+package hu.karsany.vau.project.mapping.generator.documentation;
 
-import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
-import hu.karsany.vau.project.datamodel.model.type.DataType;
-import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.Project;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
+import net.sf.jsqlparser.JSQLParserException;
 
-import java.util.Objects;
+public class TableLineageCsv implements Generator {
 
-public class Column {
-    private final String columnName;
-    private final DataType dataType;
-    private final boolean technicalColumn;
-    private final String comment;
+    private final Project pm;
 
-    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
-        this.columnName = columnName.toUpperCase();
-        this.dataType = dataType;
-        this.technicalColumn = technicalColumn;
-        this.comment = comment;
+    public TableLineageCsv(Project pm) {
 
-    }
-
-    public Column(String columnName, DataType dataType, String comment) {
-        this(columnName, dataType, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDataType() {
-        return dataType.getNativeDataType();
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public boolean isTechnicalColumn() {
-        return technicalColumn;
-    }
-
-    public String getBusinessDataType() {
-        return dataType.getBusinessDataTypeName();
+        this.pm = pm;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(columnName, column.columnName);
+    public String getFileName() {
+        return "lineage_tables.csv";
     }
 
     @Override
-    public int hashCode() {
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
 
-        return Objects.hash(columnName);
+    @Override
+    public String toString() {
+        StringBuilder tableColumnsCsv = new StringBuilder();
+
+        tableColumnsCsv.append("SOURCE_SYSTEM;TRG_TABLE_NAME;SOURCE_OWNER;SOURCE_TABLE_NAME;SQL_QUERY\n");
+
+
+        for (LoaderParameter lp : pm.getMappings()) {
+            try {
+                //SqlMappingParser lp = new SqlMappingParser(f, null);
+
+                for (SqlAnalyzer.Table table : new SqlAnalyzer(lp.getSqlScript()).getInputTables()) {
+                    tableColumnsCsv.append(new CsvRecordBuilder(
+                            lp.getSourceSystemName(),
+                            lp.getOutputTableName(),
+                            table.getOwner(),
+                            table.getTableName(),
+                            lp.getSqlScript().trim()
+                    ));
+                }
+
+
+            } catch (JSQLParserException e) {
+                throw new VauException(e);
+            }
+        }
+
+        return tableColumnsCsv.toString();
     }
 
 }
