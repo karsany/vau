@@ -21,4 +21,14 @@ public class DataModelTest extends DataModelBaseListener {
         ParseTreeWalker.DEFAULT.walk(this, tree);
     }
 
+    @Test
+    public void issue11_handleNativeDBDatatypes() throws IOException {
+        DataModelLexer lexer = new DataModelLexer(CharStreams.fromStream(getClass().getClassLoader().getResourceAsStream("issue11_handle_native_db_types.sum")));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        DataModelParser parser = new DataModelParser(tokens);
+        DataModelParser.SContext tree = parser.s();
+        ParseTreeWalker.DEFAULT.walk(this, tree);
+
+    }
+
 }

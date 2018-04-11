@@ -29,34 +29,32 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
+import hu.karsany.vau.project.datamodel.model.type.DataType;
+import hu.karsany.vau.project.datamodel.model.type.SimpleBusinessDataType;
+
 import java.util.Objects;
 
 public class Column {
     private final String columnName;
-    private final String dataType;
-    private final BusinessDataType businessDataType;
+    private final DataType dataType;
     private final boolean technicalColumn;
     private final String comment;
 
-    private Column(String columnName, String dataType, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
+    public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
         this.columnName = columnName.toUpperCase();
-        this.dataType = dataType.toUpperCase();
-        this.businessDataType = businessDataType;
+        this.dataType = dataType;
         this.technicalColumn = technicalColumn;
         this.comment = comment;
 
     }
 
-    public Column(String columnName, String dataType, String comment) {
-        this(columnName, dataType, null, false, comment);
-    }
-
-    public Column(String columnName, BusinessDataType businessDataType, String comment) {
-        this(columnName, businessDataType.getDatabaseDataType(), businessDataType, false, comment);
+    public Column(String columnName, DataType dataType, String comment) {
+        this(columnName, dataType, false, comment);
     }
 
     public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
-        this(columnName, businessDataType.getDatabaseDataType(), businessDataType, technicalColumn, comment);
+        this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
     }
 
     public String getComment() {
@@ -64,7 +62,7 @@ public class Column {
     }
 
     public String getDataType() {
-        return dataType;
+        return dataType.getNativeDataType();
     }
 
     public String getColumnName() {
@@ -76,7 +74,7 @@ public class Column {
     }
 
     public String getBusinessDataType() {
-        return businessDataType.name();
+        return dataType.getBusinessDataTypeName();
     }
 
     @Override
@@ -93,27 +91,4 @@ public class Column {
         return Objects.hash(columnName);
     }
 
-    public enum BusinessDataType {
-        FLAG("VARCHAR2(1)"),
-        ID("NUMBER(20)"),
-        SMALLTEXT("VARCHAR2(10)"),
-        DATE("DATE"),
-        MIDDLETEXT("VARCHAR2(100)"),
-        MONEY("NUMBER"),
-        INTEGER("NUMBER(20)"),
-        CURRENCY("VARCHAR2(3)"),
-        SHORTTEXT("VARCHAR2(10)"),
-        LARGETEXT("VARCHAR2(1000)"),
-        PERCENTAGE("NUMBER(10,8)");
-
-        private final String databaseDataType;
-
-        BusinessDataType(String databaseDataType) {
-            this.databaseDataType = databaseDataType;
-        }
-
-        public String getDatabaseDataType() {
-            return databaseDataType;
-        }
-    }
 }

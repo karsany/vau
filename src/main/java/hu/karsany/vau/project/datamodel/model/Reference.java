@@ -29,6 +29,8 @@
 
 package hu.karsany.vau.project.datamodel.model;
 
+import hu.karsany.vau.project.datamodel.model.type.BusinessDataType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,13 +42,13 @@ public class Reference extends DocumentableTable {
     public Reference(String referenceName) {
         super("REF_" + referenceName);
         this.referenceName = referenceName;
-        Column startDate = new Column("C$START_DATE", Column.BusinessDataType.DATE, true, "Record Validity From");
+        Column startDate = new Column("C$START_DATE", BusinessDataType.DATE, true, "Record Validity From");
         addColumn(
-                new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
+                new Column("C$SOURCE_SYSTEM", BusinessDataType.SMALLTEXT, true, "Source System"),
                 startDate,
-                new Column("C$END_DATE", Column.BusinessDataType.DATE, true, "Record Validity To"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID"),
-                new Column("C$UPDATE_AUDIT_ID", Column.BusinessDataType.ID, true, "Update audit ID")
+                new Column("C$END_DATE", BusinessDataType.DATE, true, "Record Validity To"),
+                new Column("C$AUDIT_ID", BusinessDataType.ID, true, "Audit ID"),
+                new Column("C$UPDATE_AUDIT_ID", BusinessDataType.ID, true, "Update audit ID")
         );
         this.refKeys.add(startDate);
 
