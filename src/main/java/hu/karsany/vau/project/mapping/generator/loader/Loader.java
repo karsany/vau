@@ -27,36 +27,58 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
 
-import java.io.IOException;
+public class Loader implements Generator {
 
-public class Documentation {
+    private LoaderParameter loaderParameter;
+    private Generator generator;
 
-    private final Project projectModel;
+    public Loader(LoaderParameter loaderParameter) {
+        this.loaderParameter = loaderParameter;
+        generate();
+    }
 
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    private void generate() {
+        switch (loaderParameter.getLoaderType()) {
+            case HUB:
+                generator = new HubLoader(loaderParameter);
+                break;
+            case LINK:
+                generator = new LinkLoader(loaderParameter);
+                break;
+            case SATTELITE:
+                generator = new SatLoader(loaderParameter);
+                break;
+            case REFERENCE:
+                generator = new RefLoader(loaderParameter);
+                break;
+        }
     }
 
 
-    public void run() throws IOException {
+    @Override
+    public String toString() {
+        return generator.toString();
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+    @Override
+    public String getFileName() {
+        return generator.getFileName();
+    }
 
+    @Override
+    public OutputType getOutputType() {
+        return generator.getOutputType();
+    }
+
+    public LoaderParameter getLoaderParameter() {
+        return loaderParameter;
+    }
+
+    public String getObjectName() {
+        return generator.getFileName();
     }
 }

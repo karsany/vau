@@ -27,36 +27,33 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.datamodel.generator.documentation;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.io.IOException;
+public class DataModelHtml implements Generator {
 
-public class Documentation {
+    private final DataModel dataModel;
 
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public DataModelHtml(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 
 
-    public void run() throws IOException {
+    @Override
+    public String getFileName() {
+        return "datamodel.html";
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
 
+    @Override
+    public String toString() {
+        return new TemplateEvaluation("doc_datamodel_html.html", dataModel).toString();
     }
 }

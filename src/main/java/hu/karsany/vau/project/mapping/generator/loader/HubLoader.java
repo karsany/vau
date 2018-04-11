@@ -27,36 +27,63 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
+import hu.karsany.vau.project.datamodel.model.Hub;
 
-import java.io.IOException;
+public class HubLoader implements Generator {
+    private final LoaderParameter lp;
 
-public class Documentation {
+    public HubLoader(LoaderParameter loaderParameter) {
+        this.lp = loaderParameter;
+    }
 
-    private final Project projectModel;
+    @Override
+    public String toString() {
+        TemplateModel templateModel = new TemplateModel(
+                lp.getDataModel().getHub(lp.getEntityName()),
+                lp.getSqlScript(),
+                lp.getSourceSystemName()
+        );
 
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+        return new TemplateEvaluation("hub_loader.sql", templateModel).toString();
+    }
+
+    @Override
+    public String getFileName() {
+        return "HUB_" + lp.getEntityName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+    }
+
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.LOADER;
     }
 
 
-    public void run() throws IOException {
+    public class TemplateModel {
+        private final Hub hub;
+        private final String sqlScript;
+        private final String sourceSystem;
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+        public TemplateModel(Hub hub, String sqlScript, String sourceSystem) {
+            this.hub = hub;
+            this.sqlScript = sqlScript;
+            this.sourceSystem = sourceSystem;
+        }
+
+        public String getSqlScript() {
+            return sqlScript;
+        }
+
+        public String getSourceSystem() {
+            return sourceSystem;
+        }
+
+        public Hub getHub() {
+            return hub;
+        }
 
     }
 }

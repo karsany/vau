@@ -27,36 +27,47 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.model.simplemap.model;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+public class SimplemapEntry {
+    private String entityName;
+    private SourceDefinition sourceDefinition;
+    private String businessKey;
+    private List<SimplemapDataGroupMapping> simplemapDataGroupMappingList = new ArrayList<>();
 
-public class Documentation {
 
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public String getEntityName() {
+        return entityName;
     }
 
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
 
-    public void run() throws IOException {
+    public SourceDefinition getSourceDefinition() {
+        return sourceDefinition;
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+    public void setSourceDefinition(SourceDefinition sourceDefinition) {
+        this.sourceDefinition = sourceDefinition;
+    }
 
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
+    }
+
+    public void addDataGroupMappingSpecification(SimplemapDataGroupMapping simplemapDataGroupMapping) {
+        this.simplemapDataGroupMappingList.add(simplemapDataGroupMapping);
+    }
+
+    public List<SimplemapDataGroupMapping> getSimplemapDataGroupMappingList() {
+        return simplemapDataGroupMappingList;
     }
 }

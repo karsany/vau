@@ -27,36 +27,76 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.Satellite;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.io.IOException;
+public class SatLoader implements Generator {
+    private final LoaderParameter lp;
 
-public class Documentation {
-
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public SatLoader(LoaderParameter loaderParameter) {
+        lp = loaderParameter;
     }
 
 
-    public void run() throws IOException {
+    @Override
+    public String toString() {
+        TemplateModel templateModel = new TemplateModel(
+                lp.getDataModel().getSatellite(lp.getEntityName(), lp.getDataGroupName()),
+                lp.getSqlScript(),
+                lp.getSourceSystemName()
+        );
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+        String templateFileName = null;
 
+        switch (lp.getSatteliteLoadMethod()) {
+            case FULL:
+                templateFileName = "sat_loader_full.sql";
+                break;
+            case DELTA:
+                templateFileName = "sat_loader_delta.sql";
+                break;
+            case INSERT:
+                templateFileName = "sat_loader_insert.sql";
+                break;
+        }
+
+        return new TemplateEvaluation(templateFileName, templateModel).toString();
+    }
+
+    @Override
+    public String getFileName() {
+        return "SAT_" + lp.getEntityName() + "_" + lp.getDataGroupName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+    }
+
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.LOADER;
+    }
+
+    public class TemplateModel {
+        private final Satellite sat;
+        private final String sqlScript;
+        private final String sourceSystem;
+
+        public TemplateModel(Satellite sat, String sqlScript, String sourceSystem) {
+            this.sat = sat;
+            this.sqlScript = sqlScript;
+            this.sourceSystem = sourceSystem;
+        }
+
+        public Satellite getSat() {
+            return sat;
+        }
+
+        public String getSqlScript() {
+            return sqlScript;
+        }
+
+        public String getSourceSystem() {
+            return sourceSystem;
+        }
     }
 }

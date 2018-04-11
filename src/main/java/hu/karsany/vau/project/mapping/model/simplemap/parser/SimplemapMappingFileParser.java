@@ -27,36 +27,42 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.model.simplemap.parser;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.project.mapping.parser.MappingParser;
+import hu.karsany.vau.project.mapping.model.simplemap.model.SimplemapEntry;
+import hu.karsany.vau.common.VauException;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Documentation {
+public class SimplemapMappingFileParser implements MappingParser {
 
-    private final Project projectModel;
+    private final File file;
+    private final DataModel dataModel;
 
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public SimplemapMappingFileParser(File file, DataModel dataModel) {
+        this.file = file;
+        this.dataModel = dataModel;
     }
 
+    @Override
+    public List<LoaderParameter> getMapping() {
+        try {
+            List<LoaderParameter> lps = new ArrayList<>();
 
-    public void run() throws IOException {
-
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
-
+            SimplemapEvaluation simplemapEvaluation = new SimplemapEvaluation(file);
+            List<SimplemapEntry> entries = simplemapEvaluation.getSimplemapModel().getEntries();
+            for (SimplemapEntry entry : entries) {
+                lps.addAll(new SimplemapMappingEntryParser(entry, dataModel, file).getMapping());
+            }
+            return lps;
+        } catch (IOException e) {
+            throw new VauException(e);
+        }
     }
 }

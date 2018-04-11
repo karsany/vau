@@ -27,36 +27,56 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.documentation;
 
-import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
 
-import java.io.IOException;
+public class ColumnLineageCsv implements Generator {
 
-public class Documentation {
+    private final Project pm;
 
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public ColumnLineageCsv(Project pm) {
+        this.pm = pm;
     }
 
-
-    public void run() throws IOException {
-
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
-
+    @Override
+    public String getFileName() {
+        return "lineage_columns.csv";
     }
+
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tableColumnsCsv = new StringBuilder();
+
+        tableColumnsCsv.append("SOURCE_SYSTEM;TRG_TABLE_NAME;TRG_COLUMN_NAME;SOURCE_TABLE_NAMES;SOURCE_COLUMN\n");
+
+        for (LoaderParameter lp : pm.getMappings()) {
+
+
+            SqlAnalyzer sqlAnalyzer = new SqlAnalyzer(lp.getSqlScript());
+            for (SqlAnalyzer.MappingData md : sqlAnalyzer.getMapping()) {
+                tableColumnsCsv.append(new CsvRecordBuilder(
+                        lp.getSourceSystemName(),
+                        lp.getOutputTableName(),
+                        md.getTrgColumnName(),
+                        String.join("\n", sqlAnalyzer.getTables()).trim(),
+                        md.getSourceExpression()
+                ));
+            }
+
+
+        }
+
+        return tableColumnsCsv.toString();
+    }
+
 }

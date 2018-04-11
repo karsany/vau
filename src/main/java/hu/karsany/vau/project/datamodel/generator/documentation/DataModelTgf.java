@@ -27,36 +27,41 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.datamodel.generator.documentation;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.datamodel.model.DocumentableTable;
+import hu.karsany.vau.project.datamodel.model.Table;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.struct.Pair;
 
-import java.io.IOException;
+public class DataModelTgf implements Generator {
+    private final DataModel dataModel;
 
-public class Documentation {
-
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public DataModelTgf(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder tgfFile = new StringBuilder();
+        for (Table t : dataModel.getTables()) {
+            tgfFile.append(t.getTableName() + " " + t.getTableName() + "\n");
+        }
+        tgfFile.append("##\n");
+        for (Pair<DocumentableTable, DocumentableTable> s : dataModel.getTableConnections()) {
+            tgfFile.append(s.getLeft().getTableName() + " " + s.getRight().getTableName() + "\n");
+        }
+        return tgfFile.toString();
+    }
 
-    public void run() throws IOException {
+    @Override
+    public String getFileName() {
+        return "datamodel.tgf";
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
-
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
     }
 }

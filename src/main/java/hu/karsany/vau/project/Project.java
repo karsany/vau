@@ -32,7 +32,7 @@ package hu.karsany.vau.project;
 import hu.karsany.vau.project.configuration.Configuration;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
-import hu.karsany.vau.project.mapping.generator.LoaderParameter;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.parser.GenericMappingParser;
 import org.pmw.tinylog.Logger;
 

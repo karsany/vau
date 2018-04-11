@@ -27,36 +27,61 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.Reference;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.io.IOException;
+public class RefLoader implements Generator {
+    private final LoaderParameter lp;
 
-public class Documentation {
-
-    private final Project projectModel;
-
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public RefLoader(LoaderParameter lp) {
+        this.lp = lp;
     }
 
+    @Override
+    public String getFileName() {
+        return "REF_" + lp.getReferenceName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+    }
 
-    public void run() throws IOException {
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.LOADER;
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
+    @Override
+    public String toString() {
+        TemplateModel templateModel = new TemplateModel(
+                lp.getDataModel().getReference(lp.getReferenceName()),
+                lp.getSqlScript(),
+                lp.getSourceSystemName()
+        );
 
+        return new TemplateEvaluation("ref_loader.sql", templateModel).toString();
+    }
+
+    public class TemplateModel {
+        private final Reference ref;
+        private final String sqlScript;
+        private final String sourceSystem;
+
+        public TemplateModel(Reference ref, String sqlScript, String sourceSystem) {
+            this.ref = ref;
+            this.sqlScript = sqlScript;
+            this.sourceSystem = sourceSystem;
+        }
+
+        public Reference getRef() {
+            return ref;
+        }
+
+        public String getSqlScript() {
+            return sqlScript;
+        }
+
+        public String getSourceSystem() {
+            return sourceSystem;
+        }
     }
 }

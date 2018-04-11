@@ -27,36 +27,63 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.mapping.generator.documentation;
 
-import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.file.CsvRecordBuilder;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
+import net.sf.jsqlparser.JSQLParserException;
 
-import java.io.IOException;
+public class TableLineageCsv implements Generator {
 
-public class Documentation {
+    private final Project pm;
 
-    private final Project projectModel;
+    public TableLineageCsv(Project pm) {
 
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+        this.pm = pm;
     }
 
-
-    public void run() throws IOException {
-
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
-
+    @Override
+    public String getFileName() {
+        return "lineage_tables.csv";
     }
+
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.DOCUMENTATION;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tableColumnsCsv = new StringBuilder();
+
+        tableColumnsCsv.append("SOURCE_SYSTEM;TRG_TABLE_NAME;SOURCE_OWNER;SOURCE_TABLE_NAME;SQL_QUERY\n");
+
+
+        for (LoaderParameter lp : pm.getMappings()) {
+            try {
+                //SqlMappingParser lp = new SqlMappingParser(f, null);
+
+                for (SqlAnalyzer.Table table : new SqlAnalyzer(lp.getSqlScript()).getInputTables()) {
+                    tableColumnsCsv.append(new CsvRecordBuilder(
+                            lp.getSourceSystemName(),
+                            lp.getOutputTableName(),
+                            table.getOwner(),
+                            table.getTableName(),
+                            lp.getSqlScript().trim()
+                    ));
+                }
+
+
+            } catch (JSQLParserException e) {
+                throw new VauException(e);
+            }
+        }
+
+        return tableColumnsCsv.toString();
+    }
+
 }

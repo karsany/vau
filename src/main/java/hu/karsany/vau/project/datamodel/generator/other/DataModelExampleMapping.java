@@ -27,36 +27,35 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.datamodel.generator.other;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.project.datamodel.model.Table;
+import hu.karsany.vau.common.templating.TemplateEvaluation;
 
-import java.io.IOException;
+public class DataModelExampleMapping implements Generator {
 
-public class Documentation {
 
-    private final Project projectModel;
+    private final Table table;
 
-    public Documentation(Project projectModel) {
-        this.projectModel = projectModel;
+    public DataModelExampleMapping(Table table) {
+        this.table = table;
     }
 
+    @Override
+    public String getFileName() {
+        String qualifier = table.getTableName().substring(0, 1);
+        String mainName = table.getTableName().substring(table.getTableName().indexOf('_') + 1);
+        return (qualifier + "_##_" + mainName + "_m.sql").toLowerCase();
+    }
 
-    public void run() throws IOException {
+    @Override
+    public OutputType getOutputType() {
+        return OutputType.EXAMPLE;
+    }
 
-        Logger.info("Generating data model documentation");
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelCsv(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelTgf(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new DataModelHtml(projectModel.getDataModel()));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new TableLineageCsv(projectModel));
-        GeneratorHelper.generate(projectModel.getProjectPath(), new ColumnLineageCsv(projectModel));
-
+    @Override
+    public String toString() {
+        return new TemplateEvaluation("mapping_sample.sql", table).toString();
     }
 }

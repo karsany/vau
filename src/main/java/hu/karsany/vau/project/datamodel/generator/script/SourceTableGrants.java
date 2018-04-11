@@ -27,68 +27,88 @@
  * POSSIBILITY OF SUCH DAMAGE.                                                *
  ******************************************************************************/
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.project.datamodel.generator.script;
 
-import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.App;
+import hu.karsany.vau.common.Generator;
+import hu.karsany.vau.common.VauException;
+import hu.karsany.vau.common.sql.SqlAnalyzer;
 import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
-import hu.karsany.vau.project.datamodel.generator.script.InstallScriptGenerator;
-import hu.karsany.vau.project.datamodel.generator.script.LoaderGrantGenerator;
-import hu.karsany.vau.project.datamodel.generator.script.SequenceGenerator;
-import hu.karsany.vau.project.datamodel.generator.script.SourceTableGrants;
-import hu.karsany.vau.project.datamodel.model.Entity;
-import hu.karsany.vau.project.datamodel.model.Table;
-import hu.karsany.vau.project.mapping.generator.loader.Loader;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
-import hu.karsany.vau.project.mapping.generator.loader.LoaderProcedure;
-import org.pmw.tinylog.Logger;
+import net.sf.jsqlparser.JSQLParserException;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.*;
 
-public class Compile {
+public class SourceTableGrants {
 
     private final Project pm;
 
-    public Compile(Project pm) {
+    public SourceTableGrants(Project pm) {
         this.pm = pm;
     }
 
-    public void run() throws IOException {
+    public List<Generator> generateGrants() {
+        List<Generator> r = new ArrayList<>();
 
-        Logger.info("Generating tables");
-        for (Table table : pm.getDataModel().getTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), table);
+        Map<String, Set<String>> grantScripts = collectGrantScriptsByOwner();
+
+        for (Map.Entry<String, Set<String>> kv : grantScripts.entrySet()) {
+            r.add(new SourceTableGrantPerOwnerGenerator(kv.getKey(), kv.getValue()));
         }
 
-        Logger.info("Generating sequences");
-        for (Entity entity : pm.getDataModel().getEntityTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), new SequenceGenerator(entity));
+        return r;
+    }
+
+    private Map<String, Set<String>> collectGrantScriptsByOwner() {
+        Map<String, Set<String>> grantScripts = new HashMap<>();
+
+        for (LoaderParameter lp : pm.getMappings()) {
+            try {
+                for (SqlAnalyzer.Table table : new SqlAnalyzer(lp.getSqlScript()).getInputTables()) {
+                    if (!grantScripts.containsKey(table.getOwner().toUpperCase())) {
+                        grantScripts.put(table.getOwner().toUpperCase(), new HashSet<>());
+                    }
+
+                    grantScripts.get(table.getOwner().toUpperCase()).add("grant select on " + table.getOwner() + "." + table.getTableName() + " to " + App.getProjectModel().getConfiguration().getTargetSchema() + ";".toUpperCase());
+                }
+
+
+            } catch (JSQLParserException e) {
+                throw new VauException(e);
+            }
+        }
+        return grantScripts;
+    }
+
+    public class SourceTableGrantPerOwnerGenerator implements Generator {
+
+        private final String owner;
+        private final Set<String> grants;
+
+        public SourceTableGrantPerOwnerGenerator(String owner, Set<String> grants) {
+            this.owner = owner;
+            this.grants = grants;
         }
 
+        @Override
+        public String toString() {
+            StringBuffer sb = new StringBuffer();
+            for (String grant : grants) {
+                sb.append(grant + "\n");
+            }
 
-        Logger.info("Generating example mapping");
-        for (Table table : pm.getDataModel().getTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), new DataModelExampleMapping(table));
+            return sb.toString();
         }
 
-        Logger.info("Generating loaders");
-
-        for (LoaderParameter loaderParameter : pm.getMappings()) {
-            Loader ldr = new Loader(loaderParameter);
-            GeneratorHelper.generate(pm.getProjectPath(), ldr);
-            File loaderTemplate = new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName());
-            LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
-            GeneratorHelper.generate(pm.getProjectPath(), lp);
-            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, pm.getConfiguration().getTargetExecuteGrant());
-            GeneratorHelper.generate(pm.getProjectPath(), lgg);
+        @Override
+        public String getFileName() {
+            return "grant_from_" + owner.toLowerCase() + ".sql";
         }
 
-        Logger.info("Generating grants");
-        GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
-
-        Logger.info("Generating install script");
-        GeneratorHelper.generate(pm.getProjectPath(), new InstallScriptGenerator(pm));
+        @Override
+        public OutputType getOutputType() {
+            return OutputType.GRANT;
+        }
     }
 
 }

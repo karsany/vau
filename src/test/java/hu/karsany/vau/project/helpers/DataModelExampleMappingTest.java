@@ -1,5 +1,6 @@
 package hu.karsany.vau.project.helpers;
 
+import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
 import hu.karsany.vau.project.datamodel.model.Link;
 import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
 import org.junit.Assert;
