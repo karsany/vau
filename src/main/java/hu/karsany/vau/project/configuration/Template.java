@@ -29,15 +29,33 @@
 
 package hu.karsany.vau.project.configuration;
 
+import hu.karsany.vau.common.VauException;
+
 public class Template {
 
-    private String defaultTemplate;
+    private String templateName;
+    private String templateType = "procedure";
 
-    public String getDefaultTemplate() {
-        return defaultTemplate;
+    public String getTemplateType() {
+        return templateType;
     }
 
-    public void setDefaultTemplate(String defaultTemplate) {
-        this.defaultTemplate = defaultTemplate;
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    Object readResolve() {
+        if (!(templateType.equals("procedure") || templateType.equals("package"))) {
+            throw new VauException("Template type should be procedure or package.");
+        }
+        return this;
     }
 }

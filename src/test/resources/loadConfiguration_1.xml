@@ -1,5 +1,5 @@
 <project>
-	<name>Oracle HR database Data Vault Example</name>	
+	<name>Test XML1</name>
 	
 	<template>
 		<name>template_base.vm</name>
@@ -9,10 +9,5 @@
 	<documentation>
 		<datamodel-csv>true</datamodel-csv>
 	</documentation>
-	
-	<target>oracle</target>
-	
-	<target-schema>HR_DW</target-schema>
-	<target-execute-grant>HR_DW_PROXY</target-execute-grant>
 	
 </project>

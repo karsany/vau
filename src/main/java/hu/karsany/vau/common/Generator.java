@@ -44,6 +44,7 @@ public interface Generator {
         DOCUMENTATION("doc", "doc"),
         EXAMPLE("example", "other/example"),
         LOADER_PROCEDURE("procedure", "src/procedure"),
+        LOADER_PACKAGE("procedure", "src/package"),
         GRANT("grant", "src/grant"),
         SEQUENCE("sequence", "src/sequence"),
         INSTALL_SCRIPT("install", "src");

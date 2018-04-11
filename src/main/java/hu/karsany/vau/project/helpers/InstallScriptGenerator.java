@@ -14,19 +14,21 @@ public class InstallScriptGenerator implements Generator {
 
     @Override
     public String toString() {
-        return getInstallFileList("table") + getInstallFileList("sequence") + getInstallFileList("procedure");
+        return getInstallFileList("table") + getInstallFileList("sequence") + getInstallFileList("procedure") + getInstallFileList("package");
     }
 
     private String getInstallFileList(String dir) {
         StringBuffer sb = new StringBuffer();
 
         File tablesToInstall = new File(pm.getProjectPath().toString() + "/target/src/" + dir);
+        if (tablesToInstall.exists()) {
 
-        for (File file : tablesToInstall.listFiles()) {
-            sb.append("@./" + dir + "/" + file.getName() + "\n");
+            for (File file : tablesToInstall.listFiles()) {
+                sb.append("@./" + dir + "/" + file.getName() + "\n");
+            }
+
+            sb.append("\n");
         }
-
-        sb.append("\n");
 
         return sb.toString();
     }

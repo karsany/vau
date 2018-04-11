@@ -1,0 +1,13 @@
+<project>
+	<name>Test XML1</name>
+	
+	<template>
+		<name>template_base.vm</name>
+		<type>blablabla</type>
+	</template>
+	
+	<documentation>
+		<datamodel-csv>true</datamodel-csv>
+	</documentation>
+	
+</project>

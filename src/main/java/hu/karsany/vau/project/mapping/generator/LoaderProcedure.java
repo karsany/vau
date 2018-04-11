@@ -29,6 +29,7 @@
 
 package hu.karsany.vau.project.mapping.generator;
 
+import hu.karsany.vau.App;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.sql.SqlAnalyzer;
@@ -49,20 +50,23 @@ public class LoaderProcedure implements Generator {
 
     @Override
     public String getFileName() {
+
+        String extension = App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? ".prc" : ".pck";
+
         if (loader.getLoaderParameter().getSourceFile().toString().endsWith(".sql")) {
-            return loader.getLoaderParameter().getSourceFile().getName().replace(".sql", ".prc");
+            return loader.getLoaderParameter().getSourceFile().getName().replace(".sql", extension);
         } else {
             if (loader.getLoaderParameter().getLoaderType() == LoaderParameter.LoaderType.SATTELITE) {
-                return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_" + loader.getLoaderParameter().getDataGroupName() + "_m.prc").toLowerCase();
+                return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_" + loader.getLoaderParameter().getDataGroupName() + "_m" + extension).toLowerCase();
             } else {
-                return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_m.prc").toLowerCase();
+                return (loader.getLoaderParameter().getLoaderType().toString().substring(0, 1) + "_" + loader.getLoaderParameter().getSourceSystemName() + "_" + loader.getLoaderParameter().getEntityName() + "_m" + extension).toLowerCase();
             }
         }
     }
 
     @Override
     public OutputType getOutputType() {
-        return OutputType.LOADER_PROCEDURE;
+        return App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? OutputType.LOADER_PROCEDURE : OutputType.LOADER_PACKAGE;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class LoaderProcedure implements Generator {
         TemplateModel tm = null;
         try {
             tm = new TemplateModel(
-                    getFileName().replace(".prc", ""),
+                    getLoaderName(),
                     loader.getLoaderParameter().getOutputTableName(),
                     loader.toString(),
                     new SqlAnalyzer(loader.getLoaderParameter().getSqlScript()).getInputTables()
@@ -79,6 +83,10 @@ public class LoaderProcedure implements Generator {
             throw new VauException(e);
         }
         return new TemplateEvaluation(loaderTemplate, tm).toString();
+    }
+
+    public String getLoaderName() {
+        return getFileName().replace(".prc", "");
     }
 
     public class TemplateModel {

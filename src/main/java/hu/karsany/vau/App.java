@@ -41,7 +41,7 @@ import java.io.IOException;
 
 public class App {
 
-    private Project projectModel;
+    private static Project projectModel;
 
     public static void main(String... args) throws IOException {
         new App().app(args);
@@ -75,7 +75,7 @@ public class App {
         return ps;
     }
 
-    public Project getProjectModel() {
+    public static Project getProjectModel() {
         return projectModel;
     }
 

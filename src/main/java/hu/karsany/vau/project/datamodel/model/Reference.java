@@ -45,7 +45,8 @@ public class Reference extends DocumentableTable {
                 new Column("C$SOURCE_SYSTEM", Column.BusinessDataType.SMALLTEXT, true, "Source System"),
                 startDate,
                 new Column("C$END_DATE", Column.BusinessDataType.DATE, true, "Record Validity To"),
-                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID")
+                new Column("C$AUDIT_ID", Column.BusinessDataType.ID, true, "Audit ID"),
+                new Column("C$UPDATE_AUDIT_ID", Column.BusinessDataType.ID, true, "Update audit ID")
         );
         this.refKeys.add(startDate);
 
