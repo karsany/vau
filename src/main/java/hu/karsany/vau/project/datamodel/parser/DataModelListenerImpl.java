@@ -134,17 +134,17 @@ class DataModelListenerImpl extends DataModelBaseListener {
 
         DataType dataType = getDataType(ctx.type());
 
-        String referencesTo = ctx.referencing_def() != null ? ctx.referencing_def().reference_name().getText() : null;
+        String referencesTo = ctx.referencing_def() != null ? ctx.referencing_def().reference_name().getText() : "";
 
-        if (currRef != null && referencesTo != null) {
+        if (currRef != null && !referencesTo.equals("")) {
             throw new VauException(currRef.getTableName() + "." + attributeName + ": referencing in reference is not allowed.");
         }
 
         if (currSat != null) {
             currSat.addColumn(new Column(attributeName, dataType, comment, referencesTo));
-            if (referencesTo != null) {
+            if (!referencesTo.equals("")) {
                 Reference reference = dataModel.getReference(referencesTo);
-                if (reference.getUniqueKeys().get(0).size() == 1) {
+                if (reference.getUniqueKeys().get(0).size() == 2) {
                     dataModel.addConnection(currSat, reference);
                 } else {
                     throw new VauException(ctx.start.getLine() + ":" + ctx.start.getCharPositionInLine() + ": cannot reference a reference table with multiple key columns.");

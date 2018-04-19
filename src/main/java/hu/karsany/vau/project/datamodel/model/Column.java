@@ -40,7 +40,7 @@ public class Column {
     private final DataType dataType;
     private final boolean technicalColumn;
     private final String comment;
-    private String referencesTo = null;
+    private String referencesTo = "";
 
     public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
         this.columnName = columnName.toUpperCase();
