@@ -12,7 +12,6 @@ public class ConfigurationTest {
         Assert.assertEquals("template_base.vm", configuration.getTemplate().getTemplateName());
         Assert.assertEquals("procedure", configuration.getTemplate().getTemplateType());
         Assert.assertEquals("@DW@", configuration.getTargetSchema());
-        Assert.assertEquals("true", configuration.getStrictMode());
     }
 
     @Test

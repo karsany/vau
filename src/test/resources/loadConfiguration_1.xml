@@ -9,7 +9,5 @@
 	<documentation>
 		<datamodel-csv>true</datamodel-csv>
 	</documentation>
-
-	<strict-mode>true</strict-mode>
 	
 </project>
