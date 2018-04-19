@@ -82,7 +82,7 @@ class DataModelListenerImpl extends DataModelBaseListener {
     @Override
     public void enterEntity(DataModelParser.EntityContext ctx) {
         String entityName = ctx.entity_name().getText();
-        setCurrent(dataModel.getHub(entityName));
+        setCurrent(dataModel.createHubIfNotExists(entityName));
     }
 
     @Override

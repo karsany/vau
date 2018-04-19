@@ -43,7 +43,7 @@ public class HubLoader implements Generator {
     @Override
     public String toString() {
         TemplateModel templateModel = new TemplateModel(
-                lp.getDataModel().getHub(lp.getEntityName()),
+                lp.getDataModel().createHubIfNotExists(lp.getEntityName()),
                 lp.getSqlScript(),
                 lp.getSourceSystemName()
         );

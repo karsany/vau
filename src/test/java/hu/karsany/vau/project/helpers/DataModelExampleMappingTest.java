@@ -11,7 +11,7 @@ public class DataModelExampleMappingTest {
     @Test
     public void issue2_example2_good_column_names() {
         DataModelInitializer dataModelInitializer = new DataModelInitializer();
-        dataModelInitializer.addModelDefinition("link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
+        dataModelInitializer.addModelDefinition("entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
 
         Link employeeManagerLink = dataModelInitializer.getDataModel().getLink("EMPLOYEE_MANAGER");
 

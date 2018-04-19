@@ -12,7 +12,7 @@ public class LinkLoaderTest {
     public void issue2_link_loader_generates_ok_code() {
 
         DataModelInitializer dmi = new DataModelInitializer();
-        dmi.addModelDefinition("link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
+        dmi.addModelDefinition("entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
 
         LoaderParameter lp = new LoaderParameter();
         lp.setDataModel(dmi.getDataModel());
