@@ -6,6 +6,8 @@ import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
+
 public class LinkTest {
 
     @Test
@@ -33,6 +35,14 @@ public class LinkTest {
         Assert.assertTrue(link.getColumns().contains(new Column("MANAGER_ID", new NativeDataType("NUMBER(20)"), "Comment")));
         Assert.assertTrue(link.getColumns().contains(new Column("EMPLOYEE_ID", new NativeDataType("NUMBER(20)"), "Comment")));
 
+    }
+
+    @Test
+    public void issue16_strict_mode() {
+        DataModelInitializer dataModelInitializer = new DataModelInitializer();
+        dataModelInitializer.addModelDefinition("link SEMMI between ALMA and KORTE;");
+
+        DataModel dataModel = dataModelInitializer.getDataModel();
     }
 
 }

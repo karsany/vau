@@ -71,10 +71,6 @@ public class Configuration {
         return strictMode;
     }
 
-    public void setStrictMode(String strictMode) {
-            this.strictMode = strictMode;
-    }
-
     public String getTargetExecuteGrant() {
         if (targetExecuteGrant == null) {
             return "@DW@";
@@ -124,6 +120,14 @@ public class Configuration {
             throw new VauException("Strict mode should be true or false.");
         }
         return this;
+    }
+
+    public boolean isStrictMode() {
+        return strictMode.equals("true");
+    }
+
+    public void setStrictMode(String strictMode) {
+        this.strictMode = strictMode;
     }
 
 }
