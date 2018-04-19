@@ -72,11 +72,7 @@ public class Configuration {
     }
 
     public void setStrictMode(String strictMode) {
-        if (strictMode.equals("true") || strictMode.equals("false")) {
             this.strictMode = strictMode;
-        } else {
-            throw new VauException("strict-mode setting should be true or false");
-        }
     }
 
     public String getTargetExecuteGrant() {
@@ -121,6 +117,13 @@ public class Configuration {
 
     public Documentation getDocumentation() {
         return documentation;
+    }
+
+    Object readResolve() {
+        if (!(strictMode.equals("true") || strictMode.equals("false"))) {
+            throw new VauException("Strict mode should be true or false.");
+        }
+        return this;
     }
 
 }
