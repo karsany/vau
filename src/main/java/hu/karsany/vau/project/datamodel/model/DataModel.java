@@ -60,10 +60,7 @@ public class DataModel {
     }
 
     public Hub createHubIfNotExists(String hubEntityName) {
-        Optional<DocumentableTable> first = tables.stream()
-                .filter(table -> table instanceof Hub)
-                .filter(table -> ((Hub) table).getEntityName().equals(hubEntityName))
-                .findFirst();
+        Optional<DocumentableTable> first = findHub(hubEntityName);
 
         if (first.isPresent()) {
             return (Hub) first.get();
@@ -114,15 +111,19 @@ public class DataModel {
     }
 
     public Hub getHub(String entityName) {
-        Optional<DocumentableTable> first = tables.stream()
-                .filter(table -> table instanceof Hub)
-                .filter(table -> ((Hub) table).getEntityName().equals(entityName))
-                .findFirst();
+        Optional<DocumentableTable> first = findHub(entityName);
 
         if (first.isPresent()) {
             return (Hub) first.get();
         } else {
             throw new VauException("Hub " + entityName + " not found");
         }
+    }
+
+    private Optional<DocumentableTable> findHub(String entityName) {
+        return tables.stream()
+                    .filter(table -> table instanceof Hub)
+                    .filter(table -> ((Hub) table).getEntityName().equals(entityName))
+                    .findFirst();
     }
 }
