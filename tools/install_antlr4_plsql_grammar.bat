@@ -16,6 +16,14 @@ del /Q not-implemented\*
 sed -i "s/parser grammar PlSqlParser;/parser grammar PlSqlParser;\n\n@header {package com.antlr.grammarsv4.plsql;}/g" PlSqlParser.g4
 sed -i "s/lexer grammar PlSqlLexer;/lexer grammar PlSqlLexer;\n\n@lexer::header {package com.antlr.grammarsv4.plsql;}/g" PlSqlLexer.g4
 
+md src\main\java\com\antlr\grammarsv4\plsql
+
+echo package com.antlr.grammarsv4.plsql; > src\main\java\com\antlr\grammarsv4\plsql\PlSqlBaseLexer.java
+echo package com.antlr.grammarsv4.plsql; > src\main\java\com\antlr\grammarsv4\plsql\PlSqlBaseParser.java
+
+cat Java\PlSqlBaseLexer.java >> src\main\java\com\antlr\grammarsv4\plsql\PlSqlBaseLexer.java
+cat Java\PlSqlBaseParser.java >> src\main\java\com\antlr\grammarsv4\plsql\PlSqlBaseParser.java
+
 cd ..
 
 call mvn package install
