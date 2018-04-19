@@ -59,11 +59,8 @@ public class DataModel {
         tableConnections.add(new Pair<>(t1, t2));
     }
 
-    public Hub getHub(String hubEntityName) {
-        Optional<DocumentableTable> first = tables.stream()
-                .filter(table -> table instanceof Hub)
-                .filter(table -> ((Hub) table).getEntityName().equals(hubEntityName))
-                .findFirst();
+    public Hub createHubIfNotExists(String hubEntityName) {
+        Optional<DocumentableTable> first = findHub(hubEntityName);
 
         if (first.isPresent()) {
             return (Hub) first.get();
@@ -111,5 +108,22 @@ public class DataModel {
                 .filter(table -> ((Reference) table).getEntityName().equals(entityName))
                 .findAny()
                 .get();
+    }
+
+    public Hub getHub(String entityName) {
+        Optional<DocumentableTable> first = findHub(entityName);
+
+        if (first.isPresent()) {
+            return (Hub) first.get();
+        } else {
+            throw new VauException("Hub " + entityName + " not found");
+        }
+    }
+
+    private Optional<DocumentableTable> findHub(String entityName) {
+        return tables.stream()
+                    .filter(table -> table instanceof Hub)
+                    .filter(table -> ((Hub) table).getEntityName().equals(entityName))
+                    .findFirst();
     }
 }
