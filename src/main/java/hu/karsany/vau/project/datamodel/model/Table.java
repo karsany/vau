@@ -59,17 +59,8 @@ public class Table implements Generator {
     }
 
     public void addColumn(Column... columnList) {
-
-        for (Column column : columnList) {
-            if (this.columns.contains(column)) {
-                throw new VauException("Table " + tableName + " contains the " + column.getColumnName() + ". Specify an alias.");
-            }
-            columns.add(column);
-        }
-
-
+        this.addColumn(Arrays.asList(columnList));
     }
-
 
     public List<List<Column>> getUniqueKeys() {
         return uniqueKeys;
@@ -142,5 +133,15 @@ public class Table implements Generator {
         int result = owner != null ? owner.hashCode() : 0;
         result = 31 * result + tableName.hashCode();
         return result;
+    }
+
+    public void addColumn(List<Column> columnList) {
+        for (Column column : columnList) {
+            if (this.columns.contains(column)) {
+                throw new VauException("Table " + tableName + " contains the " + column.getColumnName() + ". Specify an alias.");
+            }
+            columns.add(column);
+        }
+
     }
 }
