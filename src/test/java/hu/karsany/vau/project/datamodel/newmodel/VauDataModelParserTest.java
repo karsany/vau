@@ -1,6 +1,5 @@
 package hu.karsany.vau.project.datamodel.newmodel;
 
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import org.junit.Test;
 
@@ -59,10 +58,7 @@ public class VauDataModelParserTest {
                 "link EMPLOYEE_DEPARTMENT between EMPLOYEE and DEPARTMENT;\n" +
                 "\n" +
                 "link EMPLOYEE_JOB between EMPLOYEE and JOB;");
-        DataModel parse = vauDataModelParser.parse();
-
-        DataModelCsv dataModelCsv = new DataModelCsv(parse);
-        System.out.println(dataModelCsv.toString());
+        DataModel dataModel = vauDataModelParser.parse();
 
     }
 }

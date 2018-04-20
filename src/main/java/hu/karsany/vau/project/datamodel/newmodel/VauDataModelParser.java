@@ -49,7 +49,7 @@ public class VauDataModelParser {
             Hub hub = new Hub(ctx.entity_name().getText());
             dataModel.addTable(hub);
 
-            DataGroupVisitor dataGroupVisitor = new DataGroupVisitor(hub);
+            DataGroupVisitor dataGroupVisitor = new DataGroupVisitor(hub, dataModel);
             List<Satellite> sats = ctx.datagroup_definition().datagroup()
                     .stream()
                     .map(datagroup -> datagroup.accept(dataGroupVisitor))
@@ -79,7 +79,7 @@ public class VauDataModelParser {
                 dataModel.addConnection(link, hubStringPair.getLeft());
             }
 
-            DataGroupVisitor dataGroupVisitor = new DataGroupVisitor(link);
+            DataGroupVisitor dataGroupVisitor = new DataGroupVisitor(link, dataModel);
 
             if (ctx.datagroup_definition() != null) {
                 List<Satellite> sats = ctx.datagroup_definition().datagroup()
@@ -95,6 +95,29 @@ public class VauDataModelParser {
             return dataModel;
         }
 
+        @Override
+        public DataModel visitRef(DataModelParser.RefContext ctx) {
+            Reference reference = new Reference(ctx.reference_name().getText());
+
+            List<Column> keyColumns = ctx.reference_attributes().keys().key()
+                    .stream()
+                    .map(key -> key.accept(new KeyVisitor()))
+                    .collect(toList());
+
+            List<Column> attrColumns = ctx.reference_attributes().attributes().attribute()
+                    .stream()
+                    .map(attribute -> attribute.accept(new AttributeVisitor(reference, dataModel)))
+                    .collect(toList());
+
+            reference.addColumn(keyColumns);
+            reference.addColumn(attrColumns);
+            keyColumns.forEach(column -> reference.addToMainUniqueKey(column));
+
+            dataModel.addTable(reference);
+
+            return dataModel;
+        }
+
         public DataModel getDataModel() {
             return dataModel;
         }
@@ -103,14 +126,17 @@ public class VauDataModelParser {
     private class DataGroupVisitor extends DataModelBaseVisitor<Satellite> {
         private final Hub hub;
         private final Link link;
+        private final DataModel dataModel;
 
-        public DataGroupVisitor(Hub hub) {
+        public DataGroupVisitor(Hub hub, DataModel dataModel) {
             this.hub = hub;
+            this.dataModel = dataModel;
             link = null;
         }
 
-        public DataGroupVisitor(Link link) {
+        public DataGroupVisitor(Link link, DataModel dataModel) {
             this.link = link;
+            this.dataModel = dataModel;
             hub = null;
         }
 
@@ -123,7 +149,7 @@ public class VauDataModelParser {
                 satellite = new Satellite(link, ctx.datagroup_name().getText());
             }
 
-            AttributeVisitor attributeVisitor = new AttributeVisitor();
+            AttributeVisitor attributeVisitor = new AttributeVisitor(satellite, dataModel);
             List<Column> attributes = ctx.attributes().attribute()
                     .stream()
                     .map(attribute -> attribute.accept(attributeVisitor))
@@ -137,11 +163,25 @@ public class VauDataModelParser {
 
 
     private class AttributeVisitor extends DataModelBaseVisitor<Column> {
+
+        private final DocumentableTable attributeOwner;
+        private final DataModel dataModel;
+
+        public AttributeVisitor(DocumentableTable attributeOwner, DataModel dataModel) {
+            this.attributeOwner = attributeOwner;
+            this.dataModel = dataModel;
+        }
+
         @Override
         public Column visitAttribute(DataModelParser.AttributeContext ctx) {
             DataType dataType = ctx.type().accept(new DataTypeVisitor());
             String commentText = ctx.comment() != null ? ctx.comment().getText() : "";
             String references = ctx.referencing_def() != null ? ctx.referencing_def().reference_name().getText() : "";
+
+            if (!references.equals("")) {
+                dataModel.addConnection(attributeOwner, dataModel.getReference(references));
+            }
+
             return new Column(ctx.attribute_name().getText(), dataType, commentText, references);
         }
     }
@@ -155,6 +195,15 @@ public class VauDataModelParser {
         @Override
         public DataType visitNativetype(DataModelParser.NativetypeContext ctx) {
             return new NativeDataType(ctx.nativetypedef().getText());
+        }
+    }
+
+    private class KeyVisitor extends DataModelBaseVisitor<Column> {
+        @Override
+        public Column visitKey(DataModelParser.KeyContext ctx) {
+            DataType dataType = ctx.type().accept(new DataTypeVisitor());
+            String commentText = ctx.comment() != null ? ctx.comment().getText() : "";
+            return new Column(ctx.attribute_name().getText(), dataType, commentText);
         }
     }
 }
