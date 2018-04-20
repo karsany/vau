@@ -32,10 +32,7 @@ package hu.karsany.vau.project.datamodel.model;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.struct.Pair;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataModel {
@@ -48,27 +45,11 @@ public class DataModel {
     }
 
     public void addTable(DocumentableTable t) {
-        if (t instanceof Hub) {
-            throw new VauException("Cannot add HUB directly with addTable.");
-        } else {
-            tables.add(t);
-        }
+        tables.add(t);
     }
 
     public void addConnection(DocumentableTable t1, DocumentableTable t2) {
         tableConnections.add(new Pair<>(t1, t2));
-    }
-
-    public Hub createHubIfNotExists(String hubEntityName) {
-        Optional<DocumentableTable> first = findHub(hubEntityName);
-
-        if (first.isPresent()) {
-            return (Hub) first.get();
-        } else {
-            Hub e = new Hub(hubEntityName);
-            tables.add(e);
-            return e;
-        }
     }
 
     public Set<Entity> getEntityTables() {
@@ -122,8 +103,24 @@ public class DataModel {
 
     private Optional<DocumentableTable> findHub(String entityName) {
         return tables.stream()
-                    .filter(table -> table instanceof Hub)
-                    .filter(table -> ((Hub) table).getEntityName().equals(entityName))
-                    .findFirst();
+                .filter(table -> table instanceof Hub)
+                .filter(table -> ((Hub) table).getEntityName().equals(entityName))
+                .findFirst();
+    }
+
+    public void addTable(List<? extends DocumentableTable> hubSats) {
+        this.tables.addAll(hubSats);
+    }
+
+    public Hub createHubIfNotExists(String hubEntityName) {
+        Optional<DocumentableTable> first = findHub(hubEntityName);
+
+        if (first.isPresent()) {
+            return (Hub) first.get();
+        } else {
+            Hub e = new Hub(hubEntityName);
+            tables.add(e);
+            return e;
+        }
     }
 }
