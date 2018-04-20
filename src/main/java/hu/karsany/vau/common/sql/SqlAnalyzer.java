@@ -100,8 +100,8 @@ public class SqlAnalyzer {
 
     private class PlSqlListenerImpl extends PlSqlParserBaseListener {
 
-        private List<MappingData> mdl = new ArrayList<>();
-        private List<String> tbls = new ArrayList<>();
+        private final List<MappingData> mdl = new ArrayList<>();
+        private final List<String> tbls = new ArrayList<>();
 
         private String currentColAlias = "";
 
@@ -125,7 +125,7 @@ public class SqlAnalyzer {
         }
 
 
-        public List<String> getTables() {
+        List<String> getTables() {
             return tbls;
         }
 
@@ -157,16 +157,16 @@ public class SqlAnalyzer {
         }
 
 
-        public List<MappingData> getMapping() {
+        List<MappingData> getMapping() {
             return mdl;
         }
     }
 
     public class MappingData {
-        private String trgColumnName;
-        private String sourceExpression;
+        private final String trgColumnName;
+        private final String sourceExpression;
 
-        public MappingData(String trgColumnName, String sourceExpression) {
+        MappingData(String trgColumnName, String sourceExpression) {
 
             this.trgColumnName = trgColumnName;
             this.sourceExpression = sourceExpression;
@@ -186,7 +186,7 @@ public class SqlAnalyzer {
         private final String owner;
         private final String tableName;
 
-        public Table(String owner, String tableName) {
+        Table(String owner, String tableName) {
 
             this.owner = owner;
             this.tableName = tableName;

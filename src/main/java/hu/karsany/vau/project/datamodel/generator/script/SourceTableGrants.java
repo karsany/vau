@@ -85,14 +85,14 @@ public class SourceTableGrants {
         private final String owner;
         private final Set<String> grants;
 
-        public SourceTableGrantPerOwnerGenerator(String owner, Set<String> grants) {
+        SourceTableGrantPerOwnerGenerator(String owner, Set<String> grants) {
             this.owner = owner;
             this.grants = grants;
         }
 
         @Override
         public String toString() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (String grant : grants) {
                 sb.append(grant + "\n");
             }
