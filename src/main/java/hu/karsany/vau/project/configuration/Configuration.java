@@ -39,7 +39,7 @@ public class Configuration {
     private String name;
     private Template template;
     private Documentation documentation;
-    private String target = "oracle";
+    private final String target = "oracle";
     private String targetSchema = "@DW@";
     private String targetExecuteGrant = "@DW@";
 

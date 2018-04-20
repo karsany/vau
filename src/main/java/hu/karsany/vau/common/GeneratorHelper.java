@@ -47,7 +47,7 @@ public class GeneratorHelper {
         }
     }
 
-    public static void generate(File projectPath, Generator g, String encoding) throws IOException {
+    private static void generate(File projectPath, Generator g, String encoding) throws IOException {
         File fileName = new File(projectPath + "/target/" + g.getOutputType().getTargetDirectoryPath() + "/" + g.getFileName().toLowerCase());
 
         Logger.info("  Generating: " + fileName.toString());

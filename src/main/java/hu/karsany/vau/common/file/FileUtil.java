@@ -34,9 +34,9 @@ import org.pmw.tinylog.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FileUtil {
+class FileUtil {
 
-    public static boolean exists(String fileName) {
+    private static boolean exists(String fileName) {
         File file = new File(fileName);
         return file.exists() && !file.isDirectory();
     }

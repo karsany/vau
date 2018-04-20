@@ -18,7 +18,7 @@ public class InstallScriptGenerator implements Generator {
     }
 
     private String getInstallFileList(String dir) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         File tablesToInstall = new File(pm.getProjectPath().toString() + "/target/src/" + dir);
         if (tablesToInstall.exists()) {

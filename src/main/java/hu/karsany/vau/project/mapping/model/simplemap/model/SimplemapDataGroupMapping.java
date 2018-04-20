@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class SimplemapDataGroupMapping {
     private String datagroupName;
-    private Map<String, String> mapping = new HashMap<>();
+    private final Map<String, String> mapping = new HashMap<>();
 
     public Map<String, String> getMapping() {
         return mapping;

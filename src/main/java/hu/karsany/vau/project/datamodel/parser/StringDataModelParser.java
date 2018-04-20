@@ -1,5 +1,6 @@
 package hu.karsany.vau.project.datamodel.parser;
 
+import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.struct.Pair;
 import hu.karsany.vau.grammar.datamodel.DataModelBaseVisitor;
 import hu.karsany.vau.grammar.datamodel.DataModelLexer;
@@ -45,7 +46,7 @@ public class StringDataModelParser implements GenericDataModelParser {
 
     private class EntriesVisitor extends DataModelBaseVisitor<DataModel> {
 
-        private DataModel dataModel = new DataModel();
+        private final DataModel dataModel = new DataModel();
 
         @Override
         public DataModel visitEntity(DataModelParser.EntityContext ctx) {
@@ -59,7 +60,7 @@ public class StringDataModelParser implements GenericDataModelParser {
                     .collect(toList());
 
             dataModel.addTable(sats);
-            sats.stream().forEach(satellite -> dataModel.addConnection(hub, satellite));
+            sats.forEach(satellite -> dataModel.addConnection(hub, satellite));
 
             return dataModel;
         }
@@ -92,7 +93,7 @@ public class StringDataModelParser implements GenericDataModelParser {
 
 
                 dataModel.addTable(sats);
-                sats.stream().forEach(satellite -> dataModel.addConnection(link, satellite));
+                sats.forEach(satellite -> dataModel.addConnection(link, satellite));
             }
 
             return dataModel;
@@ -114,14 +115,14 @@ public class StringDataModelParser implements GenericDataModelParser {
 
             reference.addColumn(keyColumns);
             reference.addColumn(attrColumns);
-            keyColumns.forEach(column -> reference.addToMainUniqueKey(column));
+            keyColumns.forEach(reference::addToMainUniqueKey);
 
             dataModel.addTable(reference);
 
             return dataModel;
         }
 
-        public DataModel getDataModel() {
+        DataModel getDataModel() {
             return dataModel;
         }
     }
@@ -131,13 +132,13 @@ public class StringDataModelParser implements GenericDataModelParser {
         private final Link link;
         private final DataModel dataModel;
 
-        public DataGroupVisitor(Hub hub, DataModel dataModel) {
+        DataGroupVisitor(Hub hub, DataModel dataModel) {
             this.hub = hub;
             this.dataModel = dataModel;
             link = null;
         }
 
-        public DataGroupVisitor(Link link, DataModel dataModel) {
+        DataGroupVisitor(Link link, DataModel dataModel) {
             this.link = link;
             this.dataModel = dataModel;
             hub = null;
@@ -148,8 +149,11 @@ public class StringDataModelParser implements GenericDataModelParser {
             Satellite satellite;
             if (hub != null) {
                 satellite = new Satellite(hub, ctx.datagroup_name().getText());
-            } else {
+
+            } else if (link != null) {
                 satellite = new Satellite(link, ctx.datagroup_name().getText());
+            } else {
+                throw new VauException("Hub or Link not set.");
             }
 
             AttributeVisitor attributeVisitor = new AttributeVisitor(satellite, dataModel);
@@ -170,7 +174,7 @@ public class StringDataModelParser implements GenericDataModelParser {
         private final DocumentableTable attributeOwner;
         private final DataModel dataModel;
 
-        public AttributeVisitor(DocumentableTable attributeOwner, DataModel dataModel) {
+        AttributeVisitor(DocumentableTable attributeOwner, DataModel dataModel) {
             this.attributeOwner = attributeOwner;
             this.dataModel = dataModel;
         }

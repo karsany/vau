@@ -12,10 +12,10 @@ import org.antlr.v4.runtime.misc.Interval;
  * 'BEGIN' if constructor parameter upper=true but getText() would return
  * 'BeGiN'.
  */
-public class CaseChangingCharStream implements CharStream {
+class CaseChangingCharStream implements CharStream {
 
-    final CharStream stream;
-    final boolean upper;
+    private final CharStream stream;
+    private final boolean upper;
 
     /**
      * Constructs a new CaseChangingCharStream wrapping the given {@link CharStream} forcing

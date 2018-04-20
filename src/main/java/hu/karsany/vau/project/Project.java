@@ -70,7 +70,7 @@ public class Project {
 
         List<File> fileList = Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
                 .filter(Files::isRegularFile)
-                .map(path -> path.toFile())
+                .map(Path::toFile)
                 .collect(toList());
 
         pm.dataModel = new FileDataModelParser(fileList).parse();
