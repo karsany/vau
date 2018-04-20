@@ -1,13 +1,14 @@
-package hu.karsany.vau.project.datamodel.newmodel;
+package hu.karsany.vau.project.datamodel.parser;
 
 import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.datamodel.parser.StringDataModelParser;
 import org.junit.Test;
 
-public class VauDataModelParserTest {
+public class StringDataModelParserTest {
 
     @Test
     public void parse() {
-        VauDataModelParser vauDataModelParser = new VauDataModelParser("ref COUNTRY_CODE {\n" +
+        StringDataModelParser stringDataModelParser = new StringDataModelParser("ref COUNTRY_CODE {\n" +
                 "\tkey COUNTRY_CODE typ SMALLTEXT;\n" +
                 "\tattr COUNTRY_NAME typ MIDDLETEXT;\n" +
                 "\tattr REGION_NAME typ MIDDLETEXT;\n" +
@@ -58,7 +59,7 @@ public class VauDataModelParserTest {
                 "link EMPLOYEE_DEPARTMENT between EMPLOYEE and DEPARTMENT;\n" +
                 "\n" +
                 "link EMPLOYEE_JOB between EMPLOYEE and JOB;");
-        DataModel dataModel = vauDataModelParser.parse();
+        DataModel dataModel = stringDataModelParser.parse();
 
     }
 }

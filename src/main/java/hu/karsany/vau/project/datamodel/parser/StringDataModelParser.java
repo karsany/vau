@@ -1,4 +1,4 @@
-package hu.karsany.vau.project.datamodel.newmodel;
+package hu.karsany.vau.project.datamodel.parser;
 
 import hu.karsany.vau.common.struct.Pair;
 import hu.karsany.vau.grammar.datamodel.DataModelBaseVisitor;
@@ -13,21 +13,23 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
+import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class VauDataModelParser {
+public class StringDataModelParser implements GenericDataModelParser {
 
     private final String dataModelContent;
 
-    public VauDataModelParser(String dataModelContent) {
+    public StringDataModelParser(String dataModelContent) {
         this.dataModelContent = dataModelContent;
     }
 
     public DataModel parse() {
+        Logger.info("  Data Model parsing START");
         CharStream charStream = new ANTLRInputStream(dataModelContent);
         DataModelLexer lexer = new DataModelLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
@@ -37,6 +39,7 @@ public class VauDataModelParser {
         entriesVisitor.visit(parser.s());
         DataModel dataModel = entriesVisitor.getDataModel();
 
+        Logger.info("  Data Model parsing END");
         return dataModel;
     }
 

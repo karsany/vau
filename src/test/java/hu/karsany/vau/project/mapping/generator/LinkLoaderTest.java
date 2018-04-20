@@ -1,6 +1,6 @@
 package hu.karsany.vau.project.mapping.generator;
 
-import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
+import hu.karsany.vau.project.datamodel.parser.StringDataModelParser;
 import hu.karsany.vau.project.mapping.generator.loader.LinkLoader;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import org.junit.Assert;
@@ -11,11 +11,10 @@ public class LinkLoaderTest {
     @Test
     public void issue2_link_loader_generates_ok_code() {
 
-        DataModelInitializer dmi = new DataModelInitializer();
-        dmi.addModelDefinition("entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
+        final String TEST_DATA_MODEL = "entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;";
 
         LoaderParameter lp = new LoaderParameter();
-        lp.setDataModel(dmi.getDataModel());
+        lp.setDataModel(new StringDataModelParser(TEST_DATA_MODEL).parse());
         lp.setLinkName("EMPLOYEE_MANAGER");
         lp.setSqlScript("Select employee_id employee_bk,\n" +
                 "       manager_id  manager_bk\n" +
