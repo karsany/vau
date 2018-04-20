@@ -47,7 +47,7 @@ public class DataModelCsv implements Generator {
     public String toString() {
         StringBuilder tableColumnsCsv = new StringBuilder();
 
-        tableColumnsCsv.append("TABLE_TYPE;ENTITY_NAME;TABLE_NAME;COLUMN_NAME;BUSINESS_DATATYPE;DATATYPE;TECHNICAL_COLUMN;COLUMN_DESCRIPTION\n");
+        tableColumnsCsv.append("TABLE_TYPE;ENTITY_NAME;TABLE_NAME;COLUMN_NAME;BUSINESS_DATATYPE;DATATYPE;TECHNICAL_COLUMN;COLUMN_DESCRIPTION;REFERENCE\n");
 
         for (DocumentableTable t : dataModel.getTables()) {
             for (Column c : t.getColumns()) {
@@ -59,7 +59,8 @@ public class DataModelCsv implements Generator {
                         c.getBusinessDataType(),
                         c.getDataType(),
                         Boolean.toString(c.isTechnicalColumn()),
-                        c.getComment()
+                        c.getComment(),
+                        c.getReferencesTo()
                 ));
             }
         }

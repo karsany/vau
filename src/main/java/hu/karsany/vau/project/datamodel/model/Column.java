@@ -40,6 +40,7 @@ public class Column {
     private final DataType dataType;
     private final boolean technicalColumn;
     private final String comment;
+    private String referencesTo = "";
 
     public Column(String columnName, DataType dataType, boolean technicalColumn, String comment) {
         this.columnName = columnName.toUpperCase();
@@ -55,6 +56,15 @@ public class Column {
 
     public Column(String columnName, BusinessDataType businessDataType, boolean technicalColumn, String comment) {
         this(columnName, new SimpleBusinessDataType(businessDataType), technicalColumn, comment);
+    }
+
+    public String getReferencesTo() {
+        return referencesTo;
+    }
+
+    public Column(String columnName, DataType dataType, String comment, String referencesTo) {
+        this(columnName, dataType, false, comment);
+        this.referencesTo = referencesTo;
     }
 
     public String getComment() {

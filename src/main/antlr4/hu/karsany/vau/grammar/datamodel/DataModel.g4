@@ -26,7 +26,9 @@ keys : key+ ;
 
 attributes : attribute* ;
 
-attribute : 'attr' attribute_name 'typ' type comment? ';';
+attribute : 'attr' attribute_name 'typ' type referencing_def? comment? ';';
+
+referencing_def: 'references' reference_name;
 
 key : 'key' attribute_name 'typ' type comment? ';';
 
