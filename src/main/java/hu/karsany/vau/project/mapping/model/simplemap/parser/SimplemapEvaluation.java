@@ -47,9 +47,9 @@ import java.io.File;
 import java.io.IOException;
 
 class SimplemapEvaluation extends SimplemapBaseListener {
-    private SimplemapModel simplemapModel = new SimplemapModel();
+    private final SimplemapModel simplemapModel = new SimplemapModel();
 
-    public SimplemapEvaluation(CharStream input) {
+    private SimplemapEvaluation(CharStream input) {
         SimplemapLexer lexer = new SimplemapLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SimplemapParser parser = new SimplemapParser(tokens);
@@ -72,7 +72,7 @@ class SimplemapEvaluation extends SimplemapBaseListener {
 
     private class EntryVisitor extends SimplemapBaseVisitor<SimplemapEntry> {
 
-        SimplemapEntry se = new SimplemapEntry();
+        final SimplemapEntry se = new SimplemapEntry();
 
         @Override
         protected SimplemapEntry defaultResult() {
@@ -112,7 +112,7 @@ class SimplemapEvaluation extends SimplemapBaseListener {
     }
 
     private class DataGroupVisitor extends SimplemapBaseVisitor<SimplemapDataGroupMapping> {
-        SimplemapDataGroupMapping dms = new SimplemapDataGroupMapping();
+        final SimplemapDataGroupMapping dms = new SimplemapDataGroupMapping();
 
         @Override
         protected SimplemapDataGroupMapping defaultResult() {

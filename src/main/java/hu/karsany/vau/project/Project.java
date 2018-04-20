@@ -31,7 +31,7 @@ package hu.karsany.vau.project;
 
 import hu.karsany.vau.project.configuration.Configuration;
 import hu.karsany.vau.project.datamodel.model.DataModel;
-import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
+import hu.karsany.vau.project.datamodel.parser.FileDataModelParser;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.parser.GenericMappingParser;
 import org.pmw.tinylog.Logger;
@@ -40,9 +40,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class Project {
 
@@ -63,15 +66,14 @@ public class Project {
 
 
         // Data DataModel
-        DataModelInitializer dataModelInitializer = new DataModelInitializer();
-
         Logger.info("Found data model definitions");
 
-        Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
+        List<File> fileList = Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
                 .filter(Files::isRegularFile)
-                .forEach(dataModelInitializer::addModelDefinition);
+                .map(Path::toFile)
+                .collect(toList());
 
-        pm.dataModel = dataModelInitializer.getDataModel();
+        pm.dataModel = new FileDataModelParser(fileList).parse();
 
         // Mapping
 

@@ -36,7 +36,7 @@ public class SimplemapEntry {
     private String entityName;
     private SourceDefinition sourceDefinition;
     private String businessKey;
-    private List<SimplemapDataGroupMapping> simplemapDataGroupMappingList = new ArrayList<>();
+    private final List<SimplemapDataGroupMapping> simplemapDataGroupMappingList = new ArrayList<>();
 
 
     public String getEntityName() {

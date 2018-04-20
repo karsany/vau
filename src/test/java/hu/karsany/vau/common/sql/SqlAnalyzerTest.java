@@ -17,7 +17,7 @@ public class SqlAnalyzerTest {
     }
 
     @Test
-    public void testGetMapping2() throws JSQLParserException {
+    public void testGetMapping2() {
 
         SqlAnalyzer sqlAnalyzer = new SqlAnalyzer("Select employee_id    As employee_bk,\n" +
                 "                     hire_date      As hire_date,\n" +
@@ -36,7 +36,7 @@ public class SqlAnalyzerTest {
     }
 
     @Test
-    public void testGetMapping3() throws JSQLParserException {
+    public void testGetMapping3() {
 
         SqlAnalyzer sqlAnalyzer = new SqlAnalyzer("Select employee_id    As employee_bk,\n" +
                 "                     hire_date      As hire_date,\n" +

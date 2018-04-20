@@ -2,7 +2,7 @@ package hu.karsany.vau.project.helpers;
 
 import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
 import hu.karsany.vau.project.datamodel.model.Link;
-import hu.karsany.vau.project.datamodel.parser.DataModelInitializer;
+import hu.karsany.vau.project.datamodel.parser.StringDataModelParser;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,10 +10,11 @@ public class DataModelExampleMappingTest {
 
     @Test
     public void issue2_example2_good_column_names() {
-        DataModelInitializer dataModelInitializer = new DataModelInitializer();
-        dataModelInitializer.addModelDefinition("entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;");
 
-        Link employeeManagerLink = dataModelInitializer.getDataModel().getLink("EMPLOYEE_MANAGER");
+        final String TEST_DATA_MODEL = "entity EMPLOYEE {} link EMPLOYEE_MANAGER between EMPLOYEE as MANAGER and EMPLOYEE;";
+
+
+        Link employeeManagerLink = new StringDataModelParser(TEST_DATA_MODEL).parse().getLink("EMPLOYEE_MANAGER");
 
         String generatedScript = new DataModelExampleMapping(employeeManagerLink).toString();
 
