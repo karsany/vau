@@ -30,65 +30,25 @@
 package hu.karsany.vau.cli.task;
 
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
-import hu.karsany.vau.project.datamodel.generator.script.InstallScriptGenerator;
 import hu.karsany.vau.project.datamodel.generator.script.LoaderGrantGenerator;
-import hu.karsany.vau.project.datamodel.generator.script.SequenceGenerator;
-import hu.karsany.vau.project.datamodel.generator.script.SourceTableGrants;
-import hu.karsany.vau.project.datamodel.model.Entity;
-import hu.karsany.vau.project.datamodel.model.Table;
 import hu.karsany.vau.project.mapping.generator.loader.Loader;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderProcedure;
-import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
-public class Compile {
-
-    private final Project pm;
-
-    public Compile(Project pm) {
-        this.pm = pm;
-    }
-
+public class CompileLoaders extends AbstractTask {
+    @Override
     public void run() throws IOException {
-
-        Logger.info("Generating tables");
-        for (Table table : pm.getDataModel().getTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), table);
-        }
-
-        Logger.info("Generating sequences");
-        for (Entity entity : pm.getDataModel().getEntityTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), new SequenceGenerator(entity));
-        }
-
-
-        Logger.info("Generating example mapping");
-        for (Table table : pm.getDataModel().getTables()) {
-            GeneratorHelper.generate(pm.getProjectPath(), new DataModelExampleMapping(table));
-        }
-
-        Logger.info("Generating loaders");
-
-        for (LoaderParameter loaderParameter : pm.getMappings()) {
+        for (LoaderParameter loaderParameter : project.getMappings()) {
             Loader ldr = new Loader(loaderParameter);
-            GeneratorHelper.generate(pm.getProjectPath(), ldr);
-            File loaderTemplate = new File(pm.getProjectPath() + "/src/template/" + pm.getConfiguration().getTemplate().getTemplateName());
+            GeneratorHelper.generate(project.getProjectPath(), ldr);
+            File loaderTemplate = new File(project.getProjectPath() + "/src/template/" + project.getConfiguration().getTemplate().getTemplateName());
             LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
-            GeneratorHelper.generate(pm.getProjectPath(), lp);
-            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, pm.getConfiguration().getTargetExecuteGrant());
-            GeneratorHelper.generate(pm.getProjectPath(), lgg);
+            GeneratorHelper.generate(project.getProjectPath(), lp);
+            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, project.getConfiguration().getTargetExecuteGrant());
+            GeneratorHelper.generate(project.getProjectPath(), lgg);
         }
-
-        Logger.info("Generating grants");
-        GeneratorHelper.generate(pm.getProjectPath(), new SourceTableGrants(pm).generateGrants());
-
-        Logger.info("Generating install script");
-        GeneratorHelper.generate(pm.getProjectPath(), new InstallScriptGenerator(pm));
     }
-
 }

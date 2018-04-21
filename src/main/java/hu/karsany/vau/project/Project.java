@@ -35,9 +35,11 @@ import hu.karsany.vau.project.datamodel.parser.FileDataModelParser;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.parser.GenericMappingParser;
 import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.LoggingContext;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,65 +49,61 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class Project {
+public class Project implements ProjectInterface {
 
     private final File projectPath;
     private Configuration configuration;
     private DataModel dataModel;
     private List<LoaderParameter> mappings;
 
-    private Project(File projectPath) {
+    public Project(File projectPath) throws IOException {
         this.projectPath = projectPath;
     }
 
-    public static Project initialize(File projectPath) throws IOException {
-        Project pm = new Project(projectPath);
-
-        // Configuration
-        pm.configuration = Configuration.loadConfiguration(new FileInputStream(projectPath + "\\vau.xml"));
-
-
-        // Data DataModel
-        Logger.info("Found data model definitions");
-
-        List<File> fileList = Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
-                .filter(Files::isRegularFile)
-                .map(Path::toFile)
-                .collect(toList());
-
-        pm.dataModel = new FileDataModelParser(fileList).parse();
-
-        // Mapping
-
-        Logger.info("Found mapping definitions");
-
-        pm.mappings = new ArrayList<>();
+    public void initMapping() throws IOException {
+        mappings = new ArrayList<>();
 
         Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\mapping\\"))
                 .filter(Files::isRegularFile)
                 .forEach(path ->
-                        pm.mappings.addAll(
-                                new GenericMappingParser(path.toFile(), pm.dataModel).getMapping()
+                        this.mappings.addAll(
+                                new GenericMappingParser(path.toFile(), this.dataModel).getMapping()
                         )
                 );
 
-        return pm;
+        Logger.info("  Parsing finished.");
 
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
+    public void initConfig() throws FileNotFoundException {
+        this.configuration = Configuration.loadConfiguration(new FileInputStream(projectPath + "\\vau.xml"));
     }
 
-    public List<LoaderParameter> getMappings() {
-        return mappings;
+    public void initModel() throws IOException {
+        List<File> fileList = Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
+                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .collect(toList());
+        this.dataModel = new FileDataModelParser(fileList).parse();
     }
 
+    @Override
     public File getProjectPath() {
         return projectPath;
     }
 
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    @Override
     public DataModel getDataModel() {
         return dataModel;
+    }
+
+    @Override
+    public List<LoaderParameter> getMappings() {
+        return mappings;
     }
 }

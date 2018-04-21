@@ -27,36 +27,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli;
+package hu.karsany.vau.cli.task;
 
-import hu.karsany.vau.cli.task.TaskManager;
-import picocli.CommandLine;
+import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
+import hu.karsany.vau.project.datamodel.model.Table;
 
-import java.io.File;
+import java.io.IOException;
 
-@CommandLine.Command(description = "VAU Data Vault Generator",
-        name = "vau", version = "vau 2.0-SNAPSHOT")
-public class Parameters {
-    @CommandLine.Option(names = {"-d", "--directory"}, description = "Project directory. Defaults to current directory.")
-    private File projectDirectory = new File(".");
-    @CommandLine.Parameters(arity = "0..*", paramLabel = "TASK", description = "Tasks to complete.")
-    private TaskManager.Task[] tasks;
-
-    public static Parameters commandLineParsing(String[] args) {
-
-        if (args.length == 0) {
-            CommandLine.usage(new Parameters(), System.out);
+public class ExampleMapping extends AbstractTask {
+    @Override
+    public void run() throws IOException {
+        for (Table table : project.getDataModel().getTables()) {
+            GeneratorHelper.generate(project.getProjectPath(), new DataModelExampleMapping(table));
         }
-
-        return CommandLine.populateCommand(new Parameters(), args);
     }
-
-    public TaskManager.Task[] getTasks() {
-        return tasks;
-    }
-
-    public File getProjectDirectory() {
-        return projectDirectory;
-    }
-
 }

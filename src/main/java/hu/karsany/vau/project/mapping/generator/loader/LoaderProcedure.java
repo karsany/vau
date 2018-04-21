@@ -30,6 +30,7 @@
 package hu.karsany.vau.project.mapping.generator.loader;
 
 import hu.karsany.vau.App;
+import hu.karsany.vau.cli.task.ApplicationContext;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.sql.SqlAnalyzer;
@@ -51,7 +52,7 @@ public class LoaderProcedure implements Generator {
     @Override
     public String getFileName() {
 
-        String extension = App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? ".prc" : ".pck";
+        String extension = ApplicationContext.getProject().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? ".prc" : ".pck";
 
         if (loader.getLoaderParameter().getSourceFile().toString().endsWith(".sql")) {
             return loader.getLoaderParameter().getSourceFile().getName().replace(".sql", extension);
@@ -66,7 +67,7 @@ public class LoaderProcedure implements Generator {
 
     @Override
     public OutputType getOutputType() {
-        return App.getProjectModel().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? OutputType.LOADER_PROCEDURE : OutputType.LOADER_PACKAGE;
+        return ApplicationContext.getProject().getConfiguration().getTemplate().getTemplateType().equals("procedure") ? OutputType.LOADER_PROCEDURE : OutputType.LOADER_PACKAGE;
     }
 
     @Override

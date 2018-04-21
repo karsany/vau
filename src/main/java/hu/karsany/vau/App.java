@@ -29,81 +29,33 @@
 
 package hu.karsany.vau;
 
-import com.beust.jcommander.JCommander;
 import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.Clean;
-import hu.karsany.vau.cli.task.Compile;
-import hu.karsany.vau.cli.task.Documentation;
-import hu.karsany.vau.project.Project;
+import hu.karsany.vau.cli.task.ApplicationContext;
+import hu.karsany.vau.cli.task.TaskManager;
 import org.pmw.tinylog.Configurator;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class App {
 
-    private static Project projectModel;
-
-    public static void main(String... args) throws IOException {
+    public static void main(String... args) throws IOException, IllegalAccessException, InstantiationException {
         new App().app(args);
     }
 
-    private static void initializeLogger() {
-        // Logger
+    public void app(String... args) throws IOException, InstantiationException, IllegalAccessException {
         Configurator.defaultConfig()
                 .formatPattern("[{level}] {message}")
                 .activate();
-    }
 
-    private static Parameters commandLineParsing(String[] args) {
-        // Command Line
-        if (args.length == 0) {
-            Parameters ps = new Parameters();
-            JCommander.newBuilder()
-                    .addObject(ps)
-                    .programName("vau")
-                    .build()
-                    .usage();
-
-            return null;
-        }
-
-        Parameters ps = new Parameters();
-        JCommander.newBuilder()
-                .addObject(ps)
-                .build()
-                .parse(args);
-        return ps;
-    }
-
-    public static Project getProjectModel() {
-        return projectModel;
-    }
-
-    public void app(String... args) throws IOException {
-        Parameters ps = commandLineParsing(args);
+        Parameters ps = Parameters.commandLineParsing(args);
         if (ps == null)
             return;
 
-        initializeLogger();
+        ApplicationContext.setProjectPath(ps.getProjectDirectory());
 
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        if (ps.isCompile() || ps.isDocumentation()) {
-            projectModel = Project.initialize(ps.getProjectDirectory());
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            new Compile(projectModel).run();
-        }
-
-        // Documentation
-        if (ps.isDocumentation()) {
-            new Documentation(projectModel).run();
-        }
+        final TaskManager taskManager = new TaskManager(Arrays.asList(ps.getTasks()));
+        taskManager.run();
 
     }
 }

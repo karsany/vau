@@ -35,17 +35,9 @@ import org.pmw.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class Clean {
-    private final File projectDirectory;
-
-    public Clean(File projectDirectory) {
-        this.projectDirectory = projectDirectory;
-    }
-
+public class Clean extends AbstractTask {
     public void run() throws IOException {
-
-        Logger.info("Cleanup project directory...");
-
-        FileUtils.deleteDirectory(new File(projectDirectory.getPath() + "\\target"));
+        Logger.info("  Cleanup project directory...");
+        FileUtils.deleteDirectory(new File(ApplicationContext.getProjectPath() + "\\target"));
     }
 }
