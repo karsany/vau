@@ -27,55 +27,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau;
+package hu.karsany.vau.project;
 
-import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.Clean;
-import hu.karsany.vau.cli.task.Compile;
-import hu.karsany.vau.cli.task.Documentation;
-import hu.karsany.vau.project.Project;
-import org.pmw.tinylog.Configurator;
+import hu.karsany.vau.project.configuration.Configuration;
+import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.List;
 
-public class App {
+public interface ProjectInterface {
 
-    private static Project projectModel;
+    File getProjectPath();
 
-    public static void main(String... args) throws IOException {
-        Configurator.defaultConfig()
-                .formatPattern("[{level}] {message}")
-                .activate();
-        new App().app(args);
-    }
+    Configuration getConfiguration();
 
-    public static Project getProjectModel() {
-        return projectModel;
-    }
+    DataModel getDataModel();
 
-    public void app(String... args) throws IOException {
-        Parameters ps = Parameters.commandLineParsing(args);
-        if (ps == null)
-            return;
+    List<LoaderParameter> getMappings();
 
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        if (ps.isCompile() || ps.isDocumentation()) {
-            projectModel = new Project(ps.getProjectDirectory());
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            new Compile(projectModel).run();
-        }
-
-        // Documentation
-        if (ps.isDocumentation()) {
-            new Documentation(projectModel).run();
-        }
-
-    }
 }

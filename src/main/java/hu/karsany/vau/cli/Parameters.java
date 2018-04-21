@@ -29,6 +29,7 @@
 
 package hu.karsany.vau.cli;
 
+import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import java.io.File;
@@ -60,4 +61,26 @@ public class Parameters {
     public boolean isDocumentation() {
         return documentation;
     }
+
+    public static Parameters commandLineParsing(String[] args) {
+        // Command Line
+        if (args.length == 0) {
+            Parameters ps = new Parameters();
+            JCommander.newBuilder()
+                    .addObject(ps)
+                    .programName("vau")
+                    .build()
+                    .usage();
+
+            return null;
+        }
+
+        Parameters ps = new Parameters();
+        JCommander.newBuilder()
+                .addObject(ps)
+                .build()
+                .parse(args);
+        return ps;
+    }
+
 }
