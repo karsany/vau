@@ -39,7 +39,7 @@ STRINGDEF: '"' CHARSEQUENCE? '"'
         {
           String s = getText();
           s = s.substring(1, s.length() - 1); // strip the leading and trailing quotes
-          s = s.replace("\"\"", "\""); // replace all double quotes with single quotes
+          s = s.replace("\"\"", "\""); // replace taskName double quotes with single quotes
           setText(s);
         }
         ;
