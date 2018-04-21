@@ -35,6 +35,7 @@ import hu.karsany.vau.project.datamodel.parser.FileDataModelParser;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.parser.GenericMappingParser;
 import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.LoggingContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,14 +58,9 @@ public class Project implements ProjectInterface {
 
     public Project(File projectPath) throws IOException {
         this.projectPath = projectPath;
-        loadConfiguration();
-        initializeModel();
-        loadMapping();
     }
 
-    private void loadMapping() throws IOException {
-        Logger.info("Found mapping definitions");
-
+    public void initMapping() throws IOException {
         mappings = new ArrayList<>();
 
         Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\mapping\\"))
@@ -75,14 +71,15 @@ public class Project implements ProjectInterface {
                         )
                 );
 
+        Logger.info("  Parsing finished.");
+
     }
 
-    private void loadConfiguration() throws FileNotFoundException {
+    public void initConfig() throws FileNotFoundException {
         this.configuration = Configuration.loadConfiguration(new FileInputStream(projectPath + "\\vau.xml"));
     }
 
-    private void initializeModel() throws IOException {
-        Logger.info("Found data model definitions");
+    public void initModel() throws IOException {
         List<File> fileList = Files.walk(Paths.get(projectPath.getAbsolutePath() + "\\src\\model\\"))
                 .filter(Files::isRegularFile)
                 .map(Path::toFile)

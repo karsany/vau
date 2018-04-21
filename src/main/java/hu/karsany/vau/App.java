@@ -30,22 +30,19 @@
 package hu.karsany.vau;
 
 import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.Clean;
-import hu.karsany.vau.cli.task.Compile;
-import hu.karsany.vau.cli.task.Documentation;
+import hu.karsany.vau.cli.task.TaskManager;
+import hu.karsany.vau.cli.task.ApplicationContext;
 import hu.karsany.vau.project.Project;
 import org.pmw.tinylog.Configurator;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class App {
 
     private static Project projectModel;
 
-    public static void main(String... args) throws IOException {
-        Configurator.defaultConfig()
-                .formatPattern("[{level}] {message}")
-                .activate();
+    public static void main(String... args) throws IOException, IllegalAccessException, InstantiationException {
         new App().app(args);
     }
 
@@ -53,11 +50,22 @@ public class App {
         return projectModel;
     }
 
-    public void app(String... args) throws IOException {
+    public void app(String... args) throws IOException, InstantiationException, IllegalAccessException {
+        Configurator.defaultConfig()
+                .formatPattern("[{level}] {message}")
+                .activate();
+
         Parameters ps = Parameters.commandLineParsing(args);
         if (ps == null)
             return;
 
+        ApplicationContext.setProjectPath(ps.getProjectDirectory());
+
+        final TaskManager taskManager = new TaskManager(Arrays.asList(ps.getTasks()));
+        taskManager.run();
+
+
+/*
         // Clean
         if (ps.isClean()) {
             new Clean(ps.getProjectDirectory()).run();
@@ -76,6 +84,6 @@ public class App {
         if (ps.isDocumentation()) {
             new Documentation(projectModel).run();
         }
-
+*/
     }
 }

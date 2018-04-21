@@ -27,36 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli;
+package hu.karsany.vau.cli.task;
 
-import hu.karsany.vau.cli.task.TaskManager;
-import picocli.CommandLine;
+import java.io.IOException;
 
-import java.io.File;
-
-@CommandLine.Command(description = "VAU Data Vault Generator",
-        name = "vau", version = "vau 2.0-SNAPSHOT")
-public class Parameters {
-    @CommandLine.Option(names = {"-d", "--directory"}, description = "Project directory. Defaults to current directory.")
-    private File projectDirectory = new File(".");
-    @CommandLine.Parameters(arity = "0..*", paramLabel = "TASK", description = "Tasks to complete.")
-    private TaskManager.Task[] tasks;
-
-    public static Parameters commandLineParsing(String[] args) {
-
-        if (args.length == 0) {
-            CommandLine.usage(new Parameters(), System.out);
-        }
-
-        return CommandLine.populateCommand(new Parameters(), args);
+public class InitMapping extends AbstractTask {
+    @Override
+    public void run() throws IOException {
+        ApplicationContext.getProject().initMapping();
     }
-
-    public TaskManager.Task[] getTasks() {
-        return tasks;
-    }
-
-    public File getProjectDirectory() {
-        return projectDirectory;
-    }
-
 }

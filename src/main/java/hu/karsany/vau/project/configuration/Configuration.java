@@ -58,7 +58,7 @@ public class Configuration {
         Configuration configuration = (Configuration) xs.fromXML(is);
 
 
-        Logger.info("Configuration found in vau.xml: " + configuration.getName());
+        Logger.info("  Configuration found in vau.xml: " + configuration.getName());
 
         return configuration;
     }

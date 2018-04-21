@@ -1,5 +1,6 @@
 package hu.karsany.vau;
 
+import hu.karsany.vau.cli.task.ApplicationContext;
 import hu.karsany.vau.project.Project;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,20 +10,20 @@ import java.io.IOException;
 public class AppTest {
 
     @Test
-    public void oracleHrExampleTestCleanCompile() throws IOException {
+    public void oracleHrExampleTestCleanCompile() throws IOException, IllegalAccessException, InstantiationException {
         App app = new App();
-        app.app("clean", "compile", "-d", "examples/oracle-hr");
+        app.app("-d", "examples/oracle-hr", "clean", "compile");
 
-        Project projectModel = app.getProjectModel();
+        Project projectModel = ApplicationContext.getProject();
 
         Assert.assertNotNull(projectModel);
         Assert.assertEquals("Oracle HR database Data Vault Example", projectModel.getConfiguration().getName());
     }
 
     @Test
-    public void oracleHrExampleTestDoc() throws IOException {
+    public void oracleHrExampleTestDoc() throws IOException, IllegalAccessException, InstantiationException {
         App app = new App();
-        app.app("doc", "-d", "examples/oracle-hr");
+        app.app("-d", "examples/oracle-hr", "doc");
     }
-
+    
 }

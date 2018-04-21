@@ -59,7 +59,6 @@ public class StringDataModelParser implements GenericDataModelParser {
     }
 
     public DataModel parse() {
-        Logger.info("  Data Model parsing START");
         CharStream charStream = new ANTLRInputStream(dataModelContent);
         DataModelLexer lexer = new DataModelLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
@@ -69,7 +68,7 @@ public class StringDataModelParser implements GenericDataModelParser {
         entriesVisitor.visit(parser.s());
         DataModel dataModel = entriesVisitor.getDataModel();
 
-        Logger.info("  Data Model parsing END");
+        Logger.info("  Parsing finished.");
         return dataModel;
     }
 

@@ -30,6 +30,7 @@
 package hu.karsany.vau.project.datamodel.generator.script;
 
 import hu.karsany.vau.App;
+import hu.karsany.vau.cli.task.ApplicationContext;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.sql.SqlAnalyzer;
@@ -69,7 +70,7 @@ public class SourceTableGrants {
                         grantScripts.put(table.getOwner().toUpperCase(), new HashSet<>());
                     }
 
-                    grantScripts.get(table.getOwner().toUpperCase()).add("grant select on " + table.getOwner() + "." + table.getTableName() + " to " + App.getProjectModel().getConfiguration().getTargetSchema() + ";".toUpperCase());
+                    grantScripts.get(table.getOwner().toUpperCase()).add("grant select on " + table.getOwner() + "." + table.getTableName() + " to " + ApplicationContext.getProject().getConfiguration().getTargetSchema() + ";".toUpperCase());
                 }
 
 
