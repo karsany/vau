@@ -30,9 +30,8 @@
 package hu.karsany.vau;
 
 import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.TaskManager;
 import hu.karsany.vau.cli.task.ApplicationContext;
-import hu.karsany.vau.project.Project;
+import hu.karsany.vau.cli.task.TaskManager;
 import org.pmw.tinylog.Configurator;
 
 import java.io.IOException;
@@ -40,14 +39,8 @@ import java.util.Arrays;
 
 public class App {
 
-    private static Project projectModel;
-
     public static void main(String... args) throws IOException, IllegalAccessException, InstantiationException {
         new App().app(args);
-    }
-
-    public static Project getProjectModel() {
-        return projectModel;
     }
 
     public void app(String... args) throws IOException, InstantiationException, IllegalAccessException {
@@ -64,26 +57,5 @@ public class App {
         final TaskManager taskManager = new TaskManager(Arrays.asList(ps.getTasks()));
         taskManager.run();
 
-
-/*
-        // Clean
-        if (ps.isClean()) {
-            new Clean(ps.getProjectDirectory()).run();
-        }
-
-        if (ps.isCompile() || ps.isDocumentation()) {
-            projectModel = new Project(ps.getProjectDirectory());
-        }
-
-        // Compile
-        if (ps.isCompile()) {
-            new Compile(projectModel).run();
-        }
-
-        // Documentation
-        if (ps.isDocumentation()) {
-            new Documentation(projectModel).run();
-        }
-*/
     }
 }
