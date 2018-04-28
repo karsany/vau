@@ -89,6 +89,11 @@ public class TaskManager {
         private final Set<Task> dependencies = new HashSet<>();
         private final Class<? extends AbstractTask> taskSpec;
 
+        /***
+         * Defines a task
+         * @param taskSpec the task, what will be running
+         * @param dependencies of the tasks
+         */
         Task(Class<? extends AbstractTask> taskSpec, Task... dependencies) {
             this.taskSpec = taskSpec;
             this.dependencies.addAll(Arrays.asList(dependencies));
