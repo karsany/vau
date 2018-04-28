@@ -27,8 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.manager;
 
+import hu.karsany.vau.cli.task.documentation.*;
+import hu.karsany.vau.cli.task.init.Clean;
+import hu.karsany.vau.cli.task.init.InitConfig;
+import hu.karsany.vau.cli.task.init.InitMapping;
+import hu.karsany.vau.cli.task.init.InitModel;
+import hu.karsany.vau.cli.task.other.ExampleMapping;
+import hu.karsany.vau.cli.task.other.NopeTask;
+import hu.karsany.vau.cli.task.source.*;
 import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
@@ -66,6 +74,7 @@ public class TaskManager {
     }
 
     public enum Task {
+        // declare task and dependencies
         clean(Clean.class),
         init_config(InitConfig.class),
         init_model(InitModel.class, init_config),

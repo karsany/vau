@@ -29,7 +29,7 @@
 
 package hu.karsany.vau.cli;
 
-import hu.karsany.vau.cli.task.TaskManager;
+import hu.karsany.vau.cli.task.manager.TaskManager;
 import picocli.CommandLine;
 
 import java.io.File;

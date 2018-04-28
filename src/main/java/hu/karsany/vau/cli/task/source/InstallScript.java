@@ -27,16 +27,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.source;
 
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.script.SourceTableGrants;
+import hu.karsany.vau.project.datamodel.generator.script.InstallScriptGenerator;
 
 import java.io.IOException;
 
-public class CompileGrants extends AbstractTask {
+public class InstallScript extends AbstractTask {
     @Override
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new SourceTableGrants(project).generateGrants());
+        GeneratorHelper.generate(project.getProjectPath(), new InstallScriptGenerator(project));
     }
 }

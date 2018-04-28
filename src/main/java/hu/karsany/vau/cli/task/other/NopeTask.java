@@ -27,7 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.other;
+
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 
 public class NopeTask extends AbstractTask {
 

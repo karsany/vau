@@ -27,27 +27,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.documentation;
 
-import hu.karsany.vau.project.Project;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
+import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.project.datamodel.generator.documentation.DataModelTgf;
 
-import java.io.File;
 import java.io.IOException;
 
-public class ApplicationContext {
-    private static File projectPath;
-    private static Project project;
+public class DocTgf extends AbstractTask {
+    @Override
+    public void run() throws IOException {
+        GeneratorHelper.generate(project.getProjectPath(), new DataModelTgf(project.getDataModel()));
 
-    public static File getProjectPath() {
-        return projectPath;
-    }
-
-    public static void setProjectPath(File projectPath) throws IOException {
-        ApplicationContext.projectPath = projectPath;
-        ApplicationContext.project = new Project(projectPath);
-    }
-
-    public static Project getProject() {
-        return project;
     }
 }

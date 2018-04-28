@@ -27,21 +27,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.source;
 
-import hu.karsany.vau.cli.task.AbstractTask;
-import hu.karsany.vau.cli.task.ApplicationContext;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.Project;
-import hu.karsany.vau.project.datamodel.model.Table;
+import hu.karsany.vau.project.datamodel.generator.script.LoaderGrantGenerator;
+import hu.karsany.vau.project.mapping.generator.loader.Loader;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderProcedure;
 
+import java.io.File;
 import java.io.IOException;
 
-public class CompileTables extends AbstractTask {
+public class CompileLoaders extends AbstractTask {
     @Override
     public void run() throws IOException {
-        for (Table table : project.getDataModel().getTables()) {
-            GeneratorHelper.generate(project.getProjectPath(), table);
+        for (LoaderParameter loaderParameter : project.getMappings()) {
+            Loader ldr = new Loader(loaderParameter);
+            GeneratorHelper.generate(project.getProjectPath(), ldr);
+            File loaderTemplate = new File(project.getProjectPath() + "/src/template/" + project.getConfiguration().getTemplate().getTemplateName());
+            LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
+            GeneratorHelper.generate(project.getProjectPath(), lp);
+            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, project.getConfiguration().getTargetExecuteGrant());
+            GeneratorHelper.generate(project.getProjectPath(), lgg);
         }
     }
 }

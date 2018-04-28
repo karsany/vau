@@ -27,13 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.init;
+
+import hu.karsany.vau.ApplicationContext;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 
 import java.io.IOException;
 
-public class InitModel extends AbstractTask {
+public class InitConfig extends AbstractTask {
     @Override
     public void run() throws IOException {
-        ApplicationContext.getProject().initModel();
+        ApplicationContext.getProject().initConfig();
     }
 }
