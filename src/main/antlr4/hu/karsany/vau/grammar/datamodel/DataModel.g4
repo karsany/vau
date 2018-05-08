@@ -68,7 +68,9 @@ vautype :  'CURRENCY' |
         'SHORTTEXT' |
         'SMALLTEXT' |
 		'FLAG' |
-		'INTEGER' ;
+		'INTEGER' |
+		'ID'
+;
 
 datagroup_name : ID ;
 
