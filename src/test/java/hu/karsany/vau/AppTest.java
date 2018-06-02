@@ -1,6 +1,5 @@
 package hu.karsany.vau;
 
-import hu.karsany.vau.cli.task.ApplicationContext;
 import hu.karsany.vau.project.Project;
 import org.junit.Assert;
 import org.junit.Test;

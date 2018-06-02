@@ -27,28 +27,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.script.LoaderGrantGenerator;
-import hu.karsany.vau.project.mapping.generator.loader.Loader;
-import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
-import hu.karsany.vau.project.mapping.generator.loader.LoaderProcedure;
+import hu.karsany.vau.project.Project;
 
 import java.io.File;
 import java.io.IOException;
 
-public class CompileLoaders extends AbstractTask {
-    @Override
-    public void run() throws IOException {
-        for (LoaderParameter loaderParameter : project.getMappings()) {
-            Loader ldr = new Loader(loaderParameter);
-            GeneratorHelper.generate(project.getProjectPath(), ldr);
-            File loaderTemplate = new File(project.getProjectPath() + "/src/template/" + project.getConfiguration().getTemplate().getTemplateName());
-            LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
-            GeneratorHelper.generate(project.getProjectPath(), lp);
-            LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, project.getConfiguration().getTargetExecuteGrant());
-            GeneratorHelper.generate(project.getProjectPath(), lgg);
-        }
+public class ApplicationContext {
+    private static File projectPath;
+    private static Project project;
+
+    public static File getProjectPath() {
+        return projectPath;
+    }
+
+    public static void setProjectPath(File projectPath) throws IOException {
+        ApplicationContext.projectPath = projectPath;
+        ApplicationContext.project = new Project(projectPath);
+    }
+
+    public static Project getProject() {
+        return project;
     }
 }

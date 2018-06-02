@@ -27,16 +27,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.documentation;
 
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
+import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
 
 import java.io.IOException;
 
-public class TableLineage extends AbstractTask {
+public class DocHtml extends AbstractTask {
     @Override
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new TableLineageCsv(project));
+        GeneratorHelper.generate(project.getProjectPath(), new DataModelHtml(project.getDataModel()));
     }
 }

@@ -27,16 +27,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.other;
 
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelHtml;
+import hu.karsany.vau.project.datamodel.generator.other.DataModelExampleMapping;
+import hu.karsany.vau.project.datamodel.model.Table;
 
 import java.io.IOException;
 
-public class DocHtml extends AbstractTask {
+public class ExampleMapping extends AbstractTask {
     @Override
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new DataModelHtml(project.getDataModel()));
+        for (Table table : project.getDataModel().getTables()) {
+            GeneratorHelper.generate(project.getProjectPath(), new DataModelExampleMapping(table));
+        }
     }
 }

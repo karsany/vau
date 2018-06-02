@@ -27,17 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.init;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.documentation.DataModelCsv;
+import hu.karsany.vau.ApplicationContext;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 
 import java.io.IOException;
 
-public class DocCsv extends AbstractTask {
+public class InitMapping extends AbstractTask {
     @Override
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new DataModelCsv(project.getDataModel()));
-
+        ApplicationContext.getProject().initMapping();
     }
 }

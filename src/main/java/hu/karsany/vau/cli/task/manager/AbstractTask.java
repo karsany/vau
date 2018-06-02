@@ -27,13 +27,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.manager;
+
+import hu.karsany.vau.ApplicationContext;
+import hu.karsany.vau.project.Project;
 
 import java.io.IOException;
 
-public class InitMapping extends AbstractTask {
-    @Override
-    public void run() throws IOException {
-        ApplicationContext.getProject().initMapping();
+public abstract class AbstractTask {
+    protected final Project project;
+
+    public AbstractTask() {
+        project = ApplicationContext.getProject();
     }
+
+    public abstract void run() throws IOException;
 }

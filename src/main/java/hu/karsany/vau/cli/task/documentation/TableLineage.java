@@ -27,17 +27,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.documentation;
 
-import org.apache.commons.io.FileUtils;
-import org.pmw.tinylog.Logger;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
+import hu.karsany.vau.common.GeneratorHelper;
+import hu.karsany.vau.project.mapping.generator.documentation.TableLineageCsv;
 
-import java.io.File;
 import java.io.IOException;
 
-public class Clean extends AbstractTask {
+public class TableLineage extends AbstractTask {
+    @Override
     public void run() throws IOException {
-        Logger.info("  Cleanup project directory...");
-        FileUtils.deleteDirectory(new File(ApplicationContext.getProjectPath() + "\\target"));
+        GeneratorHelper.generate(project.getProjectPath(), new TableLineageCsv(project));
     }
 }

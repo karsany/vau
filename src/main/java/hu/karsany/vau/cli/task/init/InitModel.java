@@ -27,19 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.init;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.script.SequenceGenerator;
-import hu.karsany.vau.project.datamodel.model.Entity;
+import hu.karsany.vau.ApplicationContext;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 
 import java.io.IOException;
 
-public class CompileSequences extends AbstractTask {
+public class InitModel extends AbstractTask {
     @Override
     public void run() throws IOException {
-        for (Entity entity : project.getDataModel().getEntityTables()) {
-            GeneratorHelper.generate(project.getProjectPath(), new SequenceGenerator(entity));
-        }
+        ApplicationContext.getProject().initModel();
     }
 }

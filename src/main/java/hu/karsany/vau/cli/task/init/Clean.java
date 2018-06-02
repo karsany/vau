@@ -27,16 +27,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.init;
 
-import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.datamodel.generator.script.InstallScriptGenerator;
+import hu.karsany.vau.ApplicationContext;
+import hu.karsany.vau.cli.task.manager.AbstractTask;
+import org.apache.commons.io.FileUtils;
+import org.pmw.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
 
-public class InstallScript extends AbstractTask {
-    @Override
+public class Clean extends AbstractTask {
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new InstallScriptGenerator(project));
+        Logger.info("  Cleanup project directory...");
+        FileUtils.deleteDirectory(new File(ApplicationContext.getProjectPath() + "\\target"));
     }
 }

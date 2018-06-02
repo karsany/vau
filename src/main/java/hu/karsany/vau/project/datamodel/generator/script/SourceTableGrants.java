@@ -29,8 +29,7 @@
 
 package hu.karsany.vau.project.datamodel.generator.script;
 
-import hu.karsany.vau.App;
-import hu.karsany.vau.cli.task.ApplicationContext;
+import hu.karsany.vau.ApplicationContext;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
 import hu.karsany.vau.common.sql.SqlAnalyzer;

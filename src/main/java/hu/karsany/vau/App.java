@@ -30,8 +30,7 @@
 package hu.karsany.vau;
 
 import hu.karsany.vau.cli.Parameters;
-import hu.karsany.vau.cli.task.ApplicationContext;
-import hu.karsany.vau.cli.task.TaskManager;
+import hu.karsany.vau.cli.task.manager.TaskManager;
 import org.pmw.tinylog.Configurator;
 
 import java.io.IOException;

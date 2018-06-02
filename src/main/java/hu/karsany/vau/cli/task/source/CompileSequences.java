@@ -27,16 +27,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package hu.karsany.vau.cli.task;
+package hu.karsany.vau.cli.task.source;
 
+import hu.karsany.vau.cli.task.manager.AbstractTask;
 import hu.karsany.vau.common.GeneratorHelper;
-import hu.karsany.vau.project.mapping.generator.documentation.ColumnLineageCsv;
+import hu.karsany.vau.project.datamodel.generator.script.SequenceGenerator;
+import hu.karsany.vau.project.datamodel.model.Entity;
 
 import java.io.IOException;
 
-public class ColumnLineage extends AbstractTask {
+public class CompileSequences extends AbstractTask {
     @Override
     public void run() throws IOException {
-        GeneratorHelper.generate(project.getProjectPath(), new ColumnLineageCsv(project));
+        for (Entity entity : project.getDataModel().getEntityTables()) {
+            GeneratorHelper.generate(project.getProjectPath(), new SequenceGenerator(entity));
+        }
     }
 }
