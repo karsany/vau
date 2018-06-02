@@ -33,4 +33,6 @@ public interface Entity {
     String getEntityName();
 
     String getTableType();
+
+    String getTableName();
 }

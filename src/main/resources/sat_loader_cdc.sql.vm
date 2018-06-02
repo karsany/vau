@@ -14,7 +14,7 @@ INSERT INTO ${model.sat.tableName}
    (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
 #end h.${model.sat.hub.entityName}_ID, i.${model.cdcStartTsName} as C$START_DATE, decode(i.${model.cdcColumnName}, 'D', 0, 1) as C$REC_PRESENT
       FROM (${model.sqlScript.trim()}) i
-      JOIN hub_${model.sat.hub.entityName} h
+      JOIN h_${model.sat.hub.entityName} h
         ON i.${model.sat.hub.entityName}_BK = h.${model.sat.hub.entityName}_BK),
   src2 as (
      select q.*,
@@ -29,7 +29,7 @@ INSERT INTO ${model.sat.tableName}
             c$start_date,
                         c$rec_present,
                         0 as status
-                   From sat_location_main
+                   From ${model.sat.tableName}
                   Where c$end_date = to_date('99991231', 'yyyymmdd')
      union all
      select s.*, 1 as status from src s) q

@@ -41,12 +41,12 @@ public class SequenceGenerator implements Generator {
 
     @Override
     public String getFileName() {
-        return entity.getTableType() + "_" + entity.getEntityName() + "_SEQ.sql";
+        return entity.getTableName() + "_SEQ.sql";
     }
 
     @Override
     public String toString() {
-        return "CREATE SEQUENCE " + entity.getTableType() + "_" + entity.getEntityName() + "_SEQ START WITH 10000" + "\n" + "/\n";
+        return "CREATE SEQUENCE " + entity.getTableName() + "_SEQ START WITH 10000" + "\n" + "/\n";
     }
 
     @Override

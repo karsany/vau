@@ -73,7 +73,7 @@ public class SatLoader implements Generator {
 
     @Override
     public String getFileName() {
-        return "SAT_" + lp.getEntityName() + "_" + lp.getDataGroupName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+        return "S_" + lp.getEntityName() + "_" + lp.getDataGroupName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
     }
 
     @Override

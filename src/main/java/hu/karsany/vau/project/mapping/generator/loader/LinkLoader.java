@@ -53,7 +53,7 @@ public class LinkLoader implements Generator {
 
     @Override
     public String getFileName() {
-        return "LNK_" + lp.getLinkName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+        return "L_" + lp.getLinkName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
     }
 
     @Override

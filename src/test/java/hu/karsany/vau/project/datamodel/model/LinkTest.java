@@ -16,7 +16,7 @@ public class LinkTest {
             final DataModel parse = new StringDataModelParser(TEST_DATA_MODEL).parse();
             Assert.assertFalse(true);
         } catch (VauException e) {
-            Assert.assertEquals("Table LNK_EMPLOYEE_MANAGER contains the EMPLOYEE_ID. Specify an alias.", e.getMessage());
+            Assert.assertEquals("Table L_EMPLOYEE_MANAGER contains the EMPLOYEE_ID. Specify an alias.", e.getMessage());
         }
 
     }

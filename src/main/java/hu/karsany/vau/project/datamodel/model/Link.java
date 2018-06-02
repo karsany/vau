@@ -41,7 +41,7 @@ public class Link extends DocumentableTable implements Entity {
     private final List<Column> idColumns;
 
     public Link(String linkName, List<Pair<Hub, String>> hubs) {
-        super("LNK_" + linkName);
+        super("L_" + linkName);
         this.linkName = linkName;
         this.connectedHubs = hubs;
 

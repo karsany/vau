@@ -42,7 +42,7 @@ public class Satellite extends DocumentableTable {
     private final String qualifier;
 
     public Satellite(Hub hub, String qualifier) {
-        super("SAT_" + hub.getEntityName() + "_" + qualifier);
+        super("S_" + hub.getEntityName() + "_" + qualifier);
         this.hub = hub;
         this.link = null;
         this.qualifier = qualifier;
@@ -64,7 +64,7 @@ public class Satellite extends DocumentableTable {
     }
 
     public Satellite(Link link, String qualifier) {
-        super("SAT_" + link.getEntityName() + "_" + qualifier);
+        super("S_" + link.getEntityName() + "_" + qualifier);
         this.qualifier = qualifier;
         this.hub = null;
         this.link = link;

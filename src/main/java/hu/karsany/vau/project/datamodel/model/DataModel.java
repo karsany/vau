@@ -78,7 +78,7 @@ public class DataModel {
 
     public Satellite getSatellite(String entityName, String dataGroupName) {
         return (Satellite) tables.stream()
-                .filter(table -> table.getTableName().equals("SAT_" + entityName + "_" + dataGroupName))
+                .filter(table -> table.getTableName().equals("S_" + entityName + "_" + dataGroupName))
                 .findAny()
                 .get();
     }

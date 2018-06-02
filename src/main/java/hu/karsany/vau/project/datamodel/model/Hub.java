@@ -35,7 +35,7 @@ public class Hub extends DocumentableTable implements Entity {
     private final String hubName;
 
     public Hub(String hubName) {
-        super("HUB_" + hubName);
+        super("H_" + hubName);
         this.hubName = hubName;
 
 

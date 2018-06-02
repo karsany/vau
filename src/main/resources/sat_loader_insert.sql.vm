@@ -14,7 +14,7 @@ INSERT INTO ${model.sat.tableName}
    (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
 #end h.${model.sat.hub.entityName}_ID
       FROM (${model.sqlScript.trim()}) i
-      JOIN hub_${model.sat.hub.entityName} h
+      JOIN h_${model.sat.hub.entityName} h
         ON i.${model.sat.hub.entityName}_BK = h.${model.sat.hub.entityName}_BK)
   SELECT ${model.sat.hub.entityName}_ID,
          '${model.sourceSystem}' AS C$SOURCE_SYSTEM,

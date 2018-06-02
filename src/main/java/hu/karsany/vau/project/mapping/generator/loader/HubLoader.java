@@ -53,7 +53,7 @@ public class HubLoader implements Generator {
 
     @Override
     public String getFileName() {
-        return "HUB_" + lp.getEntityName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+        return "H_" + lp.getEntityName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
     }
 
     @Override

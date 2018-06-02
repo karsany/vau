@@ -159,13 +159,13 @@ public class LoaderParameter {
     public String getOutputTableName() {
         switch (loaderType) {
             case HUB:
-                return "HUB_" + entityName;
+                return "H_" + entityName;
             case SATTELITE:
-                return "SAT_" + entityName + "_" + dataGroupName;
+                return "S_" + entityName + "_" + dataGroupName;
             case LINK:
-                return "LNK_" + linkName;
+                return "L_" + linkName;
             case REFERENCE:
-                return "REF_" + referenceName;
+                return "R_" + referenceName;
         }
         throw new VauException("Unknown loader type: " + loaderType);
     }

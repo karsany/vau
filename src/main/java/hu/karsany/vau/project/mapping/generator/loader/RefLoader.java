@@ -42,7 +42,7 @@ public class RefLoader implements Generator {
 
     @Override
     public String getFileName() {
-        return "REF_" + lp.getReferenceName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
+        return "R_" + lp.getReferenceName() + "_" + lp.getSourceSystemName() + "_LOAD.sql";
     }
 
     @Override
