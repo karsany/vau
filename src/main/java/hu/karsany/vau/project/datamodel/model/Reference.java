@@ -40,7 +40,7 @@ public class Reference extends DocumentableTable {
     private List<Column> refKeys = new ArrayList<>();
 
     public Reference(String referenceName) {
-        super("REF_" + referenceName);
+        super("R_" + referenceName);
         this.referenceName = referenceName;
         Column startDate = new Column("C$START_DATE", BusinessDataType.DATE, true, "Record Validity From");
         addColumn(

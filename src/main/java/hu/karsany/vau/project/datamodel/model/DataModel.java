@@ -77,10 +77,19 @@ public class DataModel {
     }
 
     public Satellite getSatellite(String entityName, String dataGroupName) {
-        return (Satellite) tables.stream()
+
+        final Optional<DocumentableTable> optionalResult = tables.stream()
                 .filter(table -> table.getTableName().equals("S_" + entityName + "_" + dataGroupName))
-                .findAny()
+                .findAny();
+
+        if (!optionalResult.isPresent()) {
+            throw new VauException("Satellite not found: " + entityName + "/" + dataGroupName);
+        }
+
+        final Satellite satellite = (Satellite) optionalResult
                 .get();
+
+        return satellite;
     }
 
     public Reference getReference(String entityName) {

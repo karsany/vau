@@ -11,6 +11,8 @@ entity LOCATION {
 		attr STREET_ADDRESS typ MIDDLETEXT;
 		attr STATE_PROVINCE typ MIDDLETEXT;
 		attr COUNTRY_CODE typ NATIVE("VARCHAR2(3)") references COUNTRY_CODE;
+		attr TSTCOL typ ID;
+		attr TSTCOL_ID typ ID;
 	}
 }
 

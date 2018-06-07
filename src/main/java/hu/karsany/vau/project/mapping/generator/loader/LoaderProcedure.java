@@ -29,6 +29,7 @@
 
 package hu.karsany.vau.project.mapping.generator.loader;
 
+import hu.karsany.vau.App;
 import hu.karsany.vau.ApplicationContext;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
@@ -77,8 +78,8 @@ public class LoaderProcedure implements Generator {
                     getLoaderName(),
                     loader.getLoaderParameter().getOutputTableName(),
                     loader.toString(),
-                    new SqlAnalyzer(loader.getLoaderParameter().getSqlScript()).getInputTables()
-            );
+                    new SqlAnalyzer(loader.getLoaderParameter().getSqlScript()).getInputTables(),
+                    ApplicationContext.getProject().getConfiguration().getTargetSchema());
         } catch (JSQLParserException e) {
             throw new VauException(e);
         }
@@ -91,16 +92,23 @@ public class LoaderProcedure implements Generator {
 
     public class TemplateModel {
         private final String loaderName;
+        private final String outputOwner;
         private final String outputTableName;
         private final String loaderScript;
         private final List<SqlAnalyzer.Table> inputTables;
 
-        public TemplateModel(String loaderName, String outputTableName, String loaderScript, List<SqlAnalyzer.Table> inputTables) {
+        public TemplateModel(String loaderName, String outputTableName, String loaderScript, List<SqlAnalyzer.Table> inputTables, String outputOwner) {
 
             this.loaderName = loaderName;
             this.outputTableName = outputTableName;
             this.loaderScript = loaderScript;
             this.inputTables = inputTables;
+            this.outputOwner = outputOwner;
+
+        }
+
+        public String getOutputOwner() {
+            return outputOwner;
         }
 
         public List<SqlAnalyzer.Table> getInputTables() {
