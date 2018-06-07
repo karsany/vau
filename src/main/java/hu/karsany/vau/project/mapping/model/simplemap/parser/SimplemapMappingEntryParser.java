@@ -54,11 +54,19 @@ class SimplemapMappingEntryParser implements MappingParser {
 
     private LoaderParameter generateSatLoader(SimplemapDataGroupMapping dgms) {
         LoaderParameter lp = new LoaderParameter();
+        String cdcColumnsOptional = "";
 
         lp.setLoaderType(LoaderParameter.LoaderType.SATTELITE);
         lp.setDataModel(dataModel);
         lp.setEntityName(simplemapEntry.getEntityName());
         lp.setSatteliteLoadMethod(LoaderParameter.SatteliteLoadMethod.valueOf(simplemapEntry.getSourceDefinition().getContains()));
+
+        if (lp.getSatteliteLoadMethod() == LoaderParameter.SatteliteLoadMethod.CDC) {
+            lp.setCdcColumnName(simplemapEntry.getSourceDefinition().getCdcColumnName());
+            lp.setCdcStartTsName(simplemapEntry.getSourceDefinition().getCdcStartTsName());
+            cdcColumnsOptional = "," + simplemapEntry.getSourceDefinition().getCdcColumnName() + "," + simplemapEntry.getSourceDefinition().getCdcStartTsName();
+        }
+
         lp.setDataGroupName(dgms.getDatagroupName());
         lp.setSourceSystemName(simplemapEntry.getSourceDefinition().getSystem());
 
@@ -67,9 +75,10 @@ class SimplemapMappingEntryParser implements MappingParser {
             columnMapping.append(", " + m.getValue() + " as " + m.getKey() + "\n");
         }
 
+
         lp.setSqlScript(
                 "select " + simplemapEntry.getBusinessKey() + " as " + simplemapEntry.getEntityName() + "_BK" +
-                        columnMapping.toString()
+                        columnMapping.toString() + (cdcColumnsOptional)
                         + " from " + simplemapEntry.getSourceDefinition().getOwner() + "." + simplemapEntry.getSourceDefinition().getTable()
         );
 

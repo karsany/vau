@@ -33,9 +33,9 @@ import hu.karsany.vau.project.configuration.Configuration;
 import hu.karsany.vau.project.datamodel.model.DataModel;
 import hu.karsany.vau.project.datamodel.parser.FileDataModelParser;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
+import hu.karsany.vau.project.mapping.generator.loader.LoaderProcedure;
 import hu.karsany.vau.project.mapping.parser.GenericMappingParser;
 import org.pmw.tinylog.Logger;
-import org.pmw.tinylog.LoggingContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,6 +55,7 @@ public class Project implements ProjectInterface {
     private Configuration configuration;
     private DataModel dataModel;
     private List<LoaderParameter> mappings;
+    private List<LoaderProcedure> loaderProcedures = new ArrayList<>();
 
     public Project(File projectPath) throws IOException {
         this.projectPath = projectPath;
@@ -105,5 +106,13 @@ public class Project implements ProjectInterface {
     @Override
     public List<LoaderParameter> getMappings() {
         return mappings;
+    }
+
+    public List<LoaderProcedure> getLoaderProcedures() {
+        return loaderProcedures;
+    }
+
+    public void addLoaderProcedure(LoaderProcedure lp) {
+        this.loaderProcedures.add(lp);
     }
 }

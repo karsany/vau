@@ -87,4 +87,9 @@ public class Link extends DocumentableTable implements Entity {
     public List<Pair<Hub, String>> getConnectedHubs() {
         return connectedHubs;
     }
+
+    public List<String> getDistinctConnectedHubs() {
+        return connectedHubs.stream().map(hubStringPair -> hubStringPair.getLeft().getEntityName()).collect(Collectors.toList());
+    }
+
 }

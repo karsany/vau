@@ -29,7 +29,6 @@
 
 package hu.karsany.vau.project.mapping.generator.loader;
 
-import hu.karsany.vau.App;
 import hu.karsany.vau.ApplicationContext;
 import hu.karsany.vau.common.Generator;
 import hu.karsany.vau.common.VauException;
@@ -47,6 +46,10 @@ public class LoaderProcedure implements Generator {
     public LoaderProcedure(Loader loader, File loaderTemplate) {
         this.loader = loader;
         this.loaderTemplate = loaderTemplate;
+    }
+
+    public Loader getLoader() {
+        return loader;
     }
 
     @Override

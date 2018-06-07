@@ -92,7 +92,9 @@ class SimplemapEvaluation extends SimplemapBaseListener {
                     ctx.system_name().getText(),
                     ctx.owner_name().getText(),
                     ctx.table_name().getText(),
-                    ctx.containing_type().getText()
+                    ctx.containing_type().cdc() != null ? "CDC" : ctx.containing_type().getText(),
+                    ctx.containing_type().cdc() != null ? ctx.containing_type().cdc().cdc_column().getText() : "",
+                    ctx.containing_type().cdc() != null ? ctx.containing_type().cdc().timestamp_column().getText() : ""
             ));
 
             return visitChildren(ctx);

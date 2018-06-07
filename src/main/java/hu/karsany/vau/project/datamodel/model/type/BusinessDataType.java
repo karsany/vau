@@ -39,7 +39,7 @@ public enum BusinessDataType {
     INTEGER("NUMBER(20)"),
     CURRENCY("VARCHAR2(3)"),
     SHORTTEXT("VARCHAR2(10)"),
-    LARGETEXT("VARCHAR2(1000)"),
+    LARGETEXT("VARCHAR2(4000)"),
     PERCENTAGE("NUMBER(10,8)"),
     NATIVE(null);
 

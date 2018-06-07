@@ -34,13 +34,25 @@ public class SourceDefinition {
     private final String owner;
     private final String table;
     private final String contains;
+    private final String cdcColumnName;
+    private final String cdcStartTsName;
 
     public SourceDefinition(String system, String owner, String table, String contains) {
-
         this.system = system;
         this.owner = owner;
         this.table = table;
         this.contains = contains;
+        cdcColumnName = null;
+        cdcStartTsName = null;
+    }
+
+    public SourceDefinition(String system, String owner, String table, String contains, String cdcColumnName, String cdcStartTsName) {
+        this.system = system;
+        this.owner = owner;
+        this.table = table;
+        this.contains = contains;
+        this.cdcColumnName = cdcColumnName;
+        this.cdcStartTsName = cdcStartTsName;
     }
 
     public String getSystem() {
@@ -57,5 +69,13 @@ public class SourceDefinition {
 
     public String getContains() {
         return contains;
+    }
+
+    public String getCdcColumnName() {
+        return cdcColumnName;
+    }
+
+    public String getCdcStartTsName() {
+        return cdcStartTsName;
     }
 }

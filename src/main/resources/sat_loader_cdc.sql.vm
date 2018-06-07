@@ -1,6 +1,6 @@
 delete ${model.sat.tableName}
  where c$source_system = '${model.sourceSystem}'
-   and c$start_date >= p_run_date;
+   and c$start_date >= c_start_date;
 
 INSERT INTO ${model.sat.tableName}
   (${model.sat.hub.entityName}_ID,
@@ -12,14 +12,15 @@ INSERT INTO ${model.sat.tableName}
 #end)
   WITH src AS
    (SELECT #foreach($c in $model.sat.nonTechnicalColumns) i.$c.columnName,
-#end h.${model.sat.hub.entityName}_ID, i.${model.cdcStartTsName} as C$START_DATE, decode(i.${model.cdcColumnName}, 'D', 0, 1) as C$REC_PRESENT
+#end h.${model.sat.hub.entityName}_ID, i.${model.cdcStartTsName} as C$START_DATE, decode(i.${model.cdcColumnName}, 'D', 0, 1) as C$REC_PRESENT,
+         max(i.${model.cdcStartTsName}) over (partition by h.${model.sat.hub.entityName}_ID, cast(i.${model.cdcStartTsName} as date)) c$start_date_ctrl
       FROM (${model.sqlScript.trim()}) i
       JOIN h_${model.sat.hub.entityName} h
         ON i.${model.sat.hub.entityName}_BK = h.${model.sat.hub.entityName}_BK),
   src2 as (
      select q.*,
      decode(
-      #foreach($c in $model.sat.nonTechnicalColumns) lag($c.columnName) over (partition by ${model.sat.hub.entityName}_ID order by c$start_date) || '#>#' ||
+      #foreach($c in $model.sat.nonTechnicalColumns) lag($c.columnName) over (partition by ${model.sat.hub.entityName}_ID order by c$start_date) || '#>#' || --
                   #end '>>',
 #foreach($c in $model.sat.nonTechnicalColumns) $c.columnName || '#>#' ||
                   #end '>>'
@@ -28,11 +29,12 @@ INSERT INTO ${model.sat.tableName}
             #end    ${model.sat.hub.entityName}_ID,
             c$start_date,
                         c$rec_present,
+                        c$start_date as c$start_date_ctrl,
                         0 as status
                    From ${model.sat.tableName}
                   Where c$end_date = to_date('99991231', 'yyyymmdd')
      union all
-     select s.*, 1 as status from src s) q
+     select s.*, 1 as status from src s where s.c$start_date = s.c$start_date_ctrl) q
   )
   SELECT ${model.sat.hub.entityName}_ID,
          '${model.sourceSystem}' AS C$SOURCE_SYSTEM,

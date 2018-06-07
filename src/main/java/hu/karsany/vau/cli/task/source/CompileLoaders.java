@@ -47,6 +47,7 @@ public class CompileLoaders extends AbstractTask {
             GeneratorHelper.generate(project.getProjectPath(), ldr);
             File loaderTemplate = new File(project.getProjectPath() + "/src/template/" + project.getConfiguration().getTemplate().getTemplateName());
             LoaderProcedure lp = new LoaderProcedure(ldr, loaderTemplate);
+            project.addLoaderProcedure(lp);
             GeneratorHelper.generate(project.getProjectPath(), lp);
             LoaderGrantGenerator lgg = new LoaderGrantGenerator(lp, project.getConfiguration().getTargetExecuteGrant());
             GeneratorHelper.generate(project.getProjectPath(), lgg);

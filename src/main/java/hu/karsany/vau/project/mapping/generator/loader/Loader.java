@@ -41,6 +41,10 @@ public class Loader implements Generator {
         generate();
     }
 
+    public Generator getGenerator() {
+        return generator;
+    }
+
     private void generate() {
         switch (loaderParameter.getLoaderType()) {
             case HUB:

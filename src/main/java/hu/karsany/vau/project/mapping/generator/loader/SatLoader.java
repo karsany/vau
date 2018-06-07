@@ -35,21 +35,26 @@ import hu.karsany.vau.project.datamodel.model.Satellite;
 
 public class SatLoader implements Generator {
     private final LoaderParameter lp;
+    private final TemplateModel templateModel;
 
     public SatLoader(LoaderParameter loaderParameter) {
         lp = loaderParameter;
-    }
-
-
-    @Override
-    public String toString() {
-        TemplateModel templateModel = new TemplateModel(
+        templateModel = new TemplateModel(
                 lp.getDataModel().getSatellite(lp.getEntityName(), lp.getDataGroupName()),
                 lp.getSqlScript(),
                 lp.getSourceSystemName(),
                 lp.getCdcColumnName(),
                 lp.getCdcStartTsName()
         );
+
+    }
+
+    public TemplateModel getModel() {
+        return templateModel;
+    }
+
+    @Override
+    public String toString() {
 
         String templateFileName = null;
 

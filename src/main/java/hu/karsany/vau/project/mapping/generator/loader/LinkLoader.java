@@ -35,15 +35,23 @@ import hu.karsany.vau.project.datamodel.model.Link;
 
 public class LinkLoader implements Generator {
     private final LoaderParameter lp;
+    private final Link link;
 
     public LinkLoader(LoaderParameter loaderParameter) {
         this.lp = loaderParameter;
+        link = lp.getDataModel().getLink(lp.getLinkName());
+
+    }
+
+    public Link getLink() {
+        return link;
     }
 
     @Override
     public String toString() {
+
         TemplateModel templateModel = new TemplateModel(
-                lp.getDataModel().getLink(lp.getLinkName()),
+                link,
                 lp.getSqlScript(),
                 lp.getSourceSystemName()
         );

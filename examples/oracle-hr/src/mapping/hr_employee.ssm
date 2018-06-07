@@ -4,7 +4,7 @@ map for entity EMPLOYEE {
 		system 	HR
 		owner 	HR
 		table	EMPLOYEES
-		contains FULL
+		contains CDC ( DML_FLAG, LAST_MODIFIED_TS )
 	}
 
 	business key EMPLOYEE_ID;

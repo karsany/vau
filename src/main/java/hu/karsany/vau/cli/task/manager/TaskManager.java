@@ -37,6 +37,7 @@ import hu.karsany.vau.cli.task.init.InitModel;
 import hu.karsany.vau.cli.task.other.ExampleMapping;
 import hu.karsany.vau.cli.task.other.NopeTask;
 import hu.karsany.vau.cli.task.source.*;
+import hu.karsany.vau.project.mapping.generator.script.GenerateProcessDependencies;
 import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
@@ -85,7 +86,8 @@ public class TaskManager {
         compile_loaders(CompileLoaders.class, init_model, init_mapping),
         compile_grants(CompileGrants.class, init_mapping),
         install_script(InstallScript.class, init_config),
-        compile(NopeTask.class, compile_tables, compile_sequences, example_mapping, compile_loaders, compile_grants, install_script),
+        gen_dependencies(GenerateProcessDependencies.class, init_model, init_mapping, compile_loaders),
+        compile(NopeTask.class, compile_tables, compile_sequences, example_mapping, compile_loaders, compile_grants, install_script, gen_dependencies),
         doc_csv(DocCsv.class, init_model),
         doc_tgf(DocTgf.class, init_model),
         doc_html(DocHtml.class, init_model),
