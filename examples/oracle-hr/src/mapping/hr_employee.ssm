@@ -18,6 +18,7 @@ map for entity EMPLOYEE {
 			HIRE_DATE := HIRE_DATE;
 			COMMISSION_PCT := COMMISSION_PCT;			
 			SALARY := SALARY;
+			HIBA := "abdcd";
 		}
 	}
 }

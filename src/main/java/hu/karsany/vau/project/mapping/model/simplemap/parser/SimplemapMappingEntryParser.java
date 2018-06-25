@@ -30,10 +30,12 @@
 package hu.karsany.vau.project.mapping.model.simplemap.parser;
 
 import hu.karsany.vau.project.datamodel.model.DataModel;
+import hu.karsany.vau.project.datamodel.model.Satellite;
 import hu.karsany.vau.project.mapping.generator.loader.LoaderParameter;
 import hu.karsany.vau.project.mapping.model.simplemap.model.SimplemapDataGroupMapping;
 import hu.karsany.vau.project.mapping.model.simplemap.model.SimplemapEntry;
 import hu.karsany.vau.project.mapping.parser.MappingParser;
+import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +73,15 @@ class SimplemapMappingEntryParser implements MappingParser {
         lp.setSourceSystemName(simplemapEntry.getSourceDefinition().getSystem());
 
         StringBuilder columnMapping = new StringBuilder();
+        final Satellite satellite = dataModel.getSatellite(simplemapEntry.getEntityName(), dgms.getDatagroupName());
+
         for (Map.Entry<String, String> m : dgms.getMapping().entrySet()) {
+
+
+            if (!satellite.hasAttribute(m.getKey())) {
+                Logger.warn(simplemapEntry.getEntityName() + "/" + dgms.getDatagroupName() + "/" + m.getKey() + " not found...");
+            }
+
             columnMapping.append(", " + m.getValue() + " as " + m.getKey() + "\n");
         }
 

@@ -131,4 +131,8 @@ public class Satellite extends DocumentableTable {
     public String getColor() {
         return "CFCFFF";
     }
+
+    public boolean hasAttribute(String columnName) {
+        return this.getColumns().stream().filter(column -> column.getColumnName().equals(columnName)).count() > 0;
+    }
 }
