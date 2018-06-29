@@ -42,6 +42,13 @@ entity EMPLOYEE {
 	}
 }
 
+entity PAYMENTS type TRANSACTIONAL {
+    datagroup PMT {
+        attr AMOUNT typ MONEY;
+        attr CCY typ SMALLTEXT;
+    }
+}
+
 link DEPARTMENT_LOCATION between DEPARTMENT and LOCATION;
 
 link DEPARTMENT_MANAGER between DEPARTMENT and EMPLOYEE;

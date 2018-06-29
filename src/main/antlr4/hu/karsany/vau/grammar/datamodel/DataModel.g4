@@ -4,7 +4,15 @@ s  : entries ;
 
 entries: (entity|link|ref)+ ;
 
-entity : 'entity' entity_name datagroup_definition ;
+entity : 'entity' entity_name entity_type_def? datagroup_definition ;
+
+entity_type_def :
+    'type' entity_type_name
+    ;
+
+entity_type_name:
+    'TRANSACTIONAL' | 'SCD'
+    ;
 
 datagroup_definition : ('{' datagroup* '}')? ;
 
