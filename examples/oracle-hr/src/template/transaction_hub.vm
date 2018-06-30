@@ -1,0 +1,15 @@
+create or replace procedure ${model.loaderName}(p_run_date in date) is  
+  c_audit_id number := 1;
+begin
+
+#foreach($input_table in $model.inputTables)
+  -- input table: ${input_table.fullyQualifiedName}
+#end
+  -- output table: ${model.outputTableName}
+  
+  ${model.loaderScript}
+  
+  commit;
+
+end $model.loaderName;
+/

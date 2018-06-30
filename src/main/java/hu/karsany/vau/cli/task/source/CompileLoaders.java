@@ -43,6 +43,9 @@ public class CompileLoaders extends AbstractTask {
     @Override
     public void run() throws IOException {
         for (LoaderParameter loaderParameter : project.getMappings()) {
+
+            
+
             Loader ldr = new Loader(loaderParameter);
             GeneratorHelper.generate(project.getProjectPath(), ldr);
             File loaderTemplate = new File(project.getProjectPath() + "/src/template/" + project.getConfiguration().getTemplate().getTemplateName());

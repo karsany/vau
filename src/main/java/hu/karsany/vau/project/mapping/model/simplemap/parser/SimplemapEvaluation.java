@@ -86,6 +86,13 @@ class SimplemapEvaluation extends SimplemapBaseListener {
         }
 
         @Override
+        public SimplemapEntry visitProgram(SimplemapParser.ProgramContext ctx) {
+            se.setHubTemplate(ctx.hub_template_file().getText());
+            se.setSatTempltate(ctx.sat_template_file().getText());
+            return visitChildren(ctx);
+        }
+
+        @Override
         public SimplemapEntry visitSource(SimplemapParser.SourceContext ctx) {
 
             se.setSourceDefinition(new SourceDefinition(

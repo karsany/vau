@@ -23,5 +23,15 @@ public class SimplemapTest extends SimplemapBaseListener {
         SimplemapParser.SContext tree = parser.s();
         ParseTreeWalker.DEFAULT.walk(this, tree);
     }
-    
+
+    @Test
+    public void simplemapTc2() throws IOException {
+        SimplemapLexer lexer = new SimplemapLexer(CharStreams.fromStream(getClass().getClassLoader().getResourceAsStream("simplemap_program_testcase.ssm")));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        SimplemapParser parser = new SimplemapParser(tokens);
+        SimplemapParser.SContext tree = parser.s();
+        ParseTreeWalker.DEFAULT.walk(this, tree);
+    }
+
+
 }

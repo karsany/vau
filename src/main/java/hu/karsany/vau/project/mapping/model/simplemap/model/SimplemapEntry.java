@@ -38,6 +38,26 @@ public class SimplemapEntry {
     private SourceDefinition sourceDefinition;
     private String businessKey;
 
+    private String hubTemplate;
+    private String satTempltate;
+
+    public String getSatTempltate() {
+        return satTempltate;
+    }
+
+    public void setSatTempltate(String satTempltate) {
+        this.satTempltate = satTempltate;
+    }
+
+    public String getHubTemplate() {
+
+        return hubTemplate;
+    }
+
+    public void setHubTemplate(String hubTemplate) {
+        this.hubTemplate = hubTemplate;
+    }
+
     public String getEntityName() {
         return entityName;
     }

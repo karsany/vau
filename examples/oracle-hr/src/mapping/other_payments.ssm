@@ -1,0 +1,23 @@
+map for entity PAYMENTS {
+
+    program {
+        template hub "transaction_hub.vm"
+        template sat "transaction_sat.vm"
+    }
+
+	source {
+		system 	OTHER
+		owner 	OTHER
+		table	SALARY_PAYMENTS
+		contains INSERT
+	}
+
+	business key PAYMENT_ID;
+
+	attributes {
+		datagroup MAIN {
+			AMOUNT := AMOUNT;
+            CCY := CCY;
+		}
+	}
+}

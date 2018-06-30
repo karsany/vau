@@ -5,12 +5,29 @@ s : entries ;
 entries : entry* ;
 
 entry :
-    'map' 'for' 'entity' entity_name '{'
+     'map' 'for' 'entity' entity_name '{'
+     program?
      source
      business_key_def
      attributes
  '}'
 ;
+
+program :
+    'program' '{' 'template' 'hub' hub_template_file 'template' 'sat' sat_template_file '}'
+    ;
+
+hub_template_file:
+    filename
+    ;
+
+sat_template_file:
+    filename
+    ;
+
+filename:
+    string_constant
+    ;
 
 entity_name : ID;
 
